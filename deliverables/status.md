@@ -3,6 +3,35 @@
 > Sujet V6: Pay as you pollute: real-time billing of car depending on car categories and dynamic city zones they travel in.
 > Equipe b: Guillaume Piccina, Willian d'Andrea, Nicolas Fernandez, Yann Brault
 
+## Status semaine 41, 11/10
+
+### Flag d'avancement <img src="./flags/orange_flag.png" width="20" height="20" >
+
+- La liste des services a été fixée et ne bougera probablement pas:
+  - Services de banques
+  - Service de pollution de la ville
+  - Service de surveillance vidéos de la ville
+
+### Points non validés cette semaine:
+
+- La liste des technos n'a pas pu être validée cette semaine.
+  > Ce que nous s'avons déjà vis à vis des technos, c'est que nous devons étudier le métier de chaucn de nos services afin d'en tirer les caractéristiques principales qui pourront ainsi nous aider à définir les choix de techno. Nous n'excluons pas d'utiliser différentes technos pour chaque service même si cela impliquerait pas mal de difficultés au niveau du maintient de l'architecture.
+- pas de US
+
+### Points de difficultés de cette semaine:
+
+- Cette semaine nous avons eu beaucoup de mal à nous décider sur comment repenser notre architecture. Les points bloquants étaient quelles responsabilités peuvent être déportées sur le terminal de l'utilisateur et lesquelles ne peuvent pas.
+  En particulier, la correspondance entre une position gps avec une zone et le calcul du prix estimé de la course. Après réflexions et conseils nous avons décidé d'assigner le calcul de l'estimation à l'utilisateur et la correspondance de la position avec la zone se fait entre les services.
+
+### Pour la semaine suivante:
+
+- Définir les services, leur métier et leurs opérations
+- Définir les interfaces entre les services
+- Définir les techno pour l'architecture
+- Mocker les services externes
+
+=============================================================================
+
 ## Status semaine 40, 04/10
 
 ### Flag d'avancement: <img src="./flags/green_flag.png" width="20" height="20" >
