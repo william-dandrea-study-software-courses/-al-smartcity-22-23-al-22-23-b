@@ -5,6 +5,8 @@
 
 ## Status semaine 41, 11/10
 
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
 ### Flag d'avancement <img src="./flags/orange_flag.png" width="20" height="20" >
 
 - La liste des services a été fixée et ne bougera probablement pas:
@@ -22,6 +24,8 @@
 
 - Cette semaine nous avons eu beaucoup de mal à nous décider sur comment repenser notre architecture. Les points bloquants étaient quelles responsabilités peuvent être déportées sur le terminal de l'utilisateur et lesquelles ne peuvent pas.
   En particulier, la correspondance entre une position gps avec une zone et le calcul du prix estimé de la course. Après réflexions et conseils nous avons décidé d'assigner le calcul de l'estimation à l'utilisateur et la correspondance de la position avec la zone se fait entre les services.
+  
+- Détails de l'architecture [ici](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
 
 ### Pour la semaine suivante:
 
