@@ -1,8 +1,108 @@
-import { Injectable } from '@nestjs/common';
+import {BadRequestException, CACHE_MANAGER, Inject, Injectable, Logger} from '@nestjs/common';
+import {ClientProxy, Ctx, MessagePattern, Payload, RmqContext} from '@nestjs/microservices';
+import {Cache} from 'cache-manager';
+import {SchedulerRegistry} from "@nestjs/schedule";
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
-  }
+
+    private readonly logger = new Logger(AppService.name);
+    public INITIAL_INTERVAL_CAR_POSITION: number = 1 // seconds
+
+    constructor(
+        @Inject('RABBITMQ_SERVICE') private client: ClientProxy,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache,
+        private schedulerRegistry: SchedulerRegistry,
+    ){}
+
+    async startCar(licencePlate: string) {
+        return new Promise(async (resolve, reject) => {
+            await this.addInterval(licencePlate, this.INITIAL_INTERVAL_CAR_POSITION);
+            resolve({status: 200, message: 'Car rceated with success'});
+        });
+    }
+
+
+    async stopCar(licencePlate: string) {
+        return new Promise(async (resolve, reject) => {
+            await this.deleteInterval(licencePlate);
+            resolve({status: 200, message: 'Car deleted with success'});
+        });
+    }
+
+    async editRequestInterval(licencePlate: string, interval: number) {
+        return new Promise(async (resolve, reject) => {
+            await this.setIntervalCar(licencePlate, interval);
+            resolve({status: 200, message: 'Car updated with success'});
+        });
+    }
+
+
+
+    async addInterval(licensePlate: string, seconds: number) {
+        const milliseconds: number = seconds * 1000;
+        const interval = setInterval(() => this.sendCarPosition(licensePlate, seconds), milliseconds);
+        this.schedulerRegistry.addInterval(licensePlate, interval);
+    }
+
+    async deleteInterval(licensePlate: string) {
+        await this.schedulerRegistry.deleteInterval(licensePlate);
+        this.logger.warn(`Car ${licensePlate} stopped!`);
+    }
+
+    async setIntervalCar(licensePlate: string, newInterval: number) {
+        await this.deleteInterval(licensePlate);
+        await this.addInterval(licensePlate, newInterval)
+    }
+
+
+
+    async sendCarPosition(licencePlate: string, milliseconds: number) {
+
+        this.logger.log(`Car ${licencePlate} send request every ${milliseconds}`);
+
+        const newLat: number = Math.random() * 10;
+        const newLon: number = Math.random() * 10;
+
+        this.client.emit(
+            'car-position',
+            {
+                location: {
+                    lon: newLon,
+                    lat: newLat
+                },
+                license_plate: licencePlate,
+                time: (new Date()).toISOString()
+            }
+        );
+    }
+
+
+
+
+    /*
+
+        async getHello(){
+            return this.client.send(
+                {cmd: 'greeting'},
+                'Progressive Coder'
+            );
+        }
+
+
+        async getHelloAsync() {
+          const message = await this.client.send(
+              {cmd: 'greeting-async'},
+              'Progressive Coder'
+          );
+          return message;
+        }
+
+        async publishEvent() {
+          this.client.emit(
+              'book-created',
+              {'bookName': 'The Way Of Kings', 'author': 'Brandon Sanderson'}
+          );
+        }*/
+
 }

@@ -3,4 +3,4 @@
 
 docker-compose --project-name smartcity-dev \
                --file ./docker-compose-dev.yml \
-               down
+               down -v

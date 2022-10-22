@@ -1,0 +1,32 @@
+
+### Launch in sync mode
+GET http://localhost:6808/get-hello
+Accept: application/json
+
+# In app.controller.ts :
+# getHello() {
+#    return this.appService.getHello();
+#  }
+# Response : Hello Progressive Coder
+
+
+### Launch in async mode
+GET http://localhost:6808/get-hello
+Accept: application/json
+
+# In app.controller.ts :
+# getHello() {
+#    return this.appService.getHelloAsync();
+#  }
+# Response : Hello Progressive Coder Async
+
+### Launch in event mode
+GET http://localhost:6808/get-hello
+Accept: application/json
+
+# In app.controller.ts :
+# getHello() {
+#    return this.appService.publishEvent();
+#  }
+# Response : ""
+# Console.log : { bookName: 'The Way Of Kings', author: 'Brandon Sanderson' }
