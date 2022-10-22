@@ -15,4 +15,5 @@ export declare class AppService {
     deleteInterval(licensePlate: string): Promise<void>;
     setIntervalCar(licensePlate: string, newInterval: number): Promise<void>;
     sendCarPosition(licencePlate: string, milliseconds: number): Promise<void>;
+    sendCarShutdown(licensePlate: string): Promise<void>;
 }

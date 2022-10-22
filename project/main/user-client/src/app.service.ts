@@ -38,7 +38,6 @@ export class AppService {
     }
 
 
-
     async addInterval(licensePlate: string, seconds: number) {
         const milliseconds: number = seconds * 1000;
         const interval = setInterval(() => this.sendCarPosition(licensePlate, seconds), milliseconds);
@@ -47,6 +46,7 @@ export class AppService {
 
     async deleteInterval(licensePlate: string) {
         await this.schedulerRegistry.deleteInterval(licensePlate);
+        await this.sendCarShutdown(licensePlate)
         this.logger.warn(`Car ${licensePlate} stopped!`);
     }
 
@@ -72,6 +72,37 @@ export class AppService {
                     lat: newLat
                 },
                 license_plate: licencePlate,
+                time: (new Date()).toISOString()
+            }
+        );
+    }
+
+    async sendCarShutdown(licensePlate: string) {
+        this.logger.log(`Car ${licensePlate} send CAR_SHUTDOWN`);
+
+        const newLat: number = Math.random() * 10;
+        const newLon: number = Math.random() * 10;
+
+        this.client.emit(
+            'car-position',
+            {
+                location: {
+                    lon: newLon,
+                    lat: newLat
+                },
+                license_plate: licensePlate,
+                time: (new Date()).toISOString()
+            }
+        );
+
+        this.client.emit(
+            'car-shutdown',
+            {
+                location: {
+                    lon: newLon,
+                    lat: newLat
+                },
+                license_plate: licensePlate,
                 time: (new Date()).toISOString()
             }
         );
