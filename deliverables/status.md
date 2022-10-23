@@ -3,6 +3,36 @@
 > Sujet V6: Pay as you pollute: real-time billing of car depending on car categories and dynamic city zones they travel in.
 > Equipe b: Guillaume Piccina, Willian d'Andrea, Nicolas Fernandez, Yann Brault
 
+## Status semaine 42, 18/10
+
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Flag d'avancement <img src="./flags/green_flag.png" width="20" height="20" >
+
+### Points validés cette semaine:
+
+  - Définir les services en détail
+  - Définir la stack techno
+  - Définir les interfaces -> Fait de manière implicite dans les descriptions, pas de documents faisant une liste exhaustive 
+  - Mocker les services externes -> Zone pollution seulement pour ce rendu (dev en cours au moment du rendu)
+  - Révision de l'archi -> Transformation vers de l'évènementiel, ajout d'un bus
+  - code MVP -> user, bus et car tracker
+
+### Points non validés cette semaine:
+
+- Liste exhaustive des interfaces
+
+### Points de difficultés de cette semaine:
+
+- Développement (lié à la découverte de RabbitMQ)
+- Comment faire passer le message de configuration vers les users pour prévenir d'envoyer les positions plus régulièrement
+
+### Pour la semaine suivante:
+
+- Intégration + tests
+- Ajout BD + services pour finir la boucle principale du MVP (walking skeleton)
+
+=============================================================================
 ## Status semaine 41, 11/10
 
 - [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
