@@ -3,6 +3,32 @@
 > Sujet V6: Pay as you pollute: real-time billing of car depending on car categories and dynamic city zones they travel in.
 > Equipe b: Guillaume Piccina, Willian d'Andrea, Nicolas Fernandez, Yann Brault
 
+## Status semaine 43, 25/10
+
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Flag d'avancement <img src="./flags/orange_flag.png" width="20" height="20" >
+
+### Points validés cette semaine:
+
+- Solution viable pour communiquer à un utilisateur sa fréquence d'envoie de position ainsi que la mise à disposition des prix pour le calcul estimé.
+
+### Points non validés cette semaine:
+
+- Coder les services pour compléter le scénario MVP.
+
+### Points de difficultés cette semaine:
+
+- Utilisation de RabbitMQ
+- Mise à disposition des utilisateurs d'une politique de tracking (problème résolu pendant le point hebdomadaire)
+
+### Pour la semaine suivante:
+
+- Faire les tâches prévues pour la [semaine 43](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/develop/deliverables/Roadmap.md#objectif-pour-le-25-octore---semaine-43)
+- Commencer/Faire les tâches prévues pour la [semaina 44](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/develop/deliverables/Roadmap.md#objectif-pour-les-vacances---semaine-44)
+
+=============================================================================
+
 ## Status semaine 42, 18/10
 
 - [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
@@ -11,12 +37,12 @@
 
 ### Points validés cette semaine:
 
-  - Définir les services en détail
-  - Définir la stack techno
-  - Définir les interfaces -> Fait de manière implicite dans les descriptions, pas de documents faisant une liste exhaustive 
-  - Mocker les services externes -> Zone pollution seulement pour ce rendu (dev en cours au moment du rendu)
-  - Révision de l'archi -> Transformation vers de l'évènementiel, ajout d'un bus
-  - code MVP -> user, bus et car tracker
+- Définir les services en détail
+- Définir la stack techno
+- Définir les interfaces -> Fait de manière implicite dans les descriptions, pas de documents faisant une liste exhaustive
+- Mocker les services externes -> Zone pollution seulement pour ce rendu (dev en cours au moment du rendu)
+- Révision de l'archi -> Transformation vers de l'évènementiel, ajout d'un bus
+- code MVP -> user, bus et car tracker
 
 ### Points non validés cette semaine:
 
@@ -33,6 +59,7 @@
 - Ajout BD + services pour finir la boucle principale du MVP (walking skeleton)
 
 =============================================================================
+
 ## Status semaine 41, 11/10
 
 - [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
