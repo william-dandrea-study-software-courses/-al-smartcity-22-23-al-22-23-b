@@ -28,7 +28,7 @@ let AppService = AppService_1 = class AppService {
     async startCar(licencePlate) {
         return new Promise(async (resolve, reject) => {
             await this.addInterval(licencePlate, this.INITIAL_INTERVAL_CAR_POSITION);
-            resolve({ status: 200, message: 'Car rceated with success' });
+            resolve({ status: 200, message: 'Car created with success' });
         });
     }
     async stopCar(licencePlate) {

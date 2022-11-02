@@ -23,7 +23,8 @@ let AppController = AppController_1 = class AppController {
         return this.appService.getHello();
     }
     async handleBookCreatedEvent(data) {
-        this.logger.log(data);
+        const zone = await this.appService.getZonePollution(data.location['lon'], data.location['lat']);
+        this.appService.addPosition(data.license_plate, zone, data.time);
     }
 };
 __decorate([
@@ -39,6 +40,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "handleBookCreatedEvent", null);
 AppController = AppController_1 = __decorate([
+    (0, common_1.Injectable)(),
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])
 ], AppController);

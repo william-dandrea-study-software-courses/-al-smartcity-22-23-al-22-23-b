@@ -4,5 +4,5 @@ export declare class AppController {
     private readonly logger;
     constructor(appService: AppService);
     getHello(): string;
-    handleBookCreatedEvent(data: Record<string, unknown>): Promise<void>;
+    handleBookCreatedEvent(data: Record<string, string>): Promise<void>;
 }

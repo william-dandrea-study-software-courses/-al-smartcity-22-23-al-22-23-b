@@ -1,7 +1,7 @@
-import {BadRequestException, CACHE_MANAGER, Inject, Injectable, Logger} from '@nestjs/common';
-import {ClientProxy, Ctx, MessagePattern, Payload, RmqContext} from '@nestjs/microservices';
-import {Cache} from 'cache-manager';
-import {SchedulerRegistry} from "@nestjs/schedule";
+import { BadRequestException, CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
+import { ClientProxy, Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
+import { Cache } from 'cache-manager';
+import { SchedulerRegistry } from "@nestjs/schedule";
 
 @Injectable()
 export class AppService {
@@ -13,12 +13,12 @@ export class AppService {
         @Inject('RABBITMQ_SERVICE') private client: ClientProxy,
         @Inject(CACHE_MANAGER) private cacheManager: Cache,
         private schedulerRegistry: SchedulerRegistry,
-    ){}
+    ) { }
 
     async startCar(licencePlate: string) {
         return new Promise(async (resolve, reject) => {
             await this.addInterval(licencePlate, this.INITIAL_INTERVAL_CAR_POSITION);
-            resolve({status: 200, message: 'Car rceated with success'});
+            resolve({ status: 200, message: 'Car created with success' });
         });
     }
 
@@ -26,14 +26,14 @@ export class AppService {
     async stopCar(licencePlate: string) {
         return new Promise(async (resolve, reject) => {
             await this.deleteInterval(licencePlate);
-            resolve({status: 200, message: 'Car deleted with success'});
+            resolve({ status: 200, message: 'Car deleted with success' });
         });
     }
 
     async editRequestInterval(licencePlate: string, interval: number) {
         return new Promise(async (resolve, reject) => {
             await this.setIntervalCar(licencePlate, interval);
-            resolve({status: 200, message: 'Car updated with success'});
+            resolve({ status: 200, message: 'Car updated with success' });
         });
     }
 
