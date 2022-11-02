@@ -58,9 +58,6 @@ export class AppService {
 
 
     async sendCarPosition(licencePlate: string, milliseconds: number) {
-
-        this.logger.log(`Car ${licencePlate} send request every ${milliseconds}`);
-
         const newLat: number = Math.random() * 10;
         const newLon: number = Math.random() * 10;
 
@@ -75,25 +72,12 @@ export class AppService {
                 time: (new Date()).toISOString()
             }
         );
+        this.logger.log(`Car ${licencePlate} send request every ${milliseconds}`);
     }
 
     async sendCarShutdown(licensePlate: string) {
-        this.logger.log(`Car ${licensePlate} send CAR_SHUTDOWN`);
-
         const newLat: number = Math.random() * 10;
         const newLon: number = Math.random() * 10;
-
-        this.client.emit(
-            'car-position',
-            {
-                location: {
-                    lon: newLon,
-                    lat: newLat
-                },
-                license_plate: licensePlate,
-                time: (new Date()).toISOString()
-            }
-        );
 
         this.client.emit(
             'car-shutdown',
@@ -106,6 +90,7 @@ export class AppService {
                 time: (new Date()).toISOString()
             }
         );
+        this.logger.log(`Car ${licensePlate} send CAR_SHUTDOWN`);
     }
 
 

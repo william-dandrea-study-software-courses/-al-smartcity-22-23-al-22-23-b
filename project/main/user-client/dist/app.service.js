@@ -58,7 +58,6 @@ let AppService = AppService_1 = class AppService {
         await this.addInterval(licensePlate, newInterval);
     }
     async sendCarPosition(licencePlate, milliseconds) {
-        this.logger.log(`Car ${licencePlate} send request every ${milliseconds}`);
         const newLat = Math.random() * 10;
         const newLon = Math.random() * 10;
         this.client.emit('car-position', {
@@ -69,19 +68,11 @@ let AppService = AppService_1 = class AppService {
             license_plate: licencePlate,
             time: (new Date()).toISOString()
         });
+        this.logger.log(`Car ${licencePlate} send request every ${milliseconds}`);
     }
     async sendCarShutdown(licensePlate) {
-        this.logger.log(`Car ${licensePlate} send CAR_SHUTDOWN`);
         const newLat = Math.random() * 10;
         const newLon = Math.random() * 10;
-        this.client.emit('car-position', {
-            location: {
-                lon: newLon,
-                lat: newLat
-            },
-            license_plate: licensePlate,
-            time: (new Date()).toISOString()
-        });
         this.client.emit('car-shutdown', {
             location: {
                 lon: newLon,
@@ -90,6 +81,7 @@ let AppService = AppService_1 = class AppService {
             license_plate: licensePlate,
             time: (new Date()).toISOString()
         });
+        this.logger.log(`Car ${licensePlate} send CAR_SHUTDOWN`);
     }
 };
 AppService = AppService_1 = __decorate([

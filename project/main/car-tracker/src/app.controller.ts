@@ -15,12 +15,17 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @EventPattern('car-shutdown')
+  async handleCarShutdown(data: Record<string, string>) {
+    const zone = await this.appService.getZonePollution(data.location['lon'], data.location['lat']);
+    this.appService.addPosition(data.license_plate, zone, data.time);
+
+    this.appService.sendRealCarShutdown(data.license_plate);
+  }
 
   @EventPattern('car-position')
-  async handleBookCreatedEvent(data: Record<string, string>) {
+  async handleCarPosition(data: Record<string, string>) {
     const zone = await this.appService.getZonePollution(data.location['lon'], data.location['lat']);
-    //this.logger.log("Zone: " + zone);
-
     this.appService.addPosition(data.license_plate, zone, data.time);
   }
 }

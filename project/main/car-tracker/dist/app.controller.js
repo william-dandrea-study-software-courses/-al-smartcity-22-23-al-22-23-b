@@ -22,7 +22,12 @@ let AppController = AppController_1 = class AppController {
     getHello() {
         return this.appService.getHello();
     }
-    async handleBookCreatedEvent(data) {
+    async handleCarShutdown(data) {
+        const zone = await this.appService.getZonePollution(data.location['lon'], data.location['lat']);
+        this.appService.addPosition(data.license_plate, zone, data.time);
+        this.appService.sendRealCarShutdown(data.license_plate);
+    }
+    async handleCarPosition(data) {
         const zone = await this.appService.getZonePollution(data.location['lon'], data.location['lat']);
         this.appService.addPosition(data.license_plate, zone, data.time);
     }
@@ -34,11 +39,17 @@ __decorate([
     __metadata("design:returntype", String)
 ], AppController.prototype, "getHello", null);
 __decorate([
+    (0, microservices_1.EventPattern)('car-shutdown'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "handleCarShutdown", null);
+__decorate([
     (0, microservices_1.EventPattern)('car-position'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], AppController.prototype, "handleBookCreatedEvent", null);
+], AppController.prototype, "handleCarPosition", null);
 AppController = AppController_1 = __decorate([
     (0, common_1.Injectable)(),
     (0, common_1.Controller)(),
