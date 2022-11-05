@@ -3,6 +3,6 @@ export declare class AppController {
     private readonly appService;
     private readonly logger;
     constructor(appService: AppService);
-    getHello(): string;
+    getHello(): Promise<any>;
     handleCarShutdownEvent(data: Record<string, unknown>): Promise<void>;
 }

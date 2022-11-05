@@ -10,11 +10,18 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
+const mongoose_1 = require("@nestjs/mongoose");
+const car_position_schema_1 = require("./schema/car-position.schema");
+const axios_1 = require("@nestjs/axios");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [],
+        imports: [
+            mongoose_1.MongooseModule.forRoot('mongodb://database-dev:27017/car-position'),
+            mongoose_1.MongooseModule.forFeature([{ name: car_position_schema_1.CarPosition.name, schema: car_position_schema_1.CarPositionSchema }]),
+            axios_1.HttpModule
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

@@ -9,10 +9,9 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): string {
+  getHello(): Promise<any> {
     return this.appService.getHello();
   }
-
 
   @EventPattern('real-car-shutdown')
   async handleCarShutdownEvent(data: Record<string, unknown>) {

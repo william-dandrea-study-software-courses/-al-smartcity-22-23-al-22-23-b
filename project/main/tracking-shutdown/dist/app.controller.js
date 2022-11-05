@@ -31,7 +31,7 @@ __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", String)
+    __metadata("design:returntype", Promise)
 ], AppController.prototype, "getHello", null);
 __decorate([
     (0, microservices_1.EventPattern)('real-car-shutdown'),

@@ -12,6 +12,8 @@ let AppService = class AppService {
     getHello() {
         return 'Hello World!';
     }
+    async generateNewBill(license_plate, bill) {
+    }
 };
 AppService = __decorate([
     (0, common_1.Injectable)()
