@@ -10,24 +10,11 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const microservices_1 = require("@nestjs/microservices");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [
-            microservices_1.ClientsModule.register([{
-                    name: 'RABBITMQ_SERVICE',
-                    transport: microservices_1.Transport.RMQ,
-                    options: {
-                        urls: ['amqp://admin:admin@car-tracker-bus:5672'],
-                        queue: 'car-info-queue',
-                        queueOptions: {
-                            durable: false
-                        }
-                    }
-                }])
-        ],
+        imports: [],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

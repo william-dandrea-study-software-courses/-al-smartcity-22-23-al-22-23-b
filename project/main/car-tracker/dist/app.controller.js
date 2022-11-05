@@ -23,11 +23,13 @@ let AppController = AppController_1 = class AppController {
         return this.appService.getHello();
     }
     async handleCarShutdown(data) {
+        this.logger.log('car-shutdown ', data);
         const zone = await this.appService.getZonePollution(data.location['lon'], data.location['lat']);
-        this.appService.addPosition(data.license_plate, zone, data.time);
-        this.appService.sendRealCarShutdown(data.license_plate);
+        await this.appService.addPosition(data.license_plate, zone, data.time);
+        await this.appService.sendRealCarShutdown(data.license_plate);
     }
     async handleCarPosition(data) {
+        this.logger.log('car-position ', data);
         const zone = await this.appService.getZonePollution(data.location['lon'], data.location['lat']);
         this.appService.addPosition(data.license_plate, zone, data.time);
     }

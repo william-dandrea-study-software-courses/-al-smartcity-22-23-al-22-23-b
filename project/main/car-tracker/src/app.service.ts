@@ -10,7 +10,11 @@ export class AppService {
 
   private readonly logger = new Logger(AppService.name);
 
-  constructor(@InjectModel(CarPosition.name) private carPositionModel: Model<CarPositionDocument>, private readonly httpService: HttpService, @Inject('RABBITMQ_SERVICE') private client: ClientProxy,) { }
+  constructor(
+      @InjectModel(CarPosition.name) private carPositionModel: Model<CarPositionDocument>,
+      private readonly httpService: HttpService,
+      @Inject('RABBITMQ_SERVICE_TRACKING_SHUTDOWN') private trackingShutdownClient: ClientProxy,
+      ) { }
 
   addPosition(license_plate: string, zone: string, time: string): Promise<CarPosition> {
     this.logger.log(`Car ${license_plate} in zone ${zone} saved in db`);
@@ -32,7 +36,7 @@ export class AppService {
   }
 
   async sendRealCarShutdown(licensePlate: string) {
-    this.client.emit(
+    this.trackingShutdownClient.emit(
       'real-car-shutdown',
       {
         license_plate: licensePlate,

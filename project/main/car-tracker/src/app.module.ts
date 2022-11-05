@@ -9,11 +9,11 @@ import { HttpModule } from '@nestjs/axios';
 @Module({
   imports: [
     ClientsModule.register([{
-      name: 'RABBITMQ_SERVICE',
+      name: 'RABBITMQ_SERVICE_TRACKING_SHUTDOWN',
       transport: Transport.RMQ,
       options: {
         urls: ['amqp://admin:admin@car-tracker-bus:5672'],
-        queue: 'car-info-queue',
+        queue: 'tracking-shutdown-queue',
         queueOptions: {
           durable: false
         }

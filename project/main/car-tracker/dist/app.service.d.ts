@@ -5,9 +5,9 @@ import { ClientProxy } from '@nestjs/microservices';
 export declare class AppService {
     private carPositionModel;
     private readonly httpService;
-    private client;
+    private trackingShutdownClient;
     private readonly logger;
-    constructor(carPositionModel: Model<CarPositionDocument>, httpService: HttpService, client: ClientProxy);
+    constructor(carPositionModel: Model<CarPositionDocument>, httpService: HttpService, trackingShutdownClient: ClientProxy);
     addPosition(license_plate: string, zone: string, time: string): Promise<CarPosition>;
     getZonePollution(lon: number, lat: number): Promise<string>;
     sendRealCarShutdown(licensePlate: string): Promise<void>;

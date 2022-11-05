@@ -2,12 +2,12 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Cache } from 'cache-manager';
 import { SchedulerRegistry } from "@nestjs/schedule";
 export declare class AppService {
-    private client;
+    private carTrackerClient;
     private cacheManager;
     private schedulerRegistry;
     private readonly logger;
     INITIAL_INTERVAL_CAR_POSITION: number;
-    constructor(client: ClientProxy, cacheManager: Cache, schedulerRegistry: SchedulerRegistry);
+    constructor(carTrackerClient: ClientProxy, cacheManager: Cache, schedulerRegistry: SchedulerRegistry);
     startCar(licencePlate: string): Promise<unknown>;
     stopCar(licencePlate: string): Promise<unknown>;
     editRequestInterval(licencePlate: string, interval: number): Promise<unknown>;

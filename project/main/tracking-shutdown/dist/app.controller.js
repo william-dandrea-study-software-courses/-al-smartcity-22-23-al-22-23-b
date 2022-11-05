@@ -24,6 +24,7 @@ let AppController = AppController_1 = class AppController {
     }
     async handleCarShutdownEvent(data) {
         this.logger.log(data);
+        await this.appService.onCarShutdownEvent(data);
     }
 };
 __decorate([
@@ -33,7 +34,7 @@ __decorate([
     __metadata("design:returntype", String)
 ], AppController.prototype, "getHello", null);
 __decorate([
-    (0, microservices_1.EventPattern)('car-shutdown'),
+    (0, microservices_1.EventPattern)('real-car-shutdown'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)

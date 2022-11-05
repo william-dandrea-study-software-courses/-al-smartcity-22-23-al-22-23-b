@@ -20,7 +20,7 @@ AppModule = __decorate([
             common_1.CacheModule.register(),
             schedule_1.ScheduleModule.forRoot(),
             microservices_1.ClientsModule.register([{
-                    name: 'RABBITMQ_SERVICE',
+                    name: 'RABBITMQ_SERVICE_CAR_TRACKER_QUEUE',
                     transport: microservices_1.Transport.RMQ,
                     options: {
                         urls: ['amqp://admin:admin@car-tracker-bus:5672'],
@@ -29,7 +29,7 @@ AppModule = __decorate([
                             durable: false
                         }
                     }
-                }])
+                }]),
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

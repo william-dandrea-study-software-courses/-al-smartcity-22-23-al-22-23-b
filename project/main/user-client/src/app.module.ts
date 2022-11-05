@@ -9,7 +9,7 @@ import {ScheduleModule} from "@nestjs/schedule";
     CacheModule.register(),
     ScheduleModule.forRoot(),
     ClientsModule.register([{
-      name: 'RABBITMQ_SERVICE',
+      name: 'RABBITMQ_SERVICE_CAR_TRACKER_QUEUE',
       transport: Transport.RMQ,
       options: {
         urls: ['amqp://admin:admin@car-tracker-bus:5672'],
@@ -18,7 +18,7 @@ import {ScheduleModule} from "@nestjs/schedule";
           durable: false
         }
       }
-    }])
+    }]),
   ],
   controllers: [AppController],
   providers: [AppService],

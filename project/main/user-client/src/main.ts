@@ -4,22 +4,28 @@ import {Logger} from "@nestjs/common";
 import {AppController} from "./app.controller";
 import {MicroserviceOptions, Transport} from "@nestjs/microservices";
 
-const logger = new Logger(AppController.name);
+const logger = new Logger();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const microservice = app.connectMicroservice({
-    transport: Transport.RMQ,
-    options: {
-      urls: ['amqp://admin:admin@car-tracker-bus:5672'],
-      queue: 'car-info-queue',
-      queueOptions: {
-        durable: false
-      },
-    },
-  });
 
+  const listOfConsumersQueues = []
+
+  if (listOfConsumersQueues.length > 0) {
+    for (const queue of listOfConsumersQueues) {
+      await app.connectMicroservice({
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://admin:admin@car-tracker-bus:5672'],
+          queue,
+          queueOptions: {
+            durable: false
+          },
+        },
+      });
+    }
+  }
   await app.startAllMicroservices();
 
   const port: number = Number(process.env.APP_PORT);

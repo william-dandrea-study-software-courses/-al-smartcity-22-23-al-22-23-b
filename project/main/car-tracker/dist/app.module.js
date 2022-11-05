@@ -20,11 +20,11 @@ AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             microservices_1.ClientsModule.register([{
-                    name: 'RABBITMQ_SERVICE',
+                    name: 'RABBITMQ_SERVICE_TRACKING_SHUTDOWN',
                     transport: microservices_1.Transport.RMQ,
                     options: {
                         urls: ['amqp://admin:admin@car-tracker-bus:5672'],
-                        queue: 'car-info-queue',
+                        queue: 'tracking-shutdown-queue',
                         queueOptions: {
                             durable: false
                         }

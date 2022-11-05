@@ -14,8 +14,9 @@ export class AppController {
   }
 
 
-  @EventPattern('car-shutdown')
+  @EventPattern('real-car-shutdown')
   async handleCarShutdownEvent(data: Record<string, unknown>) {
     this.logger.log(data);
+    await this.appService.onCarShutdownEvent(data)
   }
 }

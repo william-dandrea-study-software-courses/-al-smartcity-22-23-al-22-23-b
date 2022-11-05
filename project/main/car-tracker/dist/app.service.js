@@ -21,10 +21,10 @@ const mongoose_2 = require("mongoose");
 const car_position_schema_1 = require("./schema/car-position.schema");
 const microservices_1 = require("@nestjs/microservices");
 let AppService = AppService_1 = class AppService {
-    constructor(carPositionModel, httpService, client) {
+    constructor(carPositionModel, httpService, trackingShutdownClient) {
         this.carPositionModel = carPositionModel;
         this.httpService = httpService;
-        this.client = client;
+        this.trackingShutdownClient = trackingShutdownClient;
         this.logger = new common_1.Logger(AppService_1.name);
     }
     addPosition(license_plate, zone, time) {
@@ -44,7 +44,7 @@ let AppService = AppService_1 = class AppService {
         });
     }
     async sendRealCarShutdown(licensePlate) {
-        this.client.emit('real-car-shutdown', {
+        this.trackingShutdownClient.emit('real-car-shutdown', {
             license_plate: licensePlate,
         });
         this.logger.log(`Car ${licensePlate} send REAL_CAR_SHUTDOWN`);
@@ -56,8 +56,10 @@ let AppService = AppService_1 = class AppService {
 AppService = AppService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(car_position_schema_1.CarPosition.name)),
-    __param(2, (0, common_1.Inject)('RABBITMQ_SERVICE')),
-    __metadata("design:paramtypes", [mongoose_2.Model, axios_1.HttpService, microservices_1.ClientProxy])
+    __param(2, (0, common_1.Inject)('RABBITMQ_SERVICE_TRACKING_SHUTDOWN')),
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        axios_1.HttpService,
+        microservices_1.ClientProxy])
 ], AppService);
 exports.AppService = AppService;
 //# sourceMappingURL=app.service.js.map

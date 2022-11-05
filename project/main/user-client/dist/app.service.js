@@ -18,8 +18,8 @@ const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
 const schedule_1 = require("@nestjs/schedule");
 let AppService = AppService_1 = class AppService {
-    constructor(client, cacheManager, schedulerRegistry) {
-        this.client = client;
+    constructor(carTrackerClient, cacheManager, schedulerRegistry) {
+        this.carTrackerClient = carTrackerClient;
         this.cacheManager = cacheManager;
         this.schedulerRegistry = schedulerRegistry;
         this.logger = new common_1.Logger(AppService_1.name);
@@ -60,7 +60,7 @@ let AppService = AppService_1 = class AppService {
     async sendCarPosition(licencePlate, milliseconds) {
         const newLat = Math.random() * 10;
         const newLon = Math.random() * 10;
-        this.client.emit('car-position', {
+        this.carTrackerClient.emit('car-position', {
             location: {
                 lon: newLon,
                 lat: newLat
@@ -73,7 +73,7 @@ let AppService = AppService_1 = class AppService {
     async sendCarShutdown(licensePlate) {
         const newLat = Math.random() * 10;
         const newLon = Math.random() * 10;
-        this.client.emit('car-shutdown', {
+        await this.carTrackerClient.emit('car-shutdown', {
             location: {
                 lon: newLon,
                 lat: newLat
@@ -86,7 +86,7 @@ let AppService = AppService_1 = class AppService {
 };
 AppService = AppService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, common_1.Inject)('RABBITMQ_SERVICE')),
+    __param(0, (0, common_1.Inject)('RABBITMQ_SERVICE_CAR_TRACKER_QUEUE')),
     __param(1, (0, common_1.Inject)(common_1.CACHE_MANAGER)),
     __metadata("design:paramtypes", [microservices_1.ClientProxy, Object, schedule_1.SchedulerRegistry])
 ], AppService);

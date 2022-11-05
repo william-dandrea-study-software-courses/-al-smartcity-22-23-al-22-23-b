@@ -4,8 +4,7 @@
 function function_to_execute() {
   echo $1
   cd $1 || exit
-  npm i --save amqplib amqp-connection-manager
-  npm i --save @nestjs/microservices
+  npm install
   cd ../..
 }
 

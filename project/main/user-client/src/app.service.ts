@@ -10,7 +10,7 @@ export class AppService {
     public INITIAL_INTERVAL_CAR_POSITION: number = 1 // seconds
 
     constructor(
-        @Inject('RABBITMQ_SERVICE') private client: ClientProxy,
+        @Inject('RABBITMQ_SERVICE_CAR_TRACKER_QUEUE') private carTrackerClient: ClientProxy,
         @Inject(CACHE_MANAGER) private cacheManager: Cache,
         private schedulerRegistry: SchedulerRegistry,
     ) { }
@@ -37,7 +37,6 @@ export class AppService {
         });
     }
 
-
     async addInterval(licensePlate: string, seconds: number) {
         const milliseconds: number = seconds * 1000;
         const interval = setInterval(() => this.sendCarPosition(licensePlate, seconds), milliseconds);
@@ -55,13 +54,11 @@ export class AppService {
         await this.addInterval(licensePlate, newInterval)
     }
 
-
-
     async sendCarPosition(licencePlate: string, milliseconds: number) {
         const newLat: number = Math.random() * 10;
         const newLon: number = Math.random() * 10;
 
-        this.client.emit(
+        this.carTrackerClient.emit(
             'car-position',
             {
                 location: {
@@ -79,7 +76,7 @@ export class AppService {
         const newLat: number = Math.random() * 10;
         const newLon: number = Math.random() * 10;
 
-        this.client.emit(
+        await this.carTrackerClient.emit(
             'car-shutdown',
             {
                 location: {
@@ -90,6 +87,7 @@ export class AppService {
                 time: (new Date()).toISOString()
             }
         );
+
         this.logger.log(`Car ${licensePlate} send CAR_SHUTDOWN`);
     }
 
@@ -99,7 +97,7 @@ export class AppService {
     /*
 
         async getHello(){
-            return this.client.send(
+            return this.carTrackerClient.send(
                 {cmd: 'greeting'},
                 'Progressive Coder'
             );
@@ -107,7 +105,7 @@ export class AppService {
 
 
         async getHelloAsync() {
-          const message = await this.client.send(
+          const message = await this.carTrackerClient.send(
               {cmd: 'greeting-async'},
               'Progressive Coder'
           );
@@ -115,7 +113,7 @@ export class AppService {
         }
 
         async publishEvent() {
-          this.client.emit(
+          this.carTrackerClient.emit(
               'book-created',
               {'bookName': 'The Way Of Kings', 'author': 'Brandon Sanderson'}
           );

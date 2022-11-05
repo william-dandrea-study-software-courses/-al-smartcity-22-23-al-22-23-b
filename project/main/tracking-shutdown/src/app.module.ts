@@ -4,19 +4,7 @@ import { AppService } from './app.service';
 import {ClientsModule, Transport} from "@nestjs/microservices";
 
 @Module({
-  imports: [
-    ClientsModule.register([{
-      name: 'RABBITMQ_SERVICE',
-      transport: Transport.RMQ,
-      options: {
-        urls: ['amqp://admin:admin@car-tracker-bus:5672'],
-        queue: 'car-info-queue',
-        queueOptions: {
-          durable: false
-        }
-      }
-    }])
-  ],
+  imports: [],
   controllers: [AppController],
   providers: [AppService],
 })
