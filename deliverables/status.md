@@ -3,6 +3,36 @@
 > Sujet V6: Pay as you pollute: real-time billing of car depending on car categories and dynamic city zones they travel in.
 > Equipe b: Guillaume Piccina, Willian d'Andrea, Nicolas Fernandez, Yann Brault
 
+## Status semaine 44, semaine de pause pédagogique
+
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Flag d'avancement <img src="./flags/green_flag.png" width="20" height="20" >
+
+### Points validés cette semaine:
+
+- Fin d'implémentation des composants prévus pour la semaine 43 -> Mock utilisateur, bus Rabbit, service car tracker et Mock service pollution
+- Implémentation des composants prévus pour la semaine 44 -> Complétion de la boucle primaire du scénario MVP par l'ajout du tracking shutdown, de la BD principale et du service de billing
+
+### Points non validés cette semaine:
+
+- Test
+- Eventuel démarrage de l'implémentation des composants prévus pour la semaine 45
+
+### Points de difficultés cette semaine:
+
+- RabbitMQ est plus simialaire à une message queue qu'à un bus évènementiel qui fait du pub/sub.
+- C'est à travers un problème de transmissions de messages avec Rabbit que nous avons trouvé le problème.
+- Pour pallier à ce problème nous avons du créer plusieurs queues quand il fallait brancher plusieurs service sur le bus Rabbit
+
+### Pour la semaine suivante:
+
+- Implémenter les composants prévus pour la semaine 45 -> service de tracking caméra + mock caméra, service de configuration de fréquence d'envoie
+- Vraiment faire des test
+- Attaquer le rapport et le support de la soutenance
+
+=============================================================================
+
 ## Status semaine 43, 25/10
 
 - [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
