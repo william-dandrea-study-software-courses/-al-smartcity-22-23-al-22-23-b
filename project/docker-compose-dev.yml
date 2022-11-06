@@ -1,0 +1,161 @@
+version: "3.8"
+services:
+  billing-handler-dev:
+    build:
+      context: ./main/billing-handler
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 6803:3000
+    environment:
+      - APP_PORT=3000
+    volumes:
+      - ./main/billing-handler:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - smartcity-al-b-network-dev
+
+  car-tracker-dev:
+    build:
+      context: ./main/car-tracker
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 6804:3000
+    environment:
+      - APP_PORT=3000
+    volumes:
+      - ./main/car-tracker:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - smartcity-al-b-network-dev
+
+  pollution-zone-aggregator-dev:
+    build:
+      context: ./main/pollution-zone-aggregator
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 6805:3000
+    environment:
+      - APP_PORT=3000
+    volumes:
+      - ./main/pollution-zone-aggregator:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - smartcity-al-b-network-dev
+
+  position-checker-dev:
+    build:
+      context: ./main/position-checker
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 6806:3000
+    environment:
+      - APP_PORT=3000
+    volumes:
+      - ./main/position-checker:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - smartcity-al-b-network-dev
+
+  tracking-shutdown-dev:
+    build:
+      context: ./main/tracking-shutdown
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 6807:3000
+    environment:
+      - APP_PORT=3000
+    volumes:
+      - ./main/tracking-shutdown:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - smartcity-al-b-network-dev
+
+  user-client-dev:
+    build:
+      context: ./main/user-client
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 6808:3000
+    environment:
+      - APP_PORT=3000
+    volumes:
+      - ./main/user-client:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - smartcity-al-b-network-dev
+
+  mock-camera-checker-dev:
+    build:
+      context: ./mocks/camera-checker
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 6809:3000
+    environment:
+      - APP_PORT=3000
+    volumes:
+      - ./mocks/camera-checker:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - smartcity-al-b-network-dev
+
+  mock-pollution-zones-emitter-dev:
+    build:
+      context: ./mocks/pollution-zones-emitter
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 6810:3000
+    environment:
+      - APP_PORT=3000
+    volumes:
+      - ./mocks/pollution-zones-emitter:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - smartcity-al-b-network-dev
+
+  database-dev:
+    image: "mongo:6.0.2"
+    restart: always
+    ports:
+      - 27017:27017
+    networks:
+      - smartcity-al-b-network-dev
+
+  car-tracker-bus:
+    image: 'rabbitmq:3-management'
+    container_name: car-tracker-bus
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - smartcity-al-b-network-dev
+
+networks:
+  smartcity-al-b-network-dev:
+    driver: bridge

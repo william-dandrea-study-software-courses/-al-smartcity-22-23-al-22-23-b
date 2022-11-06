@@ -1,0 +1,17 @@
+POST http://localhost:6803/new-bill
+Content-Type: application/json
+
+{
+  "license_plate": "DA-58E-EF",
+  "bill": 34
+}
+
+###
+PUT http://localhost:6803/pay-bill/63668a04524f31950cdfff62
+Content-Type: application/json
+
+{}
+
+###
+GET http://localhost:6803/user-bills/DA-58E-EF
+Content-Type: application/json

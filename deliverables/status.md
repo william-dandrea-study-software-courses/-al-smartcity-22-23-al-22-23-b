@@ -3,6 +3,93 @@
 > Sujet V6: Pay as you pollute: real-time billing of car depending on car categories and dynamic city zones they travel in.
 > Equipe b: Guillaume Piccina, Willian d'Andrea, Nicolas Fernandez, Yann Brault
 
+## Status semaine 44, semaine de pause pédagogique
+
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Flag d'avancement <img src="./flags/green_flag.png" width="20" height="20" >
+
+### Points validés cette semaine:
+
+- Fin d'implémentation des composants prévus pour la semaine 43 -> Mock utilisateur, bus Rabbit, service car tracker et Mock service pollution
+- Implémentation des composants prévus pour la semaine 44 -> Complétion de la boucle primaire du scénario MVP par l'ajout du tracking shutdown, de la BD principale et du service de billing
+
+### Points non validés cette semaine:
+
+- Test
+- Eventuel démarrage de l'implémentation des composants prévus pour la semaine 45
+
+### Points de difficultés cette semaine:
+
+- RabbitMQ est plus simialaire à une message queue qu'à un bus évènementiel qui fait du pub/sub.
+- C'est à travers un problème de transmissions de messages avec Rabbit que nous avons trouvé le problème.
+- Pour pallier à ce problème nous avons du créer plusieurs queues quand il fallait brancher plusieurs service sur le bus Rabbit
+
+### Pour la semaine suivante:
+
+- Implémenter les composants prévus pour la semaine 45 -> service de tracking caméra + mock caméra, service de configuration de fréquence d'envoie
+- Vraiment faire des test
+- Attaquer le rapport et le support de la soutenance
+
+=============================================================================
+
+## Status semaine 43, 25/10
+
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Flag d'avancement <img src="./flags/orange_flag.png" width="20" height="20" >
+
+### Points validés cette semaine:
+
+- Solution viable pour communiquer à un utilisateur sa fréquence d'envoie de position ainsi que la mise à disposition des prix pour le calcul estimé.
+
+### Points non validés cette semaine:
+
+- Coder les services pour compléter le scénario MVP.
+
+### Points de difficultés cette semaine:
+
+- Utilisation de RabbitMQ
+- Mise à disposition des utilisateurs d'une politique de tracking (problème résolu pendant le point hebdomadaire)
+
+### Pour la semaine suivante:
+
+- Faire les tâches prévues pour la [semaine 43](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/develop/deliverables/Roadmap.md#objectif-pour-le-25-octore---semaine-43)
+- Commencer/Faire les tâches prévues pour la [semaina 44](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/develop/deliverables/Roadmap.md#objectif-pour-les-vacances---semaine-44)
+
+=============================================================================
+
+## Status semaine 42, 18/10
+
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Flag d'avancement <img src="./flags/green_flag.png" width="20" height="20" >
+
+### Points validés cette semaine:
+
+- Définir les services en détail
+- Définir la stack techno
+- Définir les interfaces -> Fait de manière implicite dans les descriptions, pas de documents faisant une liste exhaustive
+- Mocker les services externes -> Zone pollution seulement pour ce rendu (dev en cours au moment du rendu)
+- Révision de l'archi -> Transformation vers de l'évènementiel, ajout d'un bus
+- code MVP -> user, bus et car tracker
+
+### Points non validés cette semaine:
+
+- Liste exhaustive des interfaces
+
+### Points de difficultés de cette semaine:
+
+- Développement (lié à la découverte de RabbitMQ)
+- Comment faire passer le message de configuration vers les users pour prévenir d'envoyer les positions plus régulièrement
+
+### Pour la semaine suivante:
+
+- Intégration + tests
+- Ajout BD + services pour finir la boucle principale du MVP (walking skeleton)
+
+=============================================================================
+
 ## Status semaine 41, 11/10
 
 - [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
