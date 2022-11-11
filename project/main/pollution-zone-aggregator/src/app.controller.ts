@@ -1,12 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
+import {Controller, Post, Query} from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Post("zone")
+  getZone(@Query() query: {long: number,  lat: number}) {
+    return this.appService.getHello(query.long, query.lat)
   }
 }

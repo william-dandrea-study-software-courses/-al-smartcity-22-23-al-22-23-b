@@ -1,3 +1,5 @@
 export declare class AppService {
-    getHello(): string;
+    getHello(long: number, lat: number): number;
+    private getDistanceFromLatLonInKm;
+    private deg2rad;
 }
