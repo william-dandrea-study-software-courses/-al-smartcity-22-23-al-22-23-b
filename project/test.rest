@@ -11,7 +11,7 @@ POST http://localhost:6808/edit-request-interval
 Content-Type: application/json
 
 {
-  "license_plate": "DA-258-LB",
+  "license_plate": "VB-947-SD",
   "interval": 5
 }
 

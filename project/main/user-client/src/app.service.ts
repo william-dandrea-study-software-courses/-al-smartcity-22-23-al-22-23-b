@@ -1,4 +1,12 @@
-import { BadRequestException, CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+    BadRequestException,
+    CACHE_MANAGER,
+    HttpException,
+    HttpStatus,
+    Inject,
+    Injectable,
+    Logger
+} from '@nestjs/common';
 import { ClientProxy, Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
 import { Cache } from 'cache-manager';
 import { SchedulerRegistry } from "@nestjs/schedule";
@@ -16,25 +24,27 @@ export class AppService {
     ) { }
 
     async startCar(licencePlate: string) {
-        return new Promise(async (resolve, reject) => {
-            await this.addInterval(licencePlate, this.INITIAL_INTERVAL_CAR_POSITION);
-            resolve({ status: 200, message: 'Car created with success' });
-        });
+        await this.addInterval(licencePlate, this.INITIAL_INTERVAL_CAR_POSITION);
+        return { status: 200, message: 'Car created with success' };
     }
 
 
     async stopCar(licencePlate: string) {
-        return new Promise(async (resolve, reject) => {
+        const currentInterval = this.schedulerRegistry.doesExist('interval', licencePlate);
+        if (currentInterval) {
             await this.deleteInterval(licencePlate);
-            resolve({ status: 200, message: 'Car deleted with success' });
-        });
+            return { status: 200, message: 'Car deleted with success' };
+        }
+        throw new HttpException(`Cannot find the car with the licence plate ${licencePlate}`, HttpStatus.UNPROCESSABLE_ENTITY)
     }
 
     async editRequestInterval(licencePlate: string, interval: number) {
-        return new Promise(async (resolve, reject) => {
+        const currentInterval = this.schedulerRegistry.doesExist('interval', licencePlate);
+        if (currentInterval) {
             await this.setIntervalCar(licencePlate, interval);
-            resolve({ status: 200, message: 'Car updated with success' });
-        });
+            return { status: 200, message: 'Car interval setted with success' };
+        }
+        throw new HttpException(`Cannot find the car with the licence plate ${licencePlate}`, HttpStatus.UNPROCESSABLE_ENTITY)
     }
 
     async addInterval(licensePlate: string, seconds: number) {
@@ -50,7 +60,7 @@ export class AppService {
     }
 
     async setIntervalCar(licensePlate: string, newInterval: number) {
-        await this.deleteInterval(licensePlate);
+        await this.schedulerRegistry.deleteInterval(licensePlate);
         await this.addInterval(licensePlate, newInterval)
     }
 
