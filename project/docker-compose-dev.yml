@@ -179,7 +179,7 @@ services:
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
-      - prometheus_data:/prometheus
+      - ./monitoring/prometheus_volume:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     links:
@@ -196,16 +196,12 @@ services:
     volumes:
       - ./monitoring/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
       - ./monitoring/grafana_config.ini:/etc/grafana/config.ini
-      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana_volume:/var/lib/grafana
     ports:
       - 3000:3000
     networks:
       - smartcity-al-b-network-dev
 
-
-volumes:
-  prometheus_data: {}
-  grafana_data: {}
 
 networks:
   smartcity-al-b-network-dev:

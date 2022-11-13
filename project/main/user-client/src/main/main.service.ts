@@ -21,8 +21,12 @@ export class MainService {
 
 
     async startCar(licencePlate: string) {
-        await this.addInterval(licencePlate, this.INITIAL_INTERVAL_CAR_POSITION);
-        return { status: 200, message: 'Car created with success' };
+        const currentInterval = this.schedulerRegistry.doesExist('interval', licencePlate);
+        if (!currentInterval) {
+            await this.addInterval(licencePlate, this.INITIAL_INTERVAL_CAR_POSITION);
+            return { status: 200, message: 'Car created with success' };
+        }
+        throw new HttpException(`Cannot find the car with the licence plate ${licencePlate}`, HttpStatus.UNPROCESSABLE_ENTITY)
     }
 
 
