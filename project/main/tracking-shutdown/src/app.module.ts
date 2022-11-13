@@ -1,18 +1,21 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import {ClientsModule, Transport} from "@nestjs/microservices";
-import { MongooseModule } from '@nestjs/mongoose';
-import {CarPosition, CarPositionSchema} from "./schema/car-position.schema";
+import {ConfigModule} from "@nestjs/config";
+import {HealthModule} from "./health/health.module";
+import {PrometheusModule} from "./prometheus/prometheus.module";
+import {MetricsModule} from "./metrics/metrics.module";
+import { MainModule } from './main/main.module';
 import {HttpModule} from "@nestjs/axios";
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://database-dev:27017/car-position'),
-    MongooseModule.forFeature([{ name: CarPosition.name, schema: CarPositionSchema }]),
-    HttpModule
+    ConfigModule.forRoot({ cache: true }),
+    HttpModule,
+    HealthModule,
+    PrometheusModule,
+    MetricsModule,
+    MainModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

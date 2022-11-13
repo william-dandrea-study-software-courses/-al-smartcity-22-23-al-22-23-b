@@ -1,23 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import {ClientsModule, Transport} from "@nestjs/microservices";
-
+import { HttpModule } from '@nestjs/axios';
+import {ConfigModule} from "@nestjs/config";
+import {HealthModule} from "./health/health.module";
+import {PrometheusModule} from "./prometheus/prometheus.module";
+import {MetricsModule} from "./metrics/metrics.module";
+import { MainModule } from './main/main.module';
 @Module({
   imports: [
-    ClientsModule.register([{
-      name: 'RABBITMQ_SERVICE',
-      transport: Transport.RMQ,
-      options: {
-        urls: ['amqp://admin:admin@car-tracker-bus:5672'],
-        queue: 'car-info-queue',
-        queueOptions: {
-          durable: false
-        }
-      }
-    }])
+    ConfigModule.forRoot({ cache: true }),
+    HttpModule,
+    HealthModule,
+    PrometheusModule,
+    MetricsModule,
+    MainModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

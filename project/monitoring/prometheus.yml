@@ -1,0 +1,45 @@
+global:
+  scrape_interval:     1s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 1s # By default, scrape targets every 15 seconds.
+  # scrape_timeout is set to the global default (10s).
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'codelab-monitor'
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+# - "first.rules"
+# - "second.rules"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  - job_name: 'billing-handler'
+    static_configs:
+      - targets: ['billing-handler:3000']
+  - job_name: 'car-tracker'
+    static_configs:
+      - targets: ['car-tracker:3000']
+  - job_name: 'pollution-zone-aggregator'
+    static_configs:
+      - targets: ['pollution-zone-aggregator:3000']
+  - job_name: 'position-checker'
+    static_configs:
+      - targets: ['position-checker:3000']
+  - job_name: 'tracking-shutdown'
+    static_configs:
+      - targets: ['tracking-shutdown:3000']
+  - job_name: 'user-client'
+    static_configs:
+      - targets: ['user-client:3000']
+  - job_name: 'mock-camera-checker'
+    static_configs:
+      - targets: [ 'mock-camera-checker:3000' ]
+  - job_name: 'mock-pollution-zone-emitter'
+    static_configs:
+      - targets: [ 'mock-pollution-zones-emitter:3000' ]
+  - job_name: 'car-tracker-bus'
+    static_configs:
+      - targets: [ 'car-tracker-bus:15692' ]

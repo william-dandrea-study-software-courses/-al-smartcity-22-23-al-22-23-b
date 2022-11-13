@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  billing-handler-dev:
+  billing-handler:
     build:
       context: ./main/billing-handler
       dockerfile: ./Dockerfile
@@ -17,7 +17,7 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-  car-tracker-dev:
+  car-tracker:
     build:
       context: ./main/car-tracker
       dockerfile: ./Dockerfile
@@ -34,7 +34,7 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-  pollution-zone-aggregator-dev:
+  pollution-zone-aggregator:
     build:
       context: ./main/pollution-zone-aggregator
       dockerfile: ./Dockerfile
@@ -51,7 +51,7 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-  position-checker-dev:
+  position-checker:
     build:
       context: ./main/position-checker
       dockerfile: ./Dockerfile
@@ -68,7 +68,7 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-  tracking-shutdown-dev:
+  tracking-shutdown:
     build:
       context: ./main/tracking-shutdown
       dockerfile: ./Dockerfile
@@ -85,7 +85,7 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-  user-client-dev:
+  user-client:
     build:
       context: ./main/user-client
       dockerfile: ./Dockerfile
@@ -102,7 +102,7 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-  mock-camera-checker-dev:
+  mock-camera-checker:
     build:
       context: ./mocks/camera-checker
       dockerfile: ./Dockerfile
@@ -119,7 +119,7 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-  mock-pollution-zones-emitter-dev:
+  mock-pollution-zones-emitter:
     build:
       context: ./mocks/pollution-zones-emitter
       dockerfile: ./Dockerfile
@@ -136,7 +136,7 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-  database-dev:
+  database:
     image: "mongo:6.0.2"
     restart: always
     ports:
@@ -152,9 +152,60 @@ services:
       RABBITMQ_DEFAULT_PASS: "admin"
     ports:
       - 5672:5672
-      - 15672:15672
+      - 15692:15692
     networks:
       - smartcity-al-b-network-dev
+
+
+
+
+  alertmanager:
+    container_name: alertmanager
+    hostname: alertmanager
+    image: prom/alertmanager
+    volumes:
+      - ./monitoring/alertmanager.conf:/etc/alertmanager/alertmanager.conf
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.conf'
+    ports:
+      - 9093:9093
+    networks:
+      - smartcity-al-b-network-dev
+
+  prometheus:
+    container_name: prometheus
+    hostname: prometheus
+    image: prom/prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    links:
+      - alertmanager:alertmanager
+    ports:
+      - 9090:9090
+    networks:
+      - smartcity-al-b-network-dev
+
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    image: grafana/grafana
+    volumes:
+      - ./monitoring/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
+      - ./monitoring/grafana_config.ini:/etc/grafana/config.ini
+      - grafana_data:/var/lib/grafana
+    ports:
+      - 3000:3000
+    networks:
+      - smartcity-al-b-network-dev
+
+
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
 
 networks:
   smartcity-al-b-network-dev:
