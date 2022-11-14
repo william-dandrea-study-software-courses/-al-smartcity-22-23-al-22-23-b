@@ -1,0 +1,13 @@
+name: "Build Dev docker containers"
+
+on: [push, pull_request]
+
+jobs:
+  build-billing-handler-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the development billing handler
+        working-directory: ./gateway
+        run: docker build --target development -f project/docker-compose-dev.yml -t "billing-handler" .

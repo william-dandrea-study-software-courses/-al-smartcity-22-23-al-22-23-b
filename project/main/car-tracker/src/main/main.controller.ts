@@ -12,8 +12,6 @@ export class MainController {
     getHello(): string {
         return this.appService.getHello();
     }
-
-
     @EventPattern('car-shutdown')
     async handleCarShutdown(data: Record<string, string>) {
         this.logger.log('car-shutdown ', data)

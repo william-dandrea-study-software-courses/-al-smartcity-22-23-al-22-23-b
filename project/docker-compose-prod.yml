@@ -1,0 +1,190 @@
+version: "3.8"
+services:
+  billing-handler:
+    build:
+      context: ./main/billing-handler
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 6803:3000
+    environment:
+      - APP_PORT=3000
+    networks:
+      - smartcity-al-b-network-dev
+
+  car-tracker:
+    build:
+      context: ./main/car-tracker
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 6804:3000
+    environment:
+      - APP_PORT=3000
+    networks:
+      - smartcity-al-b-network-dev
+
+  pollution-zone-aggregator:
+    build:
+      context: ./main/pollution-zone-aggregator
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 6805:3000
+    environment:
+      - APP_PORT=3000
+    networks:
+      - smartcity-al-b-network-dev
+
+  position-checker:
+    build:
+      context: ./main/position-checker
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 6806:3000
+    environment:
+      - APP_PORT=3000
+    networks:
+      - smartcity-al-b-network-dev
+
+  tracking-shutdown:
+    build:
+      context: ./main/tracking-shutdown
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 6807:3000
+    environment:
+      - APP_PORT=3000
+    networks:
+      - smartcity-al-b-network-dev
+
+  user-client:
+    build:
+      context: ./main/user-client
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 6808:3000
+    environment:
+      - APP_PORT=3000
+    networks:
+      - smartcity-al-b-network-dev
+
+  mock-camera-checker:
+    build:
+      context: ./mocks/camera-checker
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 6809:3000
+    environment:
+      - APP_PORT=3000
+    networks:
+      - smartcity-al-b-network-dev
+
+  mock-pollution-zones-emitter:
+    build:
+      context: ./mocks/pollution-zones-emitter
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 6810:3000
+    environment:
+      - APP_PORT=3000
+    networks:
+      - smartcity-al-b-network-dev
+
+  database:
+    image: "mongo:6.0.2"
+    restart: always
+    ports:
+      - 27017:27017
+    networks:
+      - smartcity-al-b-network-dev
+
+  car-tracker-bus:
+    image: 'rabbitmq:3-management'
+    container_name: car-tracker-bus
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
+    ports:
+      - 5672:5672
+      - 15692:15692
+    networks:
+      - smartcity-al-b-network-dev
+
+  # setting up the mongodb exporter service. exposing the port 9001
+  mongo-exporter:
+    restart: 'always'
+    ports:
+      - '9001:9001'
+    image: gpuliyar/mongo-exporter
+    environment:
+      - 'MONGO_SERVICE=database'
+      - 'MONGO_PORT=27017'
+    depends_on:
+      - database
+    networks:
+      - smartcity-al-b-network-dev
+
+
+  alertmanager:
+    container_name: alertmanager
+    hostname: alertmanager
+    image: prom/alertmanager
+    user: "$UID:$GID"
+    volumes:
+      - ./monitoring/alertmanager.conf:/etc/alertmanager/alertmanager.conf
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.conf'
+    ports:
+      - 9093:9093
+    networks:
+      - smartcity-al-b-network-dev
+
+  prometheus:
+    container_name: prometheus
+    hostname: prometheus
+    image: prom/prometheus
+    user: "$UID:$GID"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
+      - ./monitoring/prometheus_volume:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    links:
+      - alertmanager:alertmanager
+    ports:
+      - 9090:9090
+    networks:
+      - smartcity-al-b-network-dev
+
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    image: grafana/grafana
+    user: "$UID:$GID"
+    volumes:
+      - ./monitoring/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
+      - ./monitoring/grafana_config.ini:/etc/grafana/config.ini
+      - ./monitoring/grafana_volume:/var/lib/grafana
+    ports:
+      - 3000:3000
+    networks:
+      - smartcity-al-b-network-dev
+
+networks:
+  smartcity-al-b-network-dev:
+    driver: bridge
