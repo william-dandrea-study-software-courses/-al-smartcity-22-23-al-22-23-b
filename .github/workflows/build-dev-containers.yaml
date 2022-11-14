@@ -9,5 +9,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the development billing handler
-        working-directory: ./gateway
-        run: docker build --target development -f project/docker-compose-dev.yml -t "billing-handler" .
+        working-directory: ./project
+        run: docker-compose --file ./docker-compose-dev.yml build billing-handler
