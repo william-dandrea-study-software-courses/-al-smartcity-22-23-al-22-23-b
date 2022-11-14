@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {Logger} from "@nestjs/common";
-import {AppController} from "./app.controller";
 import {MicroserviceOptions, Transport} from "@nestjs/microservices";
 
 const logger = new Logger();

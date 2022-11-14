@@ -9,3 +9,5 @@ then
 fi
 
 docker-compose --project-name smartcity-dev --file ./docker-compose-dev.yml up -d
+
+# docker exec -it car-tracker-bus rabbitmq-plugins enable rabbitmq_prometheus

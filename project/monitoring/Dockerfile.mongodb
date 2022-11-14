@@ -1,0 +1,9 @@
+FROM mongo:6.0.2
+
+RUN mongosh &&\
+    use admin &&\
+    db.createUser({user: "exporter", pwd: "password", roles: [ { role: "clusterMonitor", db: "admin" }, { role: "read", db: "local" } ] } )
+
+EXPOSE 27017
+
+CMD ["mongosh"]
