@@ -3,7 +3,7 @@ POST http://localhost:6808/start-car
 Content-Type: application/json
 
 {
-  "license_plate": "VB-947-SD"
+  "license_plate": "10"
 }
 
 ### Edit interval for cart
@@ -11,8 +11,8 @@ POST http://localhost:6808/edit-request-interval
 Content-Type: application/json
 
 {
-  "license_plate": "VB-947-SD",
-  "interval": 0.01
+  "license_plate": "10",
+  "interval": 0.1
 }
 
 ### Stop car
@@ -20,5 +20,5 @@ POST http://localhost:6808/stop-car
 Content-Type: application/json
 
 {
-  "license_plate": "VB-947-SD"
+  "license_plate": "10"
 }

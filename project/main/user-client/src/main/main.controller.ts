@@ -12,7 +12,6 @@ export class MainController {
     getHello(): string {
         return this.appService.getHello();
     }
-
     @Post("/start-car")
     async startCar(@Body() body: {license_plate: string}) {
         return this.appService.startCar(body.license_plate);
