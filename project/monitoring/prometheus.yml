@@ -43,3 +43,6 @@ scrape_configs:
   - job_name: 'car-tracker-bus'
     static_configs:
       - targets: [ 'car-tracker-bus:15692' ]
+  - job_name: mongodb
+    static_configs:
+      - targets: [ 'mongo-exporter:9001' ]

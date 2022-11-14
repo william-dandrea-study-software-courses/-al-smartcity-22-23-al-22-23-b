@@ -12,7 +12,7 @@ Content-Type: application/json
 
 {
   "license_plate": "VB-947-SD",
-  "interval": 0.5
+  "interval": 0.01
 }
 
 ### Stop car

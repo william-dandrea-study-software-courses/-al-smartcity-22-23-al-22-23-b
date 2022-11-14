@@ -156,13 +156,26 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-
+  # setting up the mongodb exporter service. exposing the port 9001
+  mongo-exporter:
+    restart: 'always'
+    ports:
+      - '9001:9001'
+    image: gpuliyar/mongo-exporter
+    environment:
+      - 'MONGO_SERVICE=database'
+      - 'MONGO_PORT=27017'
+    depends_on:
+      - database
+    networks:
+      - smartcity-al-b-network-dev
 
 
   alertmanager:
     container_name: alertmanager
     hostname: alertmanager
     image: prom/alertmanager
+    user: "472"
     volumes:
       - ./monitoring/alertmanager.conf:/etc/alertmanager/alertmanager.conf
     command:
@@ -176,6 +189,7 @@ services:
     container_name: prometheus
     hostname: prometheus
     image: prom/prometheus
+    user: "472"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
@@ -193,6 +207,7 @@ services:
     container_name: grafana
     hostname: grafana
     image: grafana/grafana
+    user: "472"
     volumes:
       - ./monitoring/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
       - ./monitoring/grafana_config.ini:/etc/grafana/config.ini
