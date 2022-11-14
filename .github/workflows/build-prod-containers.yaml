@@ -1,67 +1,67 @@
-name: "Build Dev docker containers"
+name: "Build Prod docker containers"
 
 on: [push, pull_request]
 
 jobs:
-  build-billing-handler-dev:
+  build-billing-handler-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the development billing handler
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build billing-handler
+        run: docker-compose --file ./docker-compose-prod.yml build billing-handler
 
-  build-car-tracker-dev:
+  build-car-tracker-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the development car-tracker
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build car-tracker
+        run: docker-compose --file ./docker-compose-prod.yml build car-tracker
 
-  build-pollution-zone-aggregatorr-dev:
+  build-pollution-zone-aggregatorr-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the development pollution-zone-aggregator
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build pollution-zone-aggregator
+        run: docker-compose --file ./docker-compose-prod.yml build pollution-zone-aggregator
 
-  build-position-checker-dev:
+  build-position-checker-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the development position-checker
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build position-checker
+        run: docker-compose --file ./docker-compose-prod.yml build position-checker
 
-  build-tracking-shutdown-dev:
+  build-tracking-shutdown-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the development tracking-shutdown
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build tracking-shutdown
+        run: docker-compose --file ./docker-compose-prod.yml build tracking-shutdown
 
-  build-mock-camera-checker-dev:
+  build-mock-camera-checker-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the development mock-camera-checker
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build mock-camera-checker
+        run: docker-compose --file ./docker-compose-prod.yml build mock-camera-checker
 
-  build-mock-pollution-zones-emitter-dev:
+  build-mock-pollution-zones-emitter-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the development mock-pollution-zones-emitter
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build mock-pollution-zones-emitter
+        run: docker-compose --file ./docker-compose-prod.yml build mock-pollution-zones-emitter
