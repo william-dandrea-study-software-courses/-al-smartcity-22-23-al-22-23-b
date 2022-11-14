@@ -109,6 +109,10 @@ services:
     restart: always
     ports:
       - 27017:27017
+    volumes:
+      - ./data:/data/db
+    # command:
+    # - 'mongosh && use admin && db.createUser({user: "exporter", pwd: "password", roles: [ { role: "clusterMonitor", db: "admin" }, { role: "read", db: "local" } ] } )'
     networks:
       - smartcity-al-b-network-dev
 
@@ -128,11 +132,14 @@ services:
   mongo-exporter:
     restart: 'always'
     ports:
-      - '9001:9001'
-    image: gpuliyar/mongo-exporter
+      - '9216:9216'
+    image: percona/mongodb_exporter:2.32
     environment:
-      - 'MONGO_SERVICE=database'
-      - 'MONGO_PORT=27017'
+      - MONGODB_URI=mongodb://exporter:password@database:27017
+      #- 'MONGO_SERVICE=database'
+      #- 'MONGO_PORT=27017'
+    command:
+      - '--mongodb.uri=mongodb://exporter:password@database:27017'
     depends_on:
       - database
     networks:

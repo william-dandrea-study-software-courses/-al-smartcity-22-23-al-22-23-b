@@ -1,0 +1,11 @@
+)
+  }
+    ]
+        { role: "read", db: "local" }
+        { role: "clusterMonitor", db: "admin" },
+    roles: [
+    pwd: "password",
+    user: "exporter",
+  {
+db.createUser(
+use admin
