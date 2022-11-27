@@ -1,7 +1,30 @@
-# Architecture logicielle: Construction
+# Architecture logicielle: Evolution
 
 > Sujet V6: Pay as you pollute: real-time billing of car depending on car categories and dynamic city zones they travel in.
 > Equipe b: Guillaume Piccina, Willian d'Andrea, Nicolas Fernandez, Yann Brault
+
+## Status semaine 47, 22/11
+
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Flag d'avancement <img src="./flags/green_flag.png" width="20" height="20" >
+
+### Points validés cette semaine:
+
+- Première phase de discussion sur l'intégration des composants permettant de répondre aux nouveaux besoins
+- Suppression du service Zone pollution faisant le relais entre car tracker et le service externe comme vu en soutenance
+
+### Points de difficultés cette semaine:
+
+- Comment faire remonter de l'info du système vers l'utilisateur, par exemple comment envoyer un trajet à un utilisateur, ou des infos concernant son trajet
+- Comment garder l'adresse IP d'un utilisateur
+
+### Pour la semaine suivante:
+
+- Finir un premier découpage
+- Etudier différences Kafka / Rabbit et voir lequel convient le mieux aux nouveaux besoins
+
+=============================================================================
 
 ## Status semaine 44, semaine de pause pédagogique
 
