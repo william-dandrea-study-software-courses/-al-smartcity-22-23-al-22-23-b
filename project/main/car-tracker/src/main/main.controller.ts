@@ -1,4 +1,4 @@
-import {Controller, Get, Logger} from '@nestjs/common';
+import {Controller, Get, Logger, Post, Query} from '@nestjs/common';
 import {EventPattern} from "@nestjs/microservices";
 import {MainService} from "./main.service";
 
@@ -8,10 +8,13 @@ export class MainController {
 
     constructor(private readonly appService: MainService) { }
 
-    @Get("/")
-    getHello(): string {
-        return this.appService.getHello();
+
+    @Post("zone")
+    getZone(@Query() query: {long: number,  lat: number}) {
+        return this.appService.getZone(query.long, query.lat)
     }
+
+
     @EventPattern('car-shutdown')
     async handleCarShutdown(data: Record<string, string>) {
         this.logger.log('car-shutdown ', data)
@@ -26,4 +29,8 @@ export class MainController {
         const zone = await this.appService.getZonePollution(data.location['lon'], data.location['lat']);
         this.appService.addPosition(data.license_plate, zone, data.time);
     }
+
+
+
+
 }

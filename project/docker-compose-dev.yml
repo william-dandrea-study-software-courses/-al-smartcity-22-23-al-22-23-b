@@ -53,7 +53,7 @@ services:
 
   position-checker:
     build:
-      context: ./main/position-checker
+      context: main/anti-fraud-analyzer
       dockerfile: ./Dockerfile
       target: development
     restart: always
@@ -87,7 +87,7 @@ services:
 
   user-client:
     build:
-      context: ./main/user-client
+      context: main/user-client-old
       dockerfile: ./Dockerfile
       target: development
     restart: always
@@ -121,7 +121,7 @@ services:
 
   mock-pollution-zones-emitter:
     build:
-      context: ./mocks/pollution-zones-emitter
+      context: mocks/zones-pollution-extern
       dockerfile: ./Dockerfile
       target: development
     restart: always
