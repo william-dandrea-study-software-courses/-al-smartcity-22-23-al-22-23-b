@@ -6,23 +6,17 @@ import {Transport} from "@nestjs/microservices";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  const listOfConsumersQueues = []
-
-  if (listOfConsumersQueues.length > 0) {
-    for (const queue of listOfConsumersQueues) {
-      await app.connectMicroservice({
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://admin:admin@car-tracker-bus:5672'],
-          queue,
-          queueOptions: {
-            durable: false
-          },
-        },
-      });
-    }
-  }
+  await app.connectMicroservice({
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+        brokers: ['kafka-event-bus:9092'],
+      },
+      consumer: {
+        groupId: 'anti-fraud-consumer',
+      },
+    },
+  });
   await app.startAllMicroservices();
 
   const port: number = Number(process.env.APP_PORT);

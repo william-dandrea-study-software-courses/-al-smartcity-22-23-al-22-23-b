@@ -9,7 +9,9 @@ export class MainController {
     constructor(private readonly appService: MainService) { }
 
     @Get('')
-    getHello(): string {
-        return this.appService.getHello();
+    async getHello(): Promise<string> {
+        return await this.appService.getHello();
     }
+
+
 }

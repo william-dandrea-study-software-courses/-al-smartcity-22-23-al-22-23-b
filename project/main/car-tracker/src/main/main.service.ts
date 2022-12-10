@@ -3,7 +3,7 @@ import {InjectModel} from "@nestjs/mongoose";
 import {CarPosition, CarPositionDocument} from "./schema/car-position.schema";
 import {Model} from "mongoose";
 import {HttpService} from "@nestjs/axios";
-import {ClientProxy} from "@nestjs/microservices";
+import {ClientKafka, ClientProxy} from "@nestjs/microservices";
 import {PollutionZone} from "./schema/pollution-zone.schema";
 
 @Injectable()
@@ -39,7 +39,9 @@ export class MainService {
         @Inject('RABBITMQ_SERVICE_TRACKING_SHUTDOWN') private trackingShutdownClient: ClientProxy,
     ) { }
 
-
+    receiveNewPosition(data: any) {
+        console.log(data);
+    }
 
     addPosition(license_plate: string, zone: string, time: string): Promise<CarPosition> {
         this.logger.log(`Car ${license_plate} in zone ${zone} saved in db`);
@@ -111,4 +113,6 @@ export class MainService {
     public get isConnected(): boolean {
         return true;
     }
+
+
 }

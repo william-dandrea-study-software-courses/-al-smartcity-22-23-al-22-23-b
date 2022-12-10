@@ -6,7 +6,6 @@ import {ClientsModule, Transport} from "@nestjs/microservices";
 
 @Module({
   imports: [
-
     HttpModule
   ],
   controllers: [MainController],

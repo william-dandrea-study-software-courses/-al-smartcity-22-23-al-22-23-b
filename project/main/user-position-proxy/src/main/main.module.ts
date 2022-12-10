@@ -6,8 +6,22 @@ import {ClientsModule, Transport} from "@nestjs/microservices";
 
 @Module({
   imports: [
-
-    HttpModule
+    HttpModule,
+    ClientsModule.register([
+      {
+        name: 'USER_POSITION_BUS',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'position',
+            brokers: ['kafka-event-bus:9092']
+          },
+          consumer: {
+            groupId: 'user-position-proxy-consumer'
+          }
+        }
+      }
+    ]),
   ],
   controllers: [MainController],
   providers: [MainService],

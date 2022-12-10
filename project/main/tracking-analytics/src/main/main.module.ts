@@ -3,11 +3,14 @@ import { MainController } from './main.controller';
 import { MainService } from './main.service';
 import {HttpModule} from "@nestjs/axios";
 import {ClientsModule, Transport} from "@nestjs/microservices";
+import {MongooseModule} from "@nestjs/mongoose";
+import {Statistics, StatisticsSchema} from "./schema/statistics-schema.schema";
 
 @Module({
   imports: [
-
-    HttpModule
+      MongooseModule.forRoot('mongodb://car-statistics-database:27021/statistics'),
+      MongooseModule.forFeature([{name: Statistics.name, schema: StatisticsSchema, collection: 'statistics'}]),
+      HttpModule
   ],
   controllers: [MainController],
   providers: [MainService],

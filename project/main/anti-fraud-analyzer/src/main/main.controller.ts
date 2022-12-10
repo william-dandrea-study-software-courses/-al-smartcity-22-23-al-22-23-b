@@ -8,6 +8,11 @@ export class MainController {
 
     constructor(private readonly appService: MainService) { }
 
+    @EventPattern('position_pattern')
+    public receiveNewPosition(data: any) {
+        console.log(data);
+    }
+
     @Get('')
     getHello(): string {
         return this.appService.getHello();
