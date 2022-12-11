@@ -1,6 +1,5 @@
-import {Controller, Get, Logger, Post, Query} from '@nestjs/common';
-import {EventPattern} from "@nestjs/microservices";
-import {MainService} from "./main.service";
+import { Controller, Get, Logger } from '@nestjs/common';
+import { MainService } from "./main.service";
 
 @Controller('')
 export class MainController {
@@ -8,13 +7,9 @@ export class MainController {
 
     constructor(private readonly appService: MainService) { }
 
-    @Get('')
-    getHello(): string {
-        return this.appService.getHello();
+    @Get("/zones")
+    getZones() {
+        return this.appService.getZones();
     }
 
-    @Get("/zone")
-    async getZone(@Query() lon: number, @Query() lat: number): Promise<string> {
-        return "1";
-    }
 }

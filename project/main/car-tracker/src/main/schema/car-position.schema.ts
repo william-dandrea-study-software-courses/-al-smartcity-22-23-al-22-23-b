@@ -15,4 +15,4 @@ export class CarPosition {
     time: string;
 }
 
-export const CarPositionSchema = SchemaFactory.createForClass(CarPosition); 
+export const CarPositionSchema = SchemaFactory.createForClass(CarPosition);

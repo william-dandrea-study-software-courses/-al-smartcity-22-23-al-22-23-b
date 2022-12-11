@@ -44,6 +44,7 @@ services:
     ports:
       - 6803:3000
     environment:
+      - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
       - APP_PORT=3000
     volumes:
       - ./main/car-tracker:/usr/src/app
@@ -203,12 +204,6 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-
-
-
-
-
-
   tracking-infos-database:
     image: "mongo:6.0.2"
     restart: always
@@ -239,9 +234,6 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-
-
-
   tracking-shutdown-queue:
     image: 'rabbitmq:3-management'
     container_name: car-tracker-bus
@@ -253,8 +245,6 @@ services:
       - 15692:15692
     networks:
       - smartcity-al-b-network-dev
-
-
 
   zookeeper:
     container_name: smart-city-dev-zookeeper
@@ -284,18 +274,6 @@ services:
       - 9092
     networks:
       - smartcity-al-b-network-dev
-
-
-
-
-
-
-
-
-
-
-
-
 
 #  # setting up the mongodb exporter service. exposing the port 9001
 #  mongo-exporter:
@@ -364,8 +342,3 @@ services:
 networks:
   smartcity-al-b-network-dev:
     driver: bridge
-
-
-
-
-
