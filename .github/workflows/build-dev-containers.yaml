@@ -100,7 +100,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Build the development zones-pollution-extern
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build pollution-zones-extern
+        run: docker-compose --file ./docker-compose-dev.yml build zones-pollution-extern
 
   build-user-client-dev:
     runs-on: ubuntu-latest
