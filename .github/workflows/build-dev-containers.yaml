@@ -84,23 +84,23 @@ jobs:
         working-directory: ./project
         run: docker-compose --file ./docker-compose-dev.yml build user-position-proxy
 
-  build-mock-camera-checker-dev:
+  build-camera-checker-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development mock-camera-checker
+      - name: Build the development camera-checker
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build mock-camera-checker
+        run: docker-compose --file ./docker-compose-dev.yml build camera-checker
 
-  build-mock-zones-pollution-extern-dev:
+  build-zones-pollution-extern-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development mock-zones-pollution-extern
+      - name: Build the development zones-pollution-extern
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build mock-pollution-zones-emitter
+        run: docker-compose --file ./docker-compose-dev.yml build pollution-zones-extern
 
   build-user-client-dev:
     runs-on: ubuntu-latest
