@@ -3,7 +3,7 @@ name: "Build Dev docker containers"
 on: [push, pull_request]
 
 jobs:
- build-anti-fraud-analyzer-dev:
+  build-anti-fraud-analyzer-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -11,7 +11,7 @@ jobs:
       - name: Build the development anti-fraud-analyzer
         working-directory: ./project
         run: docker-compose --file ./docker-compose-dev.yml build anti-fraud-analyzer
-
+ 
   build-billing-handler-dev:
     runs-on: ubuntu-latest
     steps:
