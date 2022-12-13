@@ -3,12 +3,21 @@ name: "Build Dev docker containers"
 on: [push, pull_request]
 
 jobs:
+ build-anti-fraud-analyzer-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the development anti-fraud-analyzer
+        working-directory: ./project
+        run: docker-compose --file ./docker-compose-dev.yml build anti-fraud-analyzer
+
   build-billing-handler-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development billing handler
+      - name: Build the development billing-handler
         working-directory: ./project
         run: docker-compose --file ./docker-compose-dev.yml build billing-handler
 
@@ -21,23 +30,32 @@ jobs:
         working-directory: ./project
         run: docker-compose --file ./docker-compose-dev.yml build car-tracker
 
-  build-pollution-zone-aggregatorr-dev:
+  build-client-communication-service-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development pollution-zone-aggregator
+      - name: Build the development client-communication-service
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build pollution-zone-aggregator
+        run: docker-compose --file ./docker-compose-dev.yml build client-communication-service
 
-  build-position-checker-dev:
+  build-route-advisor-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development position-checker
+      - name: Build the development route-advisor
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build position-checker
+        run: docker-compose --file ./docker-compose-dev.yml build route-advisor
+
+  build-tracking-analytics-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the development tracking-analytics
+        working-directory: ./project
+        run: docker-compose --file ./docker-compose-dev.yml build tracking-analytics
 
   build-tracking-shutdown-dev:
     runs-on: ubuntu-latest
@@ -48,6 +66,24 @@ jobs:
         working-directory: ./project
         run: docker-compose --file ./docker-compose-dev.yml build tracking-shutdown
 
+  build-user-configurator-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the development user-configurator
+        working-directory: ./project
+        run: docker-compose --file ./docker-compose-dev.yml build user-configurator
+
+  build-user-position-proxy-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the development user-position-proxy
+        working-directory: ./project
+        run: docker-compose --file ./docker-compose-dev.yml build user-position-proxy
+
   build-mock-camera-checker-dev:
     runs-on: ubuntu-latest
     steps:
@@ -57,11 +93,21 @@ jobs:
         working-directory: ./project
         run: docker-compose --file ./docker-compose-dev.yml build mock-camera-checker
 
-  build-mock-pollution-zones-emitter-dev:
+  build-mock-zones-pollution-extern-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development mock-pollution-zones-emitter
+      - name: Build the development mock-zones-pollution-extern
         working-directory: ./project
         run: docker-compose --file ./docker-compose-dev.yml build mock-pollution-zones-emitter
+
+  build-user-client-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the development user-client
+        working-directory: ./project
+        run: docker-compose --file ./docker-compose-dev.yml build user-client
+
