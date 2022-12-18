@@ -1,10 +1,10 @@
 import React from "react";
 import { StartStop } from "../components";
 
-const PageTable = () => {
+const NavPage = () => {
   console.log("in home page");
 
   return <StartStop />;
 };
 
-export default PageTable;
+export default NavPage;
