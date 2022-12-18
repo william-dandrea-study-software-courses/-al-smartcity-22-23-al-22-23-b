@@ -13,6 +13,7 @@
 
 - Mise à disposition des données pour faire des analyses statistiques
 - Scénario équivalent à la précédente partie mais incluant les nouveaux composants et kafka
+- Service anti fraude
 
 ### Points non validés cette semaine :
 
