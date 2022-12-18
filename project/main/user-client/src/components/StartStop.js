@@ -15,15 +15,15 @@ const StartStop = () => {
     NavigationService.stopNavigation().then(() => {
       setCarMoving(false);
     });
-  });
+  }, []);
 
   return (
     <Card variant="contained">
       <CardActions>
-        <Button size="small" color={"success"} onClick={handleStartNav}>
+        <Button size="small" color={"success"} onClick={() => handleStartNav()}>
           Start Navigation
         </Button>
-        <Button size="small" color={"error"} onClick={removeC}>
+        <Button size="small" color={"error"} onClick={() => handleStopNav()}>
           Stop Navigation
         </Button>
       </CardActions>

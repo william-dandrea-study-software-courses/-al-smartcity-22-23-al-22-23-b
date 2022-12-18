@@ -3,6 +3,28 @@
 > Sujet V6: Pay as you pollute: real-time billing of car depending on car categories and dynamic city zones they travel in.
 > Equipe b: Guillaume Piccina, Willian d'Andrea, Nicolas Fernandez, Yann Brault
 
+## Status semaine 50,13/12
+
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Flag d'avancement <img src="./flags/green_flag.png" width="20" height="20" >
+
+### Points validés cette semaine:
+
+- Mise à disposition des données pour faire des analyses statistiques
+- Scénario équivalent à la précédente partie mais incluant les nouveaux composants et kafka
+
+### Points non validés cette semaine :
+
+- Faire d'autres ADR
+
+### Pour la semaine suivante:
+
+- Continuer à rédiger des ADR par rapport aux choix d'architecture qui ont été fait
+- Implémenter les composants annexes pour répondre à tous les besoins
+
+=============================================================================
+
 ## Status semaine 49, 06/12
 
 - [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
@@ -26,8 +48,7 @@
 ### Pour la semaine suivante:
 
 - Continuer à rédiger des ADR par rapport aux choix d'architecture qui ont été fait
-- Avoir un scénario totalement traversant 
-
+- Avoir un scénario totalement traversant
 
 =============================================================================
 
