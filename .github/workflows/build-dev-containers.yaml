@@ -11,7 +11,7 @@ jobs:
       - name: Build the development anti-fraud-analyzer
         working-directory: ./project
         run: docker-compose --file ./docker-compose-dev.yml build anti-fraud-analyzer
- 
+
   build-billing-handler-dev:
     runs-on: ubuntu-latest
     steps:
@@ -35,7 +35,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development client-communication-service
+      - name: Build the productdevelopment-communication-service
         working-directory: ./project
         run: docker-compose --file ./docker-compose-dev.yml build client-communication-service
 
@@ -98,16 +98,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development zones-pollution-extern
+      - name: Build the producdevelopment-pollution-extern
         working-directory: ./project
         run: docker-compose --file ./docker-compose-dev.yml build zones-pollution-extern
-
-  build-user-client-dev:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Build the development user-client
-        working-directory: ./project
-        run: docker-compose --file ./docker-compose-dev.yml build user-client
 

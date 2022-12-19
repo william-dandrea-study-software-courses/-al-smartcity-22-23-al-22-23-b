@@ -4,9 +4,8 @@ services:
     build:
       context: ./main/anti-fraud-analyzer
       dockerfile: ./Dockerfile
-      target: development
+      target: production
     restart: always
-    command: npm run start:dev
     ports:
       - 6801:3000
     environment:
@@ -18,7 +17,7 @@ services:
     build:
       context: ./main/billing-handler
       dockerfile: ./Dockerfile
-      target: development
+      target: production
     restart: always
     command: npm run start:dev
     ports:
@@ -32,7 +31,7 @@ services:
     build:
       context: ./main/car-tracker
       dockerfile: ./Dockerfile
-      target: development
+      target: production
     restart: always
     command: npm run start:dev
     ports:
@@ -47,7 +46,7 @@ services:
     build:
       context: ./main/client-communication-service
       dockerfile: ./Dockerfile
-      target: development
+      target: production
     restart: always
     command: npm run start:dev
     ports:
@@ -61,7 +60,7 @@ services:
     build:
       context: ./main/route-advisor
       dockerfile: ./Dockerfile
-      target: development
+      target: production
     restart: always
     command: npm run start:dev
     ports:
@@ -75,7 +74,7 @@ services:
     build:
       context: ./main/tracking-analytics
       dockerfile: ./Dockerfile
-      target: development
+      target: production
     restart: always
     command: npm run start:dev
     ports:
@@ -89,7 +88,7 @@ services:
     build:
       context: ./main/tracking-shutdown
       dockerfile: ./Dockerfile
-      target: development
+      target: production
     restart: always
     command: npm run start:dev
     ports:
@@ -103,7 +102,7 @@ services:
     build:
       context: ./main/user-configurator
       dockerfile: ./Dockerfile
-      target: development
+      target: production
     restart: always
     command: npm run start:dev
     ports:
@@ -117,7 +116,7 @@ services:
     build:
       context: ./main/user-position-proxy
       dockerfile: ./Dockerfile
-      target: development
+      target: production
     restart: always
     command: npm run start:dev
     ports:
@@ -131,7 +130,7 @@ services:
     build:
       context: ./mocks/camera-checker
       dockerfile: ./Dockerfile
-      target: development
+      target: production
     restart: always
     command: npm run start:dev
     ports:
@@ -145,7 +144,7 @@ services:
     build:
       context: ./mocks/zones-pollution-extern
       dockerfile: ./Dockerfile
-      target: development
+      target: production
     restart: always
     command: npm run start:dev
     ports:
