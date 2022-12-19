@@ -13,6 +13,7 @@ export class MainController {
         return this.appService.getHello();
     }
 
+
     @EventPattern('real-car-shutdown')
     async handleCarShutdownEvent(data: Record<string, unknown>) {
         this.logger.log(data);

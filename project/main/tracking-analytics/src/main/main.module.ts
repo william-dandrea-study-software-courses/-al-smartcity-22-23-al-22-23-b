@@ -8,7 +8,7 @@ import {Statistics, StatisticsSchema} from "./schema/statistics-schema.schema";
 
 @Module({
   imports: [
-      MongooseModule.forRoot('mongodb://car-statistics-database:27021/statistics'),
+      MongooseModule.forRoot('mongodb://car-statistics-database:27021'),
       MongooseModule.forFeature([{name: Statistics.name, schema: StatisticsSchema, collection: 'statistics'}]),
       HttpModule
   ],

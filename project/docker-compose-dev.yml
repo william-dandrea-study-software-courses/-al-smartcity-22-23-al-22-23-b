@@ -194,6 +194,7 @@ services:
       dockerfile: ./Dockerfile
       target: development
     restart: always
+    command: npm run start
     environment:
       - APP_ENV=dev
     ports:
@@ -205,32 +206,32 @@ services:
       - smartcity-al-b-network-dev
 
   tracking-infos-database:
-    image: "mongo:6.0.2"
+    image: "mongo:4.4.15"
     restart: always
     ports:
       - 27020:27017
-    volumes:
-      - './monitoring/dev/tracking-infos-database:/data/db'
+    # volumes:
+    #   - './monitoring/dev/tracking-infos-database:/data/db'
     networks:
       - smartcity-al-b-network-dev
 
   car-statistics-database:
-    image: "mongo:6.0.2"
+    image: "mongo:4.4.15"
     restart: always
     ports:
       - 27021:27017
-    volumes:
-      - './monitoring/dev/car-statistics-database:/data/db'
+    # volumes:
+    #   - './monitoring/dev/car-statistics-database:/data/db'
     networks:
       - smartcity-al-b-network-dev
 
   bills-database:
-    image: "mongo:6.0.2"
+    image: "mongo:4.4.15"
     restart: always
     ports:
       - 27022:27017
-    volumes:
-      - './monitoring/dev/bills-database:/data/db'
+    # volumes:
+    #   - './monitoring/dev/bills-database:/data/db'
     networks:
       - smartcity-al-b-network-dev
 

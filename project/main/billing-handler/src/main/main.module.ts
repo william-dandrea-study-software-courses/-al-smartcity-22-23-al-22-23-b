@@ -8,7 +8,7 @@ import {Bill, BillSchema} from "./schema/bill.schema";
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://bills-database:27022/bill'),
+    MongooseModule.forRoot('mongodb://bills-database:27022'),
     MongooseModule.forFeature([{ name: Bill.name, schema: BillSchema }]),
     HttpModule
   ],
