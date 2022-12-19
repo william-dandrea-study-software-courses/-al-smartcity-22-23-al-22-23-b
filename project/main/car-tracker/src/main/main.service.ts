@@ -1,7 +1,7 @@
 import { CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { InjectModel } from "@nestjs/mongoose";
-import { CarPosition, CarPositionDocument } from "./schema/car-position.schema";
+import {CarPosition, CarPositionDocument, PositionType} from "./schema/car-position.schema";
 import { Model } from "mongoose";
 import { HttpService } from "@nestjs/axios";
 import { ClientKafka, ClientProxy } from "@nestjs/microservices";
@@ -35,7 +35,7 @@ export class MainService {
         console.log(data);
     }
 
-    addPosition(license_plate: string, long: number, lat: number, time: string): Promise<CarPosition> {
+    addPosition(license_plate: string, long: number, lat: number, time: string, positionType: PositionType): Promise<CarPosition> {
         let zone: number = this.getZone(long, lat);
 
         this.logger.log(`Car ${license_plate} in zone ${zone} saved in db`);
@@ -44,6 +44,7 @@ export class MainService {
             "license_plate": license_plate,
             "zone": zone,
             "time": time,
+            "type": positionType,
         });
         return position.save();
     }

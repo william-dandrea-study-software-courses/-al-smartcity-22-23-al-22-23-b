@@ -39,7 +39,11 @@ export class MainService {
                 }
             })
 
-            this.sendPositionsToNextServices(licensePlate, price, allCarPositions).then()
+            this.sendPositionsToNextServices(licensePlate, price, allCarPositions).then(async () => {
+                await this.carPositionModel.deleteMany({license_plate: licensePlate})
+            }, () => {
+                throw new HttpException("Error during the send to the bill or tracking-shutdown", HttpStatus.UNPROCESSABLE_ENTITY)
+            })
         } else {
             throw new HttpException("Cannot shutdown a car because the license_plate is not given", HttpStatus.UNPROCESSABLE_ENTITY)
         }
@@ -48,6 +52,7 @@ export class MainService {
     public get isConnected(): boolean {
         return true;
     }
+
 
     private sendPositionsToNextServices(licensePlate: string | unknown, price: number, allCarPositions: CarPosition[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {

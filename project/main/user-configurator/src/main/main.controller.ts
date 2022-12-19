@@ -11,6 +11,7 @@ export class MainController {
     @EventPattern('position_pattern')
     public receiveNewPosition(data: any) {
         console.log(data);
+
     }
 
     @Get('')
