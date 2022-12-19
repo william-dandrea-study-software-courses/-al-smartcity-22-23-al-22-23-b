@@ -1,4 +1,5 @@
 import {Inject, Injectable, Logger} from '@nestjs/common';
+import {NewFrequencyDto} from "./dto/new-frequency.dto";
 
 
 @Injectable()
@@ -13,4 +14,7 @@ export class MainService {
         return "Hello World"
     }
 
+    public async newCarFrequency(body: NewFrequencyDto) {
+        this.logger.log(body);
+    }
 }

@@ -1,6 +1,7 @@
 import {Controller, Get, Logger, Post, Query} from '@nestjs/common';
 import {EventPattern} from "@nestjs/microservices";
 import {MainService} from "./main.service";
+import {CarPositionSchema} from "./models/car-position.schema";
 
 @Controller('')
 export class MainController {
@@ -8,14 +9,21 @@ export class MainController {
 
     constructor(private readonly appService: MainService) { }
 
-    @EventPattern('position_pattern')
-    public receiveNewPosition(data: any) {
-        console.log(data);
-
+    @EventPattern('car-position')
+    public async receiveNewPosition(data: CarPositionSchema) {
+        this.logger.log('car-position ', data);
+        await this.appService.newPosition(data);
     }
 
+    @EventPattern('car-start')
+    public async receiveStart(data: CarPositionSchema) {
+        this.logger.log('car-start ', data)
+        await this.appService.newPosition(data);
+    }
+
+    /*
     @Get('')
-    getHello(): string {
-        return this.appService.getHello();
-    }
+    getHello() {
+        return this.appService.getZone();
+    }*/
 }

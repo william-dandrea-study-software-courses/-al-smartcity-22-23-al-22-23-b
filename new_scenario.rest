@@ -10,3 +10,8 @@ Accept: application/json
 ### Send stop to the bus
 GET http://localhost:6809/stop
 Accept: application/json
+
+
+### Test
+GET http://localhost:6808/
+Accept: application/json
