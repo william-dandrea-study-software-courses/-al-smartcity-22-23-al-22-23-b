@@ -1,8 +1,9 @@
-import { Button, Card, CardActions } from "@mui/material";
+import { Button, Card, CardActions, Typography } from "@mui/material";
 import React, { useCallback, useState } from "react";
+import { observer } from "mobx-react-lite";
 import { NavigationService } from "../services/NavigationService";
 
-const StartStop = () => {
+const StartStop = observer(() => {
   const [carMoving, setCarMoving] = useState(false);
 
   const handleStartNav = useCallback(() => {
@@ -18,17 +19,32 @@ const StartStop = () => {
   }, []);
 
   return (
-    <Card variant="contained">
-      <CardActions>
-        <Button size="small" color={"success"} onClick={() => handleStartNav()}>
-          Start Navigation
-        </Button>
-        <Button size="small" color={"error"} onClick={() => handleStopNav()}>
-          Stop Navigation
-        </Button>
-      </CardActions>
-    </Card>
+    <div>
+      {/* <Typography textAlign={"center"} marginBottom={2}>
+        Liste des tables
+      </Typography> */}
+      <Card>
+        <CardActions>
+          <Button
+            size="small"
+            color={"success"}
+            variant="contained"
+            onClick={() => handleStartNav()}
+          >
+            Start Navigation
+          </Button>
+          <Button
+            size="small"
+            color={"error"}
+            variant="contained"
+            onClick={() => handleStopNav()}
+          >
+            Stop Navigation
+          </Button>
+        </CardActions>
+      </Card>
+    </div>
   );
-};
+});
 
 export default StartStop;

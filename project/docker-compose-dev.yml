@@ -188,23 +188,6 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-  user-client:
-    build:
-      context: ./main/user-client
-      dockerfile: ./Dockerfile
-      target: development
-    restart: always
-    command: npm run start
-    environment:
-      - APP_ENV=dev
-    ports:
-      - "6812:80"
-    volumes:
-      - ./main/user-client:/usr/src/app
-      - /usr/src/app/node_modules
-    networks:
-      - smartcity-al-b-network-dev
-
   tracking-infos-database:
     image: "mongo:4.4.15"
     restart: always
