@@ -1,6 +1,5 @@
-
 export class PollutionZone {
-    number:number;
+    number: number;
     centerLong: number;
     centerLat: number;
     radiusStart: number;
