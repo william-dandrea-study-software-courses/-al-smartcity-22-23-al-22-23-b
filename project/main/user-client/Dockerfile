@@ -1,40 +1,28 @@
-
-###############################
-#        PRODUCTION           #
-###############################
-FROM node:16.16.0-alpine As production
-
-# Create app directory
+### STAGE 1: Build ###
+FROM node:lts-alpine as builder
 WORKDIR /usr/src/app
-
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json ./
-
-# Install app dependencies
-RUN npm config set registry http://registry.npmjs.org/
-RUN npm install
-
-# Bundle app source
-COPY . .
-
-# Creates a "dist" folder with the production build
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+COPY package.json /usr/src/app/package.json
+RUN npm install --silent
+RUN npm install react-scripts -g --silent
+COPY . /usr/src/app
 RUN npm run build
 
-# Start the server using the production build
-CMD [ "node", "dist/main.js" ]
+### STAGE 2: Production Environment ###
+FROM nginx:latest as production
+COPY ./nginx/default.conf.template /etc/nginx/templates/default.conf.template
+COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 
-###############################
-#         DEVELOPMENT         #
-###############################
-FROM node:16.16.0-alpine As development
+
+FROM node:lts As development
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-
-RUN npm config set registry http://registry.npmjs.org/
-RUN npm install --only=development
+RUN npm install
 
 COPY . .
 

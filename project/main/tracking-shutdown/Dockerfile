@@ -11,7 +11,6 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install app dependencies
-RUN npm config set registry http://registry.npmjs.org/
 RUN npm install
 
 # Bundle app source
@@ -33,8 +32,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 
-RUN npm config set registry http://registry.npmjs.org/
-RUN npm install --only=development
+RUN npm install
 
 COPY . .
 

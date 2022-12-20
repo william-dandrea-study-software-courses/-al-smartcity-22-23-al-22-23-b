@@ -3,12 +3,21 @@ name: "Build Prod docker containers"
 on: [push, pull_request]
 
 jobs:
+  build-anti-fraud-analyzer-prod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the production anti-fraud-analyzer
+        working-directory: ./project
+        run: docker-compose --file ./docker-compose-prod.yml build anti-fraud-analyzer
+
   build-billing-handler-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development billing handler
+      - name: Build the production billing-handler
         working-directory: ./project
         run: docker-compose --file ./docker-compose-prod.yml build billing-handler
 
@@ -17,51 +26,80 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development car-tracker
+      - name: Build the production car-tracker
         working-directory: ./project
         run: docker-compose --file ./docker-compose-prod.yml build car-tracker
 
-  build-pollution-zone-aggregatorr-prod:
+  build-client-communication-service-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development pollution-zone-aggregator
+      - name: Build the production client-communication-service
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-prod.yml build pollution-zone-aggregator
+        run: docker-compose --file ./docker-compose-prod.yml build client-communication-service
 
-  build-position-checker-prod:
+  build-route-advisor-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development position-checker
+      - name: Build the production route-advisor
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-prod.yml build position-checker
+        run: docker-compose --file ./docker-compose-prod.yml build route-advisor
+
+  build-tracking-analytics-prod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the production tracking-analytics
+        working-directory: ./project
+        run: docker-compose --file ./docker-compose-prod.yml build tracking-analytics
 
   build-tracking-shutdown-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development tracking-shutdown
+      - name: Build the production tracking-shutdown
         working-directory: ./project
         run: docker-compose --file ./docker-compose-prod.yml build tracking-shutdown
 
-  build-mock-camera-checker-prod:
+  build-user-configurator-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development mock-camera-checker
+      - name: Build the production user-configurator
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-prod.yml build mock-camera-checker
+        run: docker-compose --file ./docker-compose-prod.yml build user-configurator
 
-  build-mock-pollution-zones-emitter-prod:
+  build-user-position-proxy-prod:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the development mock-pollution-zones-emitter
+      - name: Build the production user-position-proxy
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-prod.yml build mock-pollution-zones-emitter
+        run: docker-compose --file ./docker-compose-prod.yml build user-position-proxy
+
+  build-camera-checker-prod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the production camera-checker
+        working-directory: ./project
+        run: docker-compose --file ./docker-compose-prod.yml build camera-checker
+
+  build-zones-pollution-extern-prod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the production zones-pollution-extern
+        working-directory: ./project
+        run: docker-compose --file ./docker-compose-prod.yml build zones-pollution-extern
+
+

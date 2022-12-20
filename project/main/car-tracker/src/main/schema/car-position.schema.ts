@@ -13,6 +13,16 @@ export class CarPosition {
 
     @Prop({ required: true })
     time: string;
+
+    @Prop({required: true})
+    type: PositionType;
 }
 
-export const CarPositionSchema = SchemaFactory.createForClass(CarPosition); 
+export const CarPositionSchema = SchemaFactory.createForClass(CarPosition);
+
+
+export enum PositionType {
+    START="START",
+    POSITION="POSITION",
+    STOP="STOP"
+}

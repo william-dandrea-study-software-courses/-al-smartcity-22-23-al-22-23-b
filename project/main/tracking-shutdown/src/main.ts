@@ -14,7 +14,7 @@ async function bootstrap() {
       await app.connectMicroservice({
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://admin:admin@car-tracker-bus:5672'],
+          urls: ['amqp://admin:admin@tracking-shutdown-queue:5672'],
           queue,
           queueOptions: {
             durable: false

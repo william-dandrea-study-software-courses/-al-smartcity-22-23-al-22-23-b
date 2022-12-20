@@ -3,7 +3,7 @@ POST http://localhost:6808/start-car
 Content-Type: application/json
 
 {
-  "license_plate": "DA258EF"
+  "license_plate": "DA267EF"
 }
 
 ### Edit interval for cart
@@ -11,8 +11,8 @@ POST http://localhost:6808/edit-request-interval
 Content-Type: application/json
 
 {
-  "license_plate": "DA258EF",
-  "interval": 1
+  "license_plate": "DA267EF",
+  "interval": 2
 }
 
 ### Stop car
@@ -20,7 +20,7 @@ POST http://localhost:6808/stop-car
 Content-Type: application/json
 
 {
-  "license_plate": "DA258EF"
+  "license_plate": "DA267EF"
 }
 
 ### Get bills
@@ -28,9 +28,9 @@ GET http://localhost:6803/
 Content-Type: application/json
 
 ### Get User billes
-GET http://localhost:6803/user-bills/DA258EF
+GET http://localhost:6803/user-bills/DA267EF
 Content-Type: application/json
 
 ### Pay billes
-PUT http://localhost:6803/pay-bill/63728fa906859d9ecc027400
+PUT http://localhost:6803/pay-bill/6373430b8d4888de71ecb484
 Content-Type: application/json

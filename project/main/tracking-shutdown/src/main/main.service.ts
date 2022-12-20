@@ -22,7 +22,7 @@ export class MainService {
         const licensePlate: string | unknown = data.license_plate;
         const allCarPositions: CarPosition[] = await this.carPositionModel.find({license_plate: licensePlate});
 
-        if (allCarPositions) {
+        if (allCarPositions && licensePlate) {
 
             let price: number = 0;
             allCarPositions.forEach(carPosition => {
@@ -39,11 +39,10 @@ export class MainService {
                 }
             })
 
-            // Send the bills to the bills service & Remove all the elements
-            this.httpService.post('http://billing-handler:3000/new-bill', {'license_plate': licensePlate, 'bill': price}).subscribe(async response => {
-                await this.carPositionModel.deleteMany({license_plate: licensePlate}).exec();
-            }, error => {
-                this.logger.error(`Cannot access to the service http://localhost:6803/new-bill with ${{'license_plate': licensePlate, 'bill': price}} => ${error}`)
+            this.sendPositionsToNextServices(licensePlate, price, allCarPositions).then(async () => {
+                await this.carPositionModel.deleteMany({license_plate: licensePlate})
+            }, () => {
+                throw new HttpException("Error during the send to the bill or tracking-shutdown", HttpStatus.UNPROCESSABLE_ENTITY)
             })
         } else {
             throw new HttpException("Cannot shutdown a car because the license_plate is not given", HttpStatus.UNPROCESSABLE_ENTITY)
@@ -54,4 +53,20 @@ export class MainService {
         return true;
     }
 
+
+    private sendPositionsToNextServices(licensePlate: string | unknown, price: number, allCarPositions: CarPosition[]): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this.httpService.post('http://billing-handler:3000/new-bill', {'license_plate': licensePlate, 'bill': price}).subscribe(result => {
+                this.httpService.post('http://tracking-analytics:3000/new-analytics', {'license_plate': licensePlate, 'bill': price, 'positions': allCarPositions}).subscribe(r => {
+                    resolve()
+                }, error => {
+                    this.logger.error(`Cannot send the bill to tracking-analytics`)
+                    reject()
+                })
+            }, error => {
+                this.logger.error(`Cannot send the bill to billing-handler`)
+                reject()
+            })
+        });
+    }
 }

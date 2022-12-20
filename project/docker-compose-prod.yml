@@ -1,17 +1,31 @@
 version: "3.8"
 services:
+  anti-fraud-analyzer:
+    build:
+      context: ./main/anti-fraud-analyzer
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 6801:3000
+    environment:
+      - APP_PORT=3000
+    networks:
+      - smartcity-al-b-network-prod
+
   billing-handler:
     build:
       context: ./main/billing-handler
       dockerfile: ./Dockerfile
       target: production
     restart: always
+    command: npm run start:dev
     ports:
-      - 6803:3000
+      - 6802:3000
     environment:
       - APP_PORT=3000
     networks:
-      - smartcity-al-b-network-dev
+      - smartcity-al-b-network-prod
 
   car-tracker:
     build:
@@ -19,38 +33,56 @@ services:
       dockerfile: ./Dockerfile
       target: production
     restart: always
+    command: npm run start:dev
+    ports:
+      - 6803:3000
+    environment:
+      - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
+      - APP_PORT=3000
+    networks:
+      - smartcity-al-b-network-prod
+
+  client-communication-service:
+    build:
+      context: ./main/client-communication-service
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    command: npm run start:dev
     ports:
       - 6804:3000
     environment:
       - APP_PORT=3000
     networks:
-      - smartcity-al-b-network-dev
+      - smartcity-al-b-network-prod
 
-  pollution-zone-aggregator:
+  route-advisor:
     build:
-      context: ./main/pollution-zone-aggregator
+      context: ./main/route-advisor
       dockerfile: ./Dockerfile
       target: production
     restart: always
+    command: npm run start:dev
     ports:
       - 6805:3000
     environment:
       - APP_PORT=3000
     networks:
-      - smartcity-al-b-network-dev
+      - smartcity-al-b-network-prod
 
-  position-checker:
+  tracking-analytics:
     build:
-      context: ./main/position-checker
+      context: ./main/tracking-analytics
       dockerfile: ./Dockerfile
       target: production
     restart: always
+    command: npm run start:dev
     ports:
       - 6806:3000
     environment:
       - APP_PORT=3000
     networks:
-      - smartcity-al-b-network-dev
+      - smartcity-al-b-network-prod
 
   tracking-shutdown:
     build:
@@ -58,65 +90,95 @@ services:
       dockerfile: ./Dockerfile
       target: production
     restart: always
+    command: npm run start:dev
     ports:
       - 6807:3000
     environment:
       - APP_PORT=3000
     networks:
-      - smartcity-al-b-network-dev
+      - smartcity-al-b-network-prod
 
-  user-client:
+  user-configurator:
     build:
-      context: ./main/user-client
+      context: ./main/user-configurator
       dockerfile: ./Dockerfile
       target: production
     restart: always
+    command: npm run start:dev
     ports:
       - 6808:3000
     environment:
       - APP_PORT=3000
     networks:
-      - smartcity-al-b-network-dev
+      - smartcity-al-b-network-prod
 
-  mock-camera-checker:
+  user-position-proxy:
     build:
-      context: ./mocks/camera-checker
+      context: ./main/user-position-proxy
       dockerfile: ./Dockerfile
       target: production
     restart: always
+    command: npm run start:dev
     ports:
       - 6809:3000
     environment:
       - APP_PORT=3000
     networks:
-      - smartcity-al-b-network-dev
+      - smartcity-al-b-network-prod
 
-  mock-pollution-zones-emitter:
+  camera-checker:
     build:
-      context: ./mocks/pollution-zones-emitter
+      context: ./mocks/camera-checker
       dockerfile: ./Dockerfile
       target: production
     restart: always
+    command: npm run start:dev
     ports:
       - 6810:3000
     environment:
       - APP_PORT=3000
     networks:
-      - smartcity-al-b-network-dev
+      - smartcity-al-b-network-prod
 
-  database:
-    image: "mongo:6.0.2"
+  zones-pollution-extern:
+    build:
+      context: ./mocks/zones-pollution-extern
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 6811:3000
+    environment:
+      - APP_PORT=3000
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-infos-database:
+    image: "mongo:4.4.15"
     restart: always
     ports:
-      - 27017:27017
-    volumes:
-      - ./data:/data/db
-    # command:
-    # - 'mongosh && use admin && db.createUser({user: "exporter", pwd: "password", roles: [ { role: "clusterMonitor", db: "admin" }, { role: "read", db: "local" } ] } )'
+      - 27020:27017
     networks:
-      - smartcity-al-b-network-dev
+      - smartcity-al-b-network-prod
 
-  car-tracker-bus:
+  car-statistics-database:
+    image: "mongo:4.4.15"
+    restart: always
+    ports:
+      - 27021:27017
+    networks:
+      - smartcity-al-b-network-prod
+
+  bills-database:
+    image: "mongo:4.4.15"
+    restart: always
+    ports:
+      - 27022:27017
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-shutdown-queue:
     image: 'rabbitmq:3-management'
     container_name: car-tracker-bus
     environment:
@@ -126,72 +188,101 @@ services:
       - 5672:5672
       - 15692:15692
     networks:
-      - smartcity-al-b-network-dev
+      - smartcity-al-b-network-prod
 
-  # setting up the mongodb exporter service. exposing the port 9001
-  mongo-exporter:
-    restart: 'always'
-    ports:
-      - '9216:9216'
-    image: percona/mongodb_exporter:2.32
+  zookeeper:
+    container_name: smart-city-dev-zookeeper
+    restart: unless-stopped
+    image: 'wurstmeister/zookeeper'
     environment:
-      - MONGODB_URI=mongodb://exporter:password@database:27017
-      #- 'MONGO_SERVICE=database'
-      #- 'MONGO_PORT=27017'
-    command:
-      - '--mongodb.uri=mongodb://exporter:password@database:27017'
+      zk_id: "1"
+    expose:
+      - 2181
+    networks:
+      - smartcity-al-b-network-prod
+
+  kafka-event-bus:
+    # container_name: soa-team-e-kafka
+    restart: unless-stopped
+    image: 'wurstmeister/kafka'
     depends_on:
-      - database
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka-event-bus
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: smart-city-dev-zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_BROKER_ID: 1
+      KAFKA_CREATE_TOPICS: "topic-poll:1:1,topic-poll-response:1:1,topic-rocket-event:1:1,topic-launch-event:1:1,topic-launch-order:1:1"
+    expose:
+      - 9092
     networks:
-      - smartcity-al-b-network-dev
+      - smartcity-al-b-network-prod
 
-
-  alertmanager:
-    container_name: alertmanager
-    hostname: alertmanager
-    image: prom/alertmanager
-    user: "$UID:$GID"
-    volumes:
-      - ./monitoring/alertmanager.conf:/etc/alertmanager/alertmanager.conf
-    command:
-      - '--config.file=/etc/alertmanager/alertmanager.conf'
-    ports:
-      - 9093:9093
-    networks:
-      - smartcity-al-b-network-dev
-
-  prometheus:
-    container_name: prometheus
-    hostname: prometheus
-    image: prom/prometheus
-    user: "$UID:$GID"
-    volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
-      - ./monitoring/prometheus_volume:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    links:
-      - alertmanager:alertmanager
-    ports:
-      - 9090:9090
-    networks:
-      - smartcity-al-b-network-dev
-
-  grafana:
-    container_name: grafana
-    hostname: grafana
-    image: grafana/grafana
-    user: "$UID:$GID"
-    volumes:
-      - ./monitoring/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
-      - ./monitoring/grafana_config.ini:/etc/grafana/config.ini
-      - ./monitoring/grafana_volume:/var/lib/grafana
-    ports:
-      - 3000:3000
-    networks:
-      - smartcity-al-b-network-dev
+#  # setting up the mongodb exporter service. exposing the port 9001
+#  mongo-exporter:
+#    restart: 'always'
+#    ports:
+#      - '9216:9216'
+#    image: percona/mongodb_exporter:2.32
+#    environment:
+#      - MONGODB_URI=mongodb://exporter:password@database:27017
+#      #- 'MONGO_SERVICE=database'
+#      #- 'MONGO_PORT=27017'
+#    command:
+#      - '--mongodb.uri=mongodb://exporter:password@database:27017'
+#    depends_on:
+#      - database
+#    networks:
+#      - smartcity-al-b-network-prod
+#
+#
+#  alertmanager:
+#    container_name: alertmanager
+#    hostname: alertmanager
+#    image: prom/alertmanager
+#    user: "$UID:$GID"
+#    volumes:
+#      - ./monitoring/alertmanager.conf:/etc/alertmanager/alertmanager.conf
+#    command:
+#      - '--config.file=/etc/alertmanager/alertmanager.conf'
+#    ports:
+#      - 9093:9093
+#    networks:
+#      - smartcity-al-b-network-prod
+#
+#  prometheus:
+#    container_name: prometheus
+#    hostname: prometheus
+#    image: prom/prometheus
+#    user: "$UID:$GID"
+#    volumes:
+#      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+#      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
+#      - ./monitoring/prometheus_volume:/prometheus
+#    command:
+#      - '--config.file=/etc/prometheus/prometheus.yml'
+#    links:
+#      - alertmanager:alertmanager
+#    ports:
+#      - 9090:9090
+#    networks:
+#      - smartcity-al-b-network-prod
+#
+#  grafana:
+#    container_name: grafana
+#    hostname: grafana
+#    image: grafana/grafana
+#    user: "$UID:$GID"
+#    volumes:
+#      - ./monitoring/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
+#      - ./monitoring/grafana_config.ini:/etc/grafana/config.ini
+#      - ./monitoring/grafana_volume:/var/lib/grafana
+#    ports:
+#      - 3000:3000
+#    networks:
+#      - smartcity-al-b-network-prod
 
 networks:
-  smartcity-al-b-network-dev:
+  smartcity-al-b-network-prod:
     driver: bridge

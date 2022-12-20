@@ -1,7 +1,109 @@
-# Architecture logicielle: Construction
+# Architecture logicielle: Evolution
 
 > Sujet V6: Pay as you pollute: real-time billing of car depending on car categories and dynamic city zones they travel in.
 > Equipe b: Guillaume Piccina, Willian d'Andrea, Nicolas Fernandez, Yann Brault
+
+## Status semaine 50,13/12
+
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Flag d'avancement <img src="./flags/green_flag.png" width="20" height="20" >
+
+### Points validés cette semaine:
+
+- Mise à disposition des données pour faire des analyses statistiques
+- Scénario équivalent à la précédente partie mais incluant les nouveaux composants et kafka
+- Service anti fraude
+
+### Points non validés cette semaine :
+
+- Faire d'autres ADR
+
+### Pour la semaine suivante:
+
+- Continuer à rédiger des ADR par rapport aux choix d'architecture qui ont été fait
+- Implémenter les composants annexes pour répondre à tous les besoins
+
+=============================================================================
+
+## Status semaine 49, 06/12
+
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Flag d'avancement <img src="./flags/yellow_flag.png" width="20" height="20" >
+
+### Points validés cette semaine:
+
+- Implémentation de Kafka dans l'architecture
+- Implémentation d'un cache dans le service car-tracker
+- Rédaction d'ADR
+
+### Points non validés cette semaine:
+
+- Avoir un scénario totalement traversant
+
+### Points de difficultés cette semaine:
+
+- On commence à se retrouver avec beaucoup de microservice, peut-être trop (ou pas) ?
+
+### Pour la semaine suivante:
+
+- Continuer à rédiger des ADR par rapport aux choix d'architecture qui ont été fait
+- Avoir un scénario totalement traversant
+
+=============================================================================
+
+## Status semaine 48, 29/11
+
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Flag d'avancement <img src="./flags/yellow_flag.png" width="20" height="20" >
+
+### Points validés cette semaine:
+
+- Solution viable pour faire de la remontée d'informations dans les deux sens
+- Premier découpage fait
+- Transition vers Kafka décidée
+
+### Points non validés cette semaine:
+
+- Faire des ADR
+
+### Points de difficultés cette semaine:
+
+- Concevoir une solution viable pour faire de la remontée d'informations dans les deux sens
+- Solution n'impliquant pas les adresses IP
+
+### Pour la semaine suivante:
+
+- Faire des ADR
+- Commencer l'implémentation des nouveaux composants
+- Transition vers Kafka (faire dans quel sens ?)
+
+=============================================================================
+
+## Status semaine 47, 22/11
+
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Flag d'avancement <img src="./flags/green_flag.png" width="20" height="20" >
+
+### Points validés cette semaine:
+
+- Première phase de discussion sur l'intégration des composants permettant de répondre aux nouveaux besoins
+- Suppression du service Zone pollution faisant le relais entre car tracker et le service externe comme vu en soutenance
+
+### Points de difficultés cette semaine:
+
+- Comment faire remonter de l'info du système vers l'utilisateur, par exemple comment envoyer un trajet à un utilisateur, ou des infos concernant son trajet
+- Comment garder l'adresse IP d'un utilisateur
+
+### Pour la semaine suivante:
+
+- Finir un premier découpage
+- Etudier différences Kafka / Rabbit et voir lequel convient le mieux aux nouveaux besoins
+
+=============================================================================
 
 ## Status semaine 44, semaine de pause pédagogique
 
