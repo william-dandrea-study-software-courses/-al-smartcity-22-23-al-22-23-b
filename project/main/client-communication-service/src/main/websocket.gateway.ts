@@ -23,8 +23,8 @@ export class WebsocketGateway {
         @ConnectedSocket() client: Socket,
     ) {
 
+        console.log(client.handshake.auth.sessionID);
         // this.server.emit('message', message);
-
         return body;
     }
 

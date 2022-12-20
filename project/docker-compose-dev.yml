@@ -218,6 +218,15 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
+  start-stop-database:
+    image: "mongo:4.4.15"
+    restart: always
+    ports:
+      - 27023:27017
+    networks:
+      - smartcity-al-b-network-dev
+
+
   tracking-shutdown-queue:
     image: 'rabbitmq:3-management'
     container_name: car-tracker-bus
