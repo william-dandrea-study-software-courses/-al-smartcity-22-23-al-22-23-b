@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientKafka } from "@nestjs/microservices";
-import { CarPosition } from './schema/car-position.schema';
+import { NewCarPositionDto } from './dto/new-car-position.dto';
 
 
 @Injectable()
@@ -24,7 +24,7 @@ export class MainService {
         return "Hello World"
     }
 
-    public async sendPosition(data: CarPosition): Promise<string> {
+    public async sendPosition(data: NewCarPositionDto): Promise<string> {
         await this.kafkaClient.emit(
             'car-position',
             data
@@ -33,7 +33,7 @@ export class MainService {
         return "Position sent"
     }
 
-    public async sendStart(data: CarPosition): Promise<string> {
+    public async sendStart(data: NewCarPositionDto): Promise<string> {
         await this.kafkaClient.emit(
             'car-start',
             data
@@ -42,7 +42,7 @@ export class MainService {
         return "Start sent"
     }
 
-    public async sendStop(data: CarPosition): Promise<string> {
+    public async sendStop(data: NewCarPositionDto): Promise<string> {
         await this.kafkaClient.emit(
             'car-stop',
             data

@@ -1,7 +1,9 @@
-import { Controller, Get, Logger, Post, Query } from '@nestjs/common';
+import { Controller, Get, Logger, Post, Query, Body } from '@nestjs/common';
 import { EventPattern } from "@nestjs/microservices";
+import { NewCarPositionDto } from './dto/new-car-position.dto';
 import { MainService } from "./main.service";
 import { CarPosition } from './schema/car-position.schema';
+// import { CarPosition } from './schema/car-position.schema';
 
 @Controller('')
 export class MainController {
@@ -14,44 +16,19 @@ export class MainController {
         return await this.appService.getHello();
     }
 
-    @Get('/position')
-    async sendPosition(): Promise<string> {
-        let mockData: CarPosition = {
-            "license_plate": "AA-123-AA",
-            "location": {
-                "lon": 2.345,
-                "lat": 48.856
-            },
-            "time": (new Date()).toISOString()
-        }
-        return await this.appService.sendPosition(mockData);
+    @Post('/position-tracking')
+    public async sendPositionCar(@Body() CarPosition: NewCarPositionDto): Promise<string> {
+        return await this.appService.sendPosition(CarPosition);
     }
 
-    @Get('/start')
-    async sendStart(): Promise<string> {
-        let mockData: CarPosition = {
-            "license_plate": "AA-123-AA",
-            "location": {
-                "lon": 2.345,
-                "lat": 48.856
-            },
-            "time": (new Date()).toISOString()
-        }
-        return await this.appService.sendStart(mockData);
+    @Post('/start')
+    public async sendStartCar(@Body() carPosition: NewCarPositionDto): Promise<string> {
+        return await this.appService.sendStart(carPosition);
     }
 
-    @Get('/stop')
-    async sendStop(): Promise<string> {
-        let mockData: CarPosition = {
-            "license_plate": "AA-123-AA",
-            "location": {
-                "lon": 2.345,
-                "lat": 48.856
-            },
-            "time": (new Date()).toISOString()
-        }
-        return await this.appService.sendStop(mockData);
+    @Post('/stop')
+    public async sendStopCar(@Body() CarPosition: NewCarPositionDto): Promise<string> {
+        return await this.appService.sendStop(CarPosition);
     }
-
 
 }

@@ -7,7 +7,7 @@ const carPosition = () => {
   const newLon = Math.random() * 10;
 
   return {
-    licence_plate: "AA-123-AA",
+    license_plate: "AA-123-AA",
     location: {
       lon: newLon,
       lat: newLat,
@@ -17,12 +17,14 @@ const carPosition = () => {
 };
 
 const startNavigation = () => {
-  const body = carPosition();
-
-  axios.get(`${proxyUrl}start`);
+  const positionBody = carPosition();
+  axios.post(`${proxyUrl}start`, positionBody);
 };
 
-const stopNavigation = () => axios.get(`${proxyUrl}stop`);
+const stopNavigation = () => {
+  const positionBody = carPosition();
+  axios.post(`${proxyUrl}stop`, positionBody);
+};
 
 export const NavigationService = {
   startNavigation,
