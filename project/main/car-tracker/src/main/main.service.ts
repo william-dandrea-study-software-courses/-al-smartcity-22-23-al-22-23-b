@@ -1,7 +1,7 @@
-import { CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
+import { CACHE_MANAGER, HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { InjectModel } from "@nestjs/mongoose";
-import {CarPosition, CarPositionDocument, PositionType} from "./schema/car-position.schema";
+import { CarPosition, CarPositionDocument, PositionType } from "./schema/car-position.schema";
 import { Model } from "mongoose";
 import { HttpService } from "@nestjs/axios";
 import { ClientKafka, ClientProxy } from "@nestjs/microservices";
@@ -9,6 +9,8 @@ import { PollutionZone } from "./schema/pollution-zone.schema";
 
 @Injectable()
 export class MainService {
+    private readonly CACHE_TTL: number = 60;    // en secondes
+    private readonly CACHE_NAME: string = "CACHE_IDENTIFIER";
     private readonly logger = new Logger(MainService.name);
 
     constructor(
@@ -17,18 +19,6 @@ export class MainService {
         @Inject('RABBITMQ_SERVICE_TRACKING_SHUTDOWN') private trackingShutdownClient: ClientProxy,
         @Inject(CACHE_MANAGER) private cacheManager: Cache
     ) {
-        this.pullZones();
-    }
-
-    pullZones() {
-        this.httpService.axiosRef.get('http://zones-pollution-extern:3000/zones').then((response) => {
-            this.cacheManager.set('zones', response.data, 0);
-            response.data.forEach((zone: PollutionZone) => {
-                this.logger.log(`zone-${zone.number} pulled and saved in cache`);
-            });
-        }).catch((error) => {
-            this.logger.error(error);
-        });
     }
 
     receiveNewPosition(data: any) {
@@ -64,7 +54,8 @@ export class MainService {
 
     getZone(long: number, lat: number): number {
         let zoneNumber = 0;
-        this.cacheManager.get('zones').then((zones: PollutionZone[]) => {
+
+        this.getOfficialZone().then((zones: PollutionZone[]) => {
             zones.forEach(zone => {
                 const distance: number = this.getDistanceFromLatLonInKm(zone.centerLat, zone.centerLong, lat, long);
 
@@ -76,6 +67,26 @@ export class MainService {
         });
 
         return zoneNumber;
+    }
+
+    private async getOfficialZone(): Promise<PollutionZone[]> {
+        const result: PollutionZone[] | undefined = await this.cacheManager.get(this.CACHE_NAME)
+
+        if (result == undefined) {
+            this.logger.log("Update")
+
+            return await this.httpService.axiosRef.get('http://zones-pollution-extern:3000/zones').then(async (response) => {
+                await this.cacheManager.set(this.CACHE_NAME, response.data, this.CACHE_TTL * 1000);
+                const newResult: PollutionZone[] = await this.cacheManager.get(this.CACHE_NAME);
+                return newResult
+            }).catch((error) => {
+                throw new HttpException("Cannot communicate with zone-pollution-extern", HttpStatus.UNPROCESSABLE_ENTITY)
+            });
+
+        } else {
+            this.logger.log("Respond")
+            return result
+        }
     }
 
     private getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
