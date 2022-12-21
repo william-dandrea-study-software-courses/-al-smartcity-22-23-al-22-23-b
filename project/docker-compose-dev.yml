@@ -226,6 +226,11 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
+  client-communication-socket-authentification-cache:
+    image: redis:5
+    ports:
+      - "6379:6379"
+
 
   tracking-shutdown-queue:
     image: 'rabbitmq:3-management'

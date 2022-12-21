@@ -32,6 +32,8 @@
     "@nestjs/websockets": "^9.2.1",
     "amqp-connection-manager": "^4.1.9",
     "amqplib": "^0.10.3",
+    "cache-manager": "^5.1.4",
+    "cache-manager-redis-store": "^3.0.1",
     "kafkajs": "^2.2.3",
     "prom-client": "^14.1.0",
     "reflect-metadata": "^0.1.13",

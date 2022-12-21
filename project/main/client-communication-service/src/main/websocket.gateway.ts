@@ -3,56 +3,44 @@ import {
     SubscribeMessage,
     MessageBody,
     WebSocketServer,
-    ConnectedSocket,
+    ConnectedSocket, OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import {Injectable} from "@nestjs/common";
+import {CACHE_MANAGER, Inject, Injectable, Logger, OnModuleInit} from "@nestjs/common";
 
 @Injectable()
 @WebSocketGateway({ cors: { origin: '*' } })
-export class WebsocketGateway {
+export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{
 
     @WebSocketServer()
     server: Server;
 
-    constructor() {}
+    private usersConnected = {};
+    private logger: Logger = new Logger(WebsocketGateway.name);
 
-    @SubscribeMessage('createMessage')
-    async create(
-        @MessageBody() body: any,
-        @ConnectedSocket() client: Socket,
-    ) {
+    afterInit(server: Server) {
+        this.logger.log('Init');
+    }
 
-        console.log(client.handshake.auth.sessionID);
-        // this.server.emit('message', message);
-        return body;
+    handleConnection(client: Socket): void {
+        this.logger.log(`Client connected: ${client.handshake.auth.license_plate}`);
+        this.usersConnected[client.handshake.auth.license_plate] = client.id;
+
+        this.server.to(client.id).emit('connection_status_server', {"status": "Connection established"})
+    }
+
+    @SubscribeMessage('message_topic_1')
+    handleMessage(client: Socket, payload: any): void {
+        this.logger.log(`New message from one client with ID ${this.usersConnected[client.handshake.auth.license_plate]} (license_plate : ${client.handshake.auth.license_plate}) : ${payload}`);
+    }
+
+    handleDisconnect(client: Socket) {
+        delete this.usersConnected[client.handshake.auth.license_plate];
+        this.logger.log(`Client disconnected: ${client.id}`);
     }
 
 
-    @SubscribeMessage('findAllMessages')
-    findAll() {
-        return null ;
-    }
 
-    /*
-    @SubscribeMessage('join')
-    joinRoom(
-        @MessageBody('name') name: string,
-        @ConnectedSocket() client: Socket,
-    ) {
-        return this.messagesService.identify(name, client.id);
-    }
-
-    @SubscribeMessage('typing')
-    async typing(
-        @MessageBody('isTyping') isTyping: boolean,
-        @ConnectedSocket() client: Socket,
-    ) {
-        const name = await this.messagesService.getClientName(client.id);
-
-        client.broadcast.emit('typing', { name, isTyping });
-    }
-    */
 
 
 }

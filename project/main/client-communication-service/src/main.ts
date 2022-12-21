@@ -6,6 +6,13 @@ import {Transport} from "@nestjs/microservices";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  /*await app.connectMicroservice({
+    transport: Transport.REDIS,
+    options: {
+      host: 'client-communication-socket-authentification-cache',
+      port: 6379,
+    },
+  });*/
   await app.startAllMicroservices();
 
   const port: number = Number(process.env.APP_PORT);
