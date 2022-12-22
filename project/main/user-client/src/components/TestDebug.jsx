@@ -9,7 +9,11 @@ export const TestDebug = () => {
     useEffect(() => {
         socket.on('message_to_user', (message) => {
             console.log(message)
-        })
+        });
+
+        socket.on('new_frequency', (message) => {
+            console.log(message)
+        });
     }, []);
 
     const connectToSocket = async () => {

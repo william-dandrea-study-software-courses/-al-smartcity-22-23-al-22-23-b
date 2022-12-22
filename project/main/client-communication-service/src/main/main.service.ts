@@ -21,5 +21,6 @@ export class MainService {
 
     public async newCarFrequency(body: NewFrequencyDto) {
         this.logger.log(body);
+        await this.webSocket.sendMessageToLicensePlate(body.license_plate, "new_frequency", {frequency: body.frequency})
     }
 }
