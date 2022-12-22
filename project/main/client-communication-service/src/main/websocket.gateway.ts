@@ -7,6 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import {CACHE_MANAGER, HttpException, HttpStatus, Inject, Injectable, Logger, OnModuleInit} from "@nestjs/common";
+import {CacheServiceLicensePlate} from "./cache-license-plate.service";
 
 @Injectable()
 @WebSocketGateway({ cors: { origin: '*' } })
@@ -18,13 +19,16 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     private usersConnected = {};
     private logger: Logger = new Logger(WebsocketGateway.name);
 
+    constructor(private cacheService: CacheServiceLicensePlate) {}
+
     afterInit(server: Server) {
         this.logger.log('Init');
     }
 
-    handleConnection(client: Socket): void {
+    async handleConnection(client: Socket): Promise<void> {
         this.logger.log(`Client connected: ${client.handshake.auth.license_plate}`);
-        this.usersConnected[client.handshake.auth.license_plate] = client.id;
+        // this.usersConnected[client.handshake.auth.license_plate] = client.id;
+        await this.cacheService.setNewId(client.handshake.auth.license_plate, client.id);
 
         this.server.to(client.id).emit('connection_status_server', {"status": "Connection established"})
     }
@@ -34,10 +38,11 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
         this.logger.log(`New message from one client with ID ${this.usersConnected[client.handshake.auth.license_plate]} (license_plate : ${client.handshake.auth.license_plate}) : ${payload}`);
     }
 
-    public sendMessageToLicensePlate(license_plate: string, topic: string, message: any): void {
-        const idUser = this.usersConnected[license_plate];
+    public async sendMessageToLicensePlate(license_plate: string, topic: string, message: any): Promise<void> {
+        //const idUser = this.usersConnected[license_plate];
+        const idUser = await this.cacheService.getIdOfLicensePlate(license_plate);
 
-        if (idUser) {
+        if (idUser != null) {
             this.server.to(idUser).emit(topic, message);
         } else {
             throw new HttpException(`The user with the license_plate ${license_plate} is not connected`, HttpStatus.UNPROCESSABLE_ENTITY);
@@ -48,9 +53,4 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
         delete this.usersConnected[client.handshake.auth.license_plate];
         this.logger.log(`Client disconnected: ${client.id}`);
     }
-
-
-
-
-
 }

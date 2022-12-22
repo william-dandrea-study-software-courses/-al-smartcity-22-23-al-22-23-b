@@ -227,7 +227,7 @@ services:
       - smartcity-al-b-network-dev
 
   client-communication-socket-authentification-cache:
-    image: redis:5
+    image: redis:7-alpine
     ports:
       - "6379:6379"
 
