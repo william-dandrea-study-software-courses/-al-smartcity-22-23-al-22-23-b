@@ -1,12 +1,16 @@
 import {observer} from "mobx-react-lite";
-import {connectSocket, sendMessage} from "../services/Socket";
+import {connectSocket, sendMessage, socket} from "../services/Socket";
 import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
 
 
 export const TestDebug = () => {
 
-
+    useEffect(() => {
+        socket.on('message_to_user', (message) => {
+            console.log(message)
+        })
+    }, []);
 
     const connectToSocket = async () => {
         await connectSocket("DA-234-FD")
