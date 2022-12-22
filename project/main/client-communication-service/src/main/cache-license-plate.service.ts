@@ -9,19 +9,23 @@ export class CacheServiceLicensePlate {
 
     constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
-    public async setNewId(licensePlate: string, id: string): Promise<void> {
+    public async setNewId(licensePlate: string, id: string): Promise<any> {
         // this.usersConnected[licensePlate] = id;
-        await this.cacheManager.set(licensePlate, id);
-        return;
+        return await this.cacheManager.store.set<{id: string}>(licensePlate, {id})
+
+        // return await this.cacheManager.set(licensePlate, {id});
     }
 
     public async getIdOfLicensePlate(licensePlate: string): Promise<string | null> {
-        return await this.cacheManager.get(licensePlate);
-        // return this.usersConnected[licensePlate]
+        const result: {id: string} | null = await this.cacheManager.store.get<{id: string}>(licensePlate);
+        return result.id || null;
     }
+
 
     public async debug() {
         // console.log(this.cacheManager.)
-        console.log(this.cacheManager.get('tst'))
+        const r: string  = await this.getIdOfLicensePlate("DA444");
+        console.log(r)
+
     }
 }

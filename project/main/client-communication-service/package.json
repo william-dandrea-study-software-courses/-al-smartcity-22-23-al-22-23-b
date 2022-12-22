@@ -33,14 +33,14 @@
     "@types/cache-manager": "^4.0.2",
     "amqp-connection-manager": "^4.1.9",
     "amqplib": "^0.10.3",
-    "cache-manager": "^5.1.4",
-    "cache-manager-redis-store": "^2.0.0",
     "kafkajs": "^2.2.3",
     "prom-client": "^14.1.0",
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "socket.io": "^4.5.4"
+    "socket.io": "^4.5.4",
+    "cache-manager": "4.1.0",
+    "cache-manager-redis-store": "2.0.0",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

@@ -226,10 +226,12 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-  client-communication-socket-authentification-cache:
-    image: redis:7-alpine
+  redis:
+    image: "redis:alpine"
     ports:
-      - "6379:6379"
+      - 6379:6379
+    networks:
+      - smartcity-al-b-network-dev
 
 
   tracking-shutdown-queue:
