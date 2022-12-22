@@ -1,0 +1,199 @@
+2022-12-22 20:42:28,175 INFO [ors.Application] - Starting Application v6.6.1 on 83b5577ea5b0 with PID 137 (/usr/local/tomcat/webapps/ors/WEB-INF/classes started by ors in /ors-core)
+2022-12-22 20:42:28,178 DEBUG [ors.Application] - Running with Spring Boot v2.3.5.RELEASE, Spring v5.2.10.RELEASE
+2022-12-22 20:42:28,179 INFO [ors.Application] - No active profile set, falling back to default profiles: default
+2022-12-22 20:42:29,415 INFO [ors.Application] - Started Application in 1.75 seconds (JVM running for 4.49)
+2022-12-22 20:42:29,477 INFO [routing.RoutingProfileManager] -  Total - 1.00 GB, Free - 782.75 MB, Max: 2 GB, Used - 243.25 MB
+2022-12-22 20:42:29,478 INFO [routing.RoutingProfileManager] -       
+2022-12-22 20:42:29,490 INFO [routing.RoutingProfileManager] - ====> Initializing profiles from 'data/osm_file.pbf' (1 threads) ...
+2022-12-22 20:42:29,491 INFO [routing.RoutingProfileManager] -                               
+2022-12-22 20:42:29,493 INFO [routing.RoutingProfileManager] -                
+2022-12-22 20:42:29,509 INFO [routing.RoutingProfile] - [1] Profiles: 'driving-car', location: 'data/graphs/car'.
+2022-12-22 20:46:31,948 ERROR [routing.RoutingProfileManager] - java.util.concurrent.ExecutionException: java.lang.OutOfMemoryError: Java heap space - problem when allocating new memory. Old capacity: 91226112, new bytes:8, segmentSizeIntsPower:18, new segments:1, existing:87
+2022-12-22 20:46:31,951 ERROR [routing.RoutingProfileManager] - Failed to initialize RoutingProfileManager instance.
+java.util.concurrent.ExecutionException: java.lang.OutOfMemoryError: Java heap space - problem when allocating new memory. Old capacity: 91226112, new bytes:8, segmentSizeIntsPower:18, new segments:1, existing:87
+	at java.util.concurrent.FutureTask.report(FutureTask.java:122) ~[?:?]
+	at java.util.concurrent.FutureTask.get(FutureTask.java:191) ~[?:?]
+	at org.heigit.ors.routing.RoutingProfileManager.initialize(RoutingProfileManager.java:176) ~[classes/:6.6.1]
+	at org.heigit.ors.routing.RoutingProfileManager.getInstance(RoutingProfileManager.java:70) ~[classes/:6.6.1]
+	at org.heigit.ors.servlet.listeners.ORSInitContextListener.lambda$contextInitialized$0(ORSInitContextListener.java:41) ~[classes/:6.6.1]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+Caused by: java.lang.OutOfMemoryError: Java heap space - problem when allocating new memory. Old capacity: 91226112, new bytes:8, segmentSizeIntsPower:18, new segments:1, existing:87
+	at com.graphhopper.storage.RAMIntDataAccess.ensureCapacity(RAMIntDataAccess.java:108) ~[graphhopper-core-v0.13.15.jar:?]
+	at com.graphhopper.storage.BaseGraph.ensureNodeIndex(BaseGraph.java:304) ~[graphhopper-core-v0.13.15.jar:?]
+	at com.graphhopper.storage.GHNodeAccess.setNode(GHNodeAccess.java:49) ~[graphhopper-core-v0.13.15.jar:?]
+	at com.graphhopper.reader.osm.OSMReader.addTowerNode(OSMReader.java:752) ~[graphhopper-reader-osm-v0.13.15.jar:?]
+	at com.graphhopper.reader.osm.OSMReader.handlePillarNode(OSMReader.java:963) ~[graphhopper-reader-osm-v0.13.15.jar:?]
+	at com.graphhopper.reader.osm.OSMReader.addOSMWay(OSMReader.java:813) ~[graphhopper-reader-osm-v0.13.15.jar:?]
+	at com.graphhopper.reader.osm.OSMReader.processWay(OSMReader.java:440) ~[graphhopper-reader-osm-v0.13.15.jar:?]
+	at org.heigit.ors.routing.graphhopper.extensions.ORSOSMReader.processWay(ORSOSMReader.java:165) ~[classes/:6.6.1]
+	at com.graphhopper.reader.osm.OSMReader.writeOsm2Graph(OSMReader.java:302) ~[graphhopper-reader-osm-v0.13.15.jar:?]
+	at com.graphhopper.reader.osm.OSMReader.readGraph(OSMReader.java:178) ~[graphhopper-reader-osm-v0.13.15.jar:?]
+	at com.graphhopper.GraphHopper.importData(GraphHopper.java:735) ~[graphhopper-core-v0.13.15.jar:?]
+	at com.graphhopper.GraphHopper.readData(GraphHopper.java:714) ~[graphhopper-core-v0.13.15.jar:?]
+	at com.graphhopper.GraphHopper.process(GraphHopper.java:701) ~[graphhopper-core-v0.13.15.jar:?]
+	at com.graphhopper.GraphHopper.importOrLoad(GraphHopper.java:680) ~[graphhopper-core-v0.13.15.jar:?]
+	at org.heigit.ors.routing.graphhopper.extensions.ORSGraphHopper.importOrLoad(ORSGraphHopper.java:155) ~[classes/:6.6.1]
+	at org.heigit.ors.routing.RoutingProfile.initGraphHopper(RoutingProfile.java:189) ~[classes/:6.6.1]
+	at org.heigit.ors.routing.RoutingProfile.<init>(RoutingProfile.java:133) ~[classes/:6.6.1]
+	at org.heigit.ors.routing.RoutingProfileLoader.call(RoutingProfileLoader.java:35) ~[classes/:6.6.1]
+	at org.heigit.ors.routing.RoutingProfileLoader.call(RoutingProfileLoader.java:21) ~[classes/:6.6.1]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[?:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) ~[?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) ~[?:?]
+	... 1 more
+2022-12-22 20:46:31,965 INFO [routing.RoutingProfileManager] - ====> Recycling garbage...
+2022-12-22 20:46:31,966 INFO [routing.RoutingProfileManager] - Before:  Total - 2 GB, Free - 72.80 MB, Max: 2 GB, Used - 1.93 GB
+2022-12-22 20:46:32,147 INFO [routing.RoutingProfileManager] - After:  Total - 1024 MB, Free - 998.06 MB, Max: 2 GB, Used - 25.94 MB
+2022-12-22 20:46:32,148 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 20:46:32,149 INFO [routing.RoutingProfileManager] - ====> Memory usage by profiles:
+2022-12-22 20:46:32,154 INFO [routing.RoutingProfileManager] - Total: 0 B (0.0%)
+2022-12-22 20:46:32,154 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 20:52:43,343 INFO [ors.Application] - Starting Application v6.6.1 on 0785b0342657 with PID 136 (/usr/local/tomcat/webapps/ors/WEB-INF/classes started by ors in /ors-core)
+2022-12-22 20:52:43,345 DEBUG [ors.Application] - Running with Spring Boot v2.3.5.RELEASE, Spring v5.2.10.RELEASE
+2022-12-22 20:52:43,346 INFO [ors.Application] - No active profile set, falling back to default profiles: default
+2022-12-22 20:52:44,535 INFO [ors.Application] - Started Application in 1.676 seconds (JVM running for 4.332)
+2022-12-22 20:52:44,591 INFO [routing.RoutingProfileManager] -  Total - 1.00 GB, Free - 778.85 MB, Max: 2 GB, Used - 247.15 MB
+2022-12-22 20:52:44,593 INFO [routing.RoutingProfileManager] -       
+2022-12-22 20:52:44,603 INFO [routing.RoutingProfileManager] - ====> Initializing profiles from 'data/osm_file.pbf' (1 threads) ...
+2022-12-22 20:52:44,604 INFO [routing.RoutingProfileManager] -                               
+2022-12-22 20:52:44,605 ERROR [routing.RoutingProfileManager] - Failed to initialize RoutingProfileManager instance.
+java.lang.NullPointerException: null
+	at org.heigit.ors.routing.configuration.RouteProfileConfiguration.getProfilesTypes(RouteProfileConfiguration.java:109) ~[classes/:6.6.1]
+	at org.heigit.ors.routing.RoutingProfileManager.initialize(RoutingProfileManager.java:162) ~[classes/:6.6.1]
+	at org.heigit.ors.routing.RoutingProfileManager.getInstance(RoutingProfileManager.java:70) ~[classes/:6.6.1]
+	at org.heigit.ors.servlet.listeners.ORSInitContextListener.lambda$contextInitialized$0(ORSInitContextListener.java:41) ~[classes/:6.6.1]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+2022-12-22 20:52:44,610 INFO [routing.RoutingProfileManager] - ====> Recycling garbage...
+2022-12-22 20:52:44,610 INFO [routing.RoutingProfileManager] - Before:  Total - 1.00 GB, Free - 772.60 MB, Max: 2 GB, Used - 253.40 MB
+2022-12-22 20:52:44,638 INFO [routing.RoutingProfileManager] - After:  Total - 1024 MB, Free - 996.20 MB, Max: 2 GB, Used - 27.80 MB
+2022-12-22 20:52:44,638 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 20:52:44,639 INFO [routing.RoutingProfileManager] - ====> Memory usage by profiles:
+2022-12-22 20:52:44,641 INFO [routing.RoutingProfileManager] - Total: 0 B (0.0%)
+2022-12-22 20:52:44,641 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 20:52:44,646 INFO [routing.RoutingProfile] - [1] Profiles: 'driving-car', location: 'data/graphs/car'.
+2022-12-22 21:07:45,972 INFO [ors.Application] - Starting Application v6.6.1 on 7c5b433234d3 with PID 139 (/usr/local/tomcat/webapps/ors/WEB-INF/classes started by ors in /ors-core)
+2022-12-22 21:07:45,974 DEBUG [ors.Application] - Running with Spring Boot v2.3.5.RELEASE, Spring v5.2.10.RELEASE
+2022-12-22 21:07:45,975 INFO [ors.Application] - No active profile set, falling back to default profiles: default
+2022-12-22 21:07:47,129 INFO [ors.Application] - Started Application in 1.65 seconds (JVM running for 4.309)
+2022-12-22 21:07:47,190 INFO [routing.RoutingProfileManager] -  Total - 1.00 GB, Free - 781.31 MB, Max: 2 GB, Used - 244.69 MB
+2022-12-22 21:07:47,191 INFO [routing.RoutingProfileManager] -       
+2022-12-22 21:07:47,210 INFO [routing.RoutingProfileManager] - ====> Initializing profiles from 'data/osm_file.pbf' (1 threads) ...
+2022-12-22 21:07:47,210 INFO [routing.RoutingProfileManager] -                               
+2022-12-22 21:07:47,212 INFO [routing.RoutingProfileManager] -                
+2022-12-22 21:07:47,219 INFO [routing.RoutingProfile] - [1] Profiles: 'driving-car', location: 'data/graphs/car'.
+2022-12-22 21:07:51,185 INFO [core.PrepareCore] - 0, updates:0, nodes: 15 462, shortcuts:0, dijkstras:53 802, t(dijk):0.01, t(period):0.0, t(lazy):0.0, t(neighbor):0.0, meanDegree:1, algo:0MB, totalMB:1026, usedMB:300
+2022-12-22 21:07:51,464 INFO [core.PrepareCore] - 3 092, updates:2, nodes: 12 370, shortcuts:28, dijkstras:148 710, t(dijk):0.26, t(period):0.24, t(lazy):0.0, t(neighbor):0.02, meanDegree:1, algo:0MB, totalMB:1026, usedMB:302
+2022-12-22 21:07:51,666 INFO [core.PrepareCore] - 6 184, updates:4, nodes: 9 278, shortcuts:284, dijkstras:218 361, t(dijk):0.44, t(period):0.42, t(lazy):0.0, t(neighbor):0.04, meanDegree:1, algo:0MB, totalMB:1026, usedMB:304
+2022-12-22 21:07:51,902 INFO [core.PrepareCore] - 9 276, updates:6, nodes: 6 186, shortcuts:3 417, dijkstras:291 225, t(dijk):0.65, t(period):0.55, t(lazy):0.0, t(neighbor):0.12, meanDegree:1, algo:0MB, totalMB:1026, usedMB:306
+2022-12-22 21:07:52,076 INFO [core.PrepareCore] - 12 368, updates:8, nodes: 3 094, shortcuts:6 476, dijkstras:350 662, t(dijk):0.81, t(period):0.62, t(lazy):0.0, t(neighbor):0.2, meanDegree:2, algo:0MB, totalMB:1026, usedMB:308
+2022-12-22 21:07:52,232 INFO [core.PrepareCore] - took:1, new shortcuts: 10 251, prepare|fastest|car-ors, dijkstras:414281, t(dijk):0.95, t(period):0.62, t(lazy):0.01, t(neighbor):0.31, meanDegree:3, initSize:15462, periodic:10, lazy:10, neighbor:90, totalMB:1026, usedMB:309
+2022-12-22 21:07:52,283 INFO [core.PrepareCore] - 0, updates:0, nodes: 15 462, shortcuts:0, dijkstras:53 802, t(dijk):0.03, t(period):0.0, t(lazy):0.0, t(neighbor):0.0, meanDegree:1, algo:0MB, totalMB:1026, usedMB:312
+2022-12-22 21:07:52,538 INFO [core.PrepareCore] - 3 092, updates:2, nodes: 12 370, shortcuts:10, dijkstras:148 818, t(dijk):0.26, t(period):0.22, t(lazy):0.0, t(neighbor):0.03, meanDegree:1, algo:0MB, totalMB:1026, usedMB:314
+2022-12-22 21:07:52,720 INFO [core.PrepareCore] - 6 184, updates:4, nodes: 9 278, shortcuts:477, dijkstras:220 956, t(dijk):0.42, t(period):0.38, t(lazy):0.0, t(neighbor):0.04, meanDegree:1, algo:0MB, totalMB:1026, usedMB:316
+2022-12-22 21:07:52,936 INFO [core.PrepareCore] - 9 276, updates:6, nodes: 6 186, shortcuts:3 671, dijkstras:297 863, t(dijk):0.62, t(period):0.51, t(lazy):0.0, t(neighbor):0.11, meanDegree:1, algo:0MB, totalMB:1026, usedMB:318
+2022-12-22 21:07:53,114 INFO [core.PrepareCore] - 12 368, updates:8, nodes: 3 094, shortcuts:6 945, dijkstras:363 643, t(dijk):0.78, t(period):0.58, t(lazy):0.0, t(neighbor):0.2, meanDegree:2, algo:0MB, totalMB:1026, usedMB:319
+2022-12-22 21:07:53,328 INFO [core.PrepareCore] - took:1, new shortcuts: 11 540, prepare|shortest|car-ors, dijkstras:464038, t(dijk):0.96, t(period):0.59, t(lazy):0.01, t(neighbor):0.35, meanDegree:5, initSize:15462, periodic:10, lazy:10, neighbor:90, totalMB:1026, usedMB:321
+2022-12-22 21:07:54,986 INFO [routing.RoutingProfile] - [1] FlagEncoders: 1, bits used [UNKNOWN]/64.
+2022-12-22 21:07:54,987 INFO [routing.RoutingProfile] - [1] Capacity: [UNKNOWN]. (edges - 20863, nodes - 15462)
+2022-12-22 21:07:54,988 INFO [routing.RoutingProfile] - [1] Total time: 7.768s.
+2022-12-22 21:07:54,988 INFO [routing.RoutingProfile] - [1] Finished at: 2022-12-22 21:07:54.
+2022-12-22 21:07:54,988 INFO [routing.RoutingProfile] -                               
+2022-12-22 21:07:54,997 INFO [routing.RoutingProfileManager] - Total time: 7.805s.
+2022-12-22 21:07:54,998 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 21:07:55,000 INFO [routing.RoutingProfileManager] - ====> Recycling garbage...
+2022-12-22 21:07:55,001 INFO [routing.RoutingProfileManager] - Before:  Total - 1.00 GB, Free - 595.97 MB, Max: 2 GB, Used - 430.03 MB
+2022-12-22 21:07:55,026 INFO [routing.RoutingProfileManager] - After:  Total - 1024 MB, Free - 943.40 MB, Max: 2 GB, Used - 80.60 MB
+2022-12-22 21:07:55,026 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 21:07:55,027 INFO [routing.RoutingProfileManager] - ====> Memory usage by profiles:
+2022-12-22 21:07:55,028 INFO [routing.RoutingProfileManager] - [1] 20.03 MB (24.9%)
+2022-12-22 21:07:55,029 INFO [routing.RoutingProfileManager] - Total: 20.03 MB (24.9%)
+2022-12-22 21:07:55,029 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 21:16:42,005 INFO [ors.Application] - Starting Application v6.6.1 on 5d8ef95a3a3f with PID 136 (/usr/local/tomcat/webapps/ors/WEB-INF/classes started by ors in /ors-core)
+2022-12-22 21:16:42,007 DEBUG [ors.Application] - Running with Spring Boot v2.3.5.RELEASE, Spring v5.2.10.RELEASE
+2022-12-22 21:16:42,008 INFO [ors.Application] - No active profile set, falling back to default profiles: default
+2022-12-22 21:16:43,139 INFO [ors.Application] - Started Application in 1.602 seconds (JVM running for 4.152)
+2022-12-22 21:16:43,187 INFO [routing.RoutingProfileManager] -  Total - 1.00 GB, Free - 781.76 MB, Max: 2 GB, Used - 244.24 MB
+2022-12-22 21:16:43,188 INFO [routing.RoutingProfileManager] -       
+2022-12-22 21:16:43,204 INFO [routing.RoutingProfileManager] - ====> Initializing profiles from 'data/osm_file.pbf' (1 threads) ...
+2022-12-22 21:16:43,205 INFO [routing.RoutingProfileManager] -                               
+2022-12-22 21:16:43,206 INFO [routing.RoutingProfileManager] -                
+2022-12-22 21:16:43,213 INFO [routing.RoutingProfile] - [1] Profiles: 'driving-car', location: 'data/graphs/car'.
+2022-12-22 21:16:43,855 INFO [routing.RoutingProfile] - [1] FlagEncoders: 1, bits used [UNKNOWN]/64.
+2022-12-22 21:16:43,857 INFO [routing.RoutingProfile] - [1] Capacity: [UNKNOWN]. (edges - 20863, nodes - 15462)
+2022-12-22 21:16:43,857 INFO [routing.RoutingProfile] - [1] Total time: 0.644s.
+2022-12-22 21:16:43,858 INFO [routing.RoutingProfile] - [1] Finished at: 2022-12-22 21:16:43.
+2022-12-22 21:16:43,858 INFO [routing.RoutingProfile] -                               
+2022-12-22 21:16:43,860 INFO [routing.RoutingProfileManager] - Total time: 0.672s.
+2022-12-22 21:16:43,860 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 21:16:43,862 INFO [routing.RoutingProfileManager] - ====> Recycling garbage...
+2022-12-22 21:16:43,862 INFO [routing.RoutingProfileManager] - Before:  Total - 1.00 GB, Free - 474.26 MB, Max: 2 GB, Used - 551.74 MB
+2022-12-22 21:16:43,889 INFO [routing.RoutingProfileManager] - After:  Total - 1024 MB, Free - 943.33 MB, Max: 2 GB, Used - 80.67 MB
+2022-12-22 21:16:43,890 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 21:16:43,890 INFO [routing.RoutingProfileManager] - ====> Memory usage by profiles:
+2022-12-22 21:16:43,892 INFO [routing.RoutingProfileManager] - [1] 20.03 MB (24.8%)
+2022-12-22 21:16:43,892 INFO [routing.RoutingProfileManager] - Total: 20.03 MB (24.8%)
+2022-12-22 21:16:43,893 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 21:33:49,311 INFO [ors.Application] - Starting Application v6.6.1 on 44d06d35e281 with PID 137 (/usr/local/tomcat/webapps/ors/WEB-INF/classes started by ors in /ors-core)
+2022-12-22 21:33:49,314 DEBUG [ors.Application] - Running with Spring Boot v2.3.5.RELEASE, Spring v5.2.10.RELEASE
+2022-12-22 21:33:49,315 INFO [ors.Application] - No active profile set, falling back to default profiles: default
+2022-12-22 21:33:50,503 INFO [ors.Application] - Started Application in 1.663 seconds (JVM running for 4.248)
+2022-12-22 21:33:50,557 INFO [routing.RoutingProfileManager] -  Total - 1.00 GB, Free - 774.86 MB, Max: 2 GB, Used - 251.14 MB
+2022-12-22 21:33:50,558 INFO [routing.RoutingProfileManager] -       
+2022-12-22 21:33:50,579 INFO [routing.RoutingProfileManager] - ====> Initializing profiles from 'data/osm_file.pbf' (1 threads) ...
+2022-12-22 21:33:50,580 INFO [routing.RoutingProfileManager] -                               
+2022-12-22 21:33:50,583 INFO [routing.RoutingProfileManager] -                
+2022-12-22 21:33:50,591 INFO [routing.RoutingProfile] - [1] Profiles: 'driving-car', location: 'data/graphs/car'.
+2022-12-22 21:33:51,311 INFO [routing.RoutingProfile] - [1] FlagEncoders: 1, bits used [UNKNOWN]/64.
+2022-12-22 21:33:51,312 INFO [routing.RoutingProfile] - [1] Capacity: [UNKNOWN]. (edges - 20863, nodes - 15462)
+2022-12-22 21:33:51,312 INFO [routing.RoutingProfile] - [1] Total time: 0.721s.
+2022-12-22 21:33:51,313 INFO [routing.RoutingProfile] - [1] Finished at: 2022-12-22 21:33:51.
+2022-12-22 21:33:51,313 INFO [routing.RoutingProfile] -                               
+2022-12-22 21:33:51,317 INFO [routing.RoutingProfileManager] - Total time: 0.759s.
+2022-12-22 21:33:51,318 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 21:33:51,320 INFO [routing.RoutingProfileManager] - ====> Recycling garbage...
+2022-12-22 21:33:51,321 INFO [routing.RoutingProfileManager] - Before:  Total - 1.00 GB, Free - 468.86 MB, Max: 2 GB, Used - 557.14 MB
+2022-12-22 21:33:51,350 INFO [routing.RoutingProfileManager] - After:  Total - 1024 MB, Free - 943.32 MB, Max: 2 GB, Used - 80.68 MB
+2022-12-22 21:33:51,351 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 21:33:51,351 INFO [routing.RoutingProfileManager] - ====> Memory usage by profiles:
+2022-12-22 21:33:51,352 INFO [routing.RoutingProfileManager] - [1] 20.03 MB (24.8%)
+2022-12-22 21:33:51,353 INFO [routing.RoutingProfileManager] - Total: 20.03 MB (24.8%)
+2022-12-22 21:33:51,353 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 21:49:39,770 INFO [ors.Application] - Starting Application v6.6.1 on 4bf1dcbb0967 with PID 135 (/usr/local/tomcat/webapps/ors/WEB-INF/classes started by ors in /ors-core)
+2022-12-22 21:49:39,772 DEBUG [ors.Application] - Running with Spring Boot v2.3.5.RELEASE, Spring v5.2.10.RELEASE
+2022-12-22 21:49:39,773 INFO [ors.Application] - No active profile set, falling back to default profiles: default
+2022-12-22 21:49:40,975 INFO [ors.Application] - Started Application in 1.708 seconds (JVM running for 4.297)
+2022-12-22 21:49:41,028 INFO [routing.RoutingProfileManager] -  Total - 1.00 GB, Free - 783.45 MB, Max: 2 GB, Used - 242.55 MB
+2022-12-22 21:49:41,029 INFO [routing.RoutingProfileManager] -       
+2022-12-22 21:49:41,049 INFO [routing.RoutingProfileManager] - ====> Initializing profiles from 'data/osm_file.pbf' (1 threads) ...
+2022-12-22 21:49:41,050 INFO [routing.RoutingProfileManager] -                               
+2022-12-22 21:49:41,052 INFO [routing.RoutingProfileManager] -                
+2022-12-22 21:49:41,060 INFO [routing.RoutingProfile] - [1] Profiles: 'driving-car', location: 'data/graphs/car'.
+2022-12-22 21:49:45,004 INFO [core.PrepareCore] - 0, updates:0, nodes: 15 462, shortcuts:0, dijkstras:53 802, t(dijk):0.04, t(period):0.0, t(lazy):0.0, t(neighbor):0.0, meanDegree:1, algo:0MB, totalMB:1026, usedMB:313
+2022-12-22 21:49:45,282 INFO [core.PrepareCore] - 3 092, updates:2, nodes: 12 370, shortcuts:28, dijkstras:148 710, t(dijk):0.28, t(period):0.24, t(lazy):0.0, t(neighbor):0.03, meanDegree:1, algo:0MB, totalMB:1026, usedMB:318
+2022-12-22 21:49:45,478 INFO [core.PrepareCore] - 6 184, updates:4, nodes: 9 278, shortcuts:284, dijkstras:218 361, t(dijk):0.46, t(period):0.41, t(lazy):0.0, t(neighbor):0.05, meanDegree:1, algo:0MB, totalMB:1026, usedMB:320
+2022-12-22 21:49:45,708 INFO [core.PrepareCore] - 9 276, updates:6, nodes: 6 186, shortcuts:3 417, dijkstras:291 225, t(dijk):0.66, t(period):0.54, t(lazy):0.0, t(neighbor):0.12, meanDegree:1, algo:0MB, totalMB:1026, usedMB:322
+2022-12-22 21:49:45,877 INFO [core.PrepareCore] - 12 368, updates:8, nodes: 3 094, shortcuts:6 476, dijkstras:350 662, t(dijk):0.81, t(period):0.6, t(lazy):0.0, t(neighbor):0.2, meanDegree:2, algo:0MB, totalMB:1026, usedMB:323
+2022-12-22 21:49:46,031 INFO [core.PrepareCore] - took:1, new shortcuts: 10 251, prepare|fastest|car-ors, dijkstras:414281, t(dijk):0.95, t(period):0.61, t(lazy):0.01, t(neighbor):0.31, meanDegree:3, initSize:15462, periodic:10, lazy:10, neighbor:90, totalMB:1026, usedMB:325
+2022-12-22 21:49:46,068 INFO [core.PrepareCore] - 0, updates:0, nodes: 15 462, shortcuts:0, dijkstras:53 802, t(dijk):0.02, t(period):0.0, t(lazy):0.0, t(neighbor):0.0, meanDegree:1, algo:0MB, totalMB:1026, usedMB:328
+2022-12-22 21:49:46,297 INFO [core.PrepareCore] - 3 092, updates:2, nodes: 12 370, shortcuts:10, dijkstras:148 818, t(dijk):0.22, t(period):0.2, t(lazy):0.0, t(neighbor):0.02, meanDegree:1, algo:0MB, totalMB:1026, usedMB:330
+2022-12-22 21:49:46,478 INFO [core.PrepareCore] - 6 184, updates:4, nodes: 9 278, shortcuts:477, dijkstras:220 956, t(dijk):0.38, t(period):0.36, t(lazy):0.0, t(neighbor):0.04, meanDegree:1, algo:0MB, totalMB:1026, usedMB:331
+2022-12-22 21:49:46,693 INFO [core.PrepareCore] - 9 276, updates:6, nodes: 6 186, shortcuts:3 671, dijkstras:297 863, t(dijk):0.58, t(period):0.48, t(lazy):0.0, t(neighbor):0.11, meanDegree:1, algo:0MB, totalMB:1026, usedMB:333
+2022-12-22 21:49:46,872 INFO [core.PrepareCore] - 12 368, updates:8, nodes: 3 094, shortcuts:6 945, dijkstras:363 643, t(dijk):0.74, t(period):0.56, t(lazy):0.0, t(neighbor):0.19, meanDegree:2, algo:0MB, totalMB:1026, usedMB:335
+2022-12-22 21:49:47,082 INFO [core.PrepareCore] - took:1, new shortcuts: 11 540, prepare|shortest|car-ors, dijkstras:464038, t(dijk):0.93, t(period):0.57, t(lazy):0.01, t(neighbor):0.35, meanDegree:5, initSize:15462, periodic:10, lazy:10, neighbor:90, totalMB:1026, usedMB:336
+2022-12-22 21:49:48,634 INFO [routing.RoutingProfile] - [1] FlagEncoders: 1, bits used [UNKNOWN]/64.
+2022-12-22 21:49:48,635 INFO [routing.RoutingProfile] - [1] Capacity: [UNKNOWN]. (edges - 20863, nodes - 15462)
+2022-12-22 21:49:48,635 INFO [routing.RoutingProfile] - [1] Total time: 7.575s.
+2022-12-22 21:49:48,636 INFO [routing.RoutingProfile] - [1] Finished at: 2022-12-22 21:49:48.
+2022-12-22 21:49:48,636 INFO [routing.RoutingProfile] -                               
+2022-12-22 21:49:48,643 INFO [routing.RoutingProfileManager] - Total time: 7.613s.
+2022-12-22 21:49:48,643 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 21:49:48,646 INFO [routing.RoutingProfileManager] - ====> Recycling garbage...
+2022-12-22 21:49:48,646 INFO [routing.RoutingProfileManager] - Before:  Total - 1.00 GB, Free - 581.21 MB, Max: 2 GB, Used - 444.79 MB
+2022-12-22 21:49:48,671 INFO [routing.RoutingProfileManager] - After:  Total - 1024 MB, Free - 943.40 MB, Max: 2 GB, Used - 80.60 MB
+2022-12-22 21:49:48,673 INFO [routing.RoutingProfileManager] - ========================================================================
+2022-12-22 21:49:48,673 INFO [routing.RoutingProfileManager] - ====> Memory usage by profiles:
+2022-12-22 21:49:48,674 INFO [routing.RoutingProfileManager] - [1] 20.03 MB (24.9%)
+2022-12-22 21:49:48,676 INFO [routing.RoutingProfileManager] - Total: 20.03 MB (24.9%)
+2022-12-22 21:49:48,677 INFO [routing.RoutingProfileManager] - ========================================================================

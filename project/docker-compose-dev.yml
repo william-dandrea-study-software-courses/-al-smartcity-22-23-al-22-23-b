@@ -232,6 +232,23 @@ services:
       - "6379:6379"
 
 
+  open-route-service:
+    image: 'giscience/openrouteservice'
+    container_name: smartcity-open-route-service
+    ports:
+      - 8080:8080
+    volumes:
+      - ./graphs:/ors-core/data/graphs
+      - ./elevation_cache:/ors-core/data/elevation_cache
+      - ./logs/ors:/var/log/ors
+      - ./logs/tomcat:/usr/local/tomcat/logs
+      - ./conf:/ors-conf
+      - ./OSMFiles/france-latest.osm.pbf:/data/osm_file.pbf
+    environment:
+      - BUILD_GRAPHS=False  # Forces the container to rebuild the graphs, e.g. when PBF is changed
+      - "JAVA_OPTS=-Djava.awt.headless=true -server -XX:TargetSurvivorRatio=75 -XX:SurvivorRatio=64 -XX:MaxTenuringThreshold=3 -XX:+UseG1GC -XX:+ScavengeBeforeFullGC -XX:ParallelGCThreads=4 -Xms1g -Xmx2g"
+      - "CATALINA_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9001 -Dcom.sun.management.jmxremote.rmi.port=9001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost"
+
   tracking-shutdown-queue:
     image: 'rabbitmq:3-management'
     container_name: car-tracker-bus
