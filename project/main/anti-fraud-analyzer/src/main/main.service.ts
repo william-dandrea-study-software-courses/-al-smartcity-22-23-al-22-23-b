@@ -18,7 +18,7 @@ export class MainService {
 
     public async isFraudulent(licensePlate: string, locationStart: CarLocation): Promise<boolean> {
         const carPosition: AntiFraud = await this.antiFraudModel.findOne({ license_plate: licensePlate });
-        this.logger.log("car position found", carPosition);
+
         if (carPosition) {
             await this.antiFraudModel.findOneAndUpdate({ license_plate: licensePlate }, { start: locationStart });
             this.logger.log("start position updated for " + licensePlate);
@@ -27,7 +27,7 @@ export class MainService {
                 this.logger.log("car is not fraudulent: " + licensePlate);
                 return false;
             } else {
-                this.logger.log("fraudulent car detected:" + licensePlate);
+                this.logger.log("fraudulent car detected: " + licensePlate);
                 return true;
             }
         } else {
@@ -39,9 +39,12 @@ export class MainService {
     }
 
 
-    private saveNewLicensePlate(licensePlate: string, locationStart: CarLocation): Promise<AntiFraud> {
-        const newPlate: AntiFraud = new this.antiFraudModel({ license_plate: licensePlate, start: locationStart, stop: locationStart });
-        return newPlate.save();
+    private async saveNewLicensePlate(licensePlate: string, locationStart: CarLocation): Promise<AntiFraud> {
+        const newPlate: AntiFraud = new AntiFraud();
+        newPlate.license_plate = licensePlate;
+        newPlate.start = locationStart;
+        newPlate.stop = locationStart;
+        return await this.antiFraudModel.create(newPlate);
     }
 
 
