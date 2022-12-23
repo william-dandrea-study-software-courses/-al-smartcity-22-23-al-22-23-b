@@ -1,6 +1,6 @@
-import {Controller, Get, Logger, Post, Query} from '@nestjs/common';
-import {EventPattern} from "@nestjs/microservices";
-import {MainService} from "./main.service";
+import { Controller, Get, Logger, Post, Param } from '@nestjs/common';
+import { EventPattern } from "@nestjs/microservices";
+import { MainService } from "./main.service";
 
 @Controller('')
 export class MainController {
@@ -8,8 +8,8 @@ export class MainController {
 
     constructor(private readonly appService: MainService) { }
 
-    @Get('')
-    getHello(): string {
-        return this.appService.getHello();
+    @Get('/check')
+    checkCamera(): boolean {
+        return this.appService.checkCamera();
     }
 }

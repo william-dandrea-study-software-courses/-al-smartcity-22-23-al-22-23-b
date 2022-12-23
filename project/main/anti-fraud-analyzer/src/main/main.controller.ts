@@ -1,6 +1,6 @@
-import {Controller, Get, Logger, Post, Query} from '@nestjs/common';
-import {EventPattern} from "@nestjs/microservices";
-import {MainService} from "./main.service";
+import { Controller, Get, Logger, Post, Query } from '@nestjs/common';
+import { EventPattern } from "@nestjs/microservices";
+import { MainService } from "./main.service";
 
 @Controller('')
 export class MainController {
@@ -8,13 +8,24 @@ export class MainController {
 
     constructor(private readonly appService: MainService) { }
 
-    @EventPattern('position_pattern')
-    public receiveNewPosition(data: any) {
-        console.log(data);
+    @EventPattern('car-position')
+    public async receiveNewPosition(data: any) {
+        this.logger.log('car-position ', data);
+        this.appService.checkCamera(data.license_plate);
     }
 
-    @Get('')
-    getHello(): string {
-        return this.appService.getHello();
+    @EventPattern('car-start')
+    public async receiveStart(data: any) {
+        this.logger.log('car-start ', data)
+        if (this.appService.isFraudulent(data.license_plate, data.location)) {
+            this.appService.sendTicket(data.license_plate);
+        }
     }
+
+    @EventPattern('car-stop')
+    public async receiveStop(data: any) {
+        this.logger.log('car-stop ', data);
+        this.appService.updateStop(data.license_plate, data.location);
+    }
+
 }
