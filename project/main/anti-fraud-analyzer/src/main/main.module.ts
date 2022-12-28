@@ -3,7 +3,7 @@ import { MainController } from './main.controller';
 import { MainService } from './main.service';
 import {HttpModule} from "@nestjs/axios";
 import {MongooseModule} from "@nestjs/mongoose";
-import {AntiFraud, AntiFraudSchema} from "./schema/anti-fraud.schema";
+import {AntiFraud, AntiFraudSchema} from "./schema/car-position.schema";
 
 @Module({
   imports: [
