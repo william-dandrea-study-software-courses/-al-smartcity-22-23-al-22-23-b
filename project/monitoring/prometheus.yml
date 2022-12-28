@@ -52,20 +52,37 @@ scrape_configs:
       - targets: ['zones-pollution-extern:3000' ]
 
 
-  - job_name: 'tracking-shutdown-queue'
+
+  - job_name: 'queues'
     static_configs:
       - targets: [ 'tracking-shutdown-queue:15692' ]
+        labels:
+          instance: 'tracking_shutdown_queue'
 
 
-  - job_name: tracking-infos-database-exporter
+
+  - job_name: database
     static_configs:
       - targets: [ 'tracking-infos-database-exporter:9216' ]
-  - job_name: car-statistics-database-exporter
-    static_configs:
+        labels:
+          instance: 'tracking_infos_database'
       - targets: [ 'car-statistics-database-exporter:9216' ]
-  - job_name: bills-database-exporter
-    static_configs:
+        labels:
+          instance: 'car_statistics_database'
       - targets: [ 'bills-database-exporter:9216' ]
-  - job_name: start-stop-database-exporter
-    static_configs:
+        labels:
+          instance: 'bills_database'
       - targets: [ 'start-stop-database-exporter:9216' ]
+        labels:
+          instance: 'start_stop'
+
+
+#  - job_name: car-statistics-database-exporter
+#    static_configs:
+#      - targets: [ 'car-statistics-database-exporter:9216' ]
+#  - job_name: bills-database-exporter
+#    static_configs:
+#      - targets: [ 'bills-database-exporter:9216' ]
+#  - job_name: start-stop-database-exporter
+#    static_configs:
+#      - targets: [ 'start-stop-database-exporter:9216' ]

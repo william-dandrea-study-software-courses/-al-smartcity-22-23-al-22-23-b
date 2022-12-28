@@ -14,6 +14,9 @@ services:
     volumes:
       - ./main/anti-fraud-analyzer:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - start-stop-database
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-dev
 
@@ -31,6 +34,8 @@ services:
     volumes:
       - ./main/billing-handler:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - bills-database
     networks:
       - smartcity-al-b-network-dev
 
@@ -49,6 +54,10 @@ services:
     volumes:
       - ./main/car-tracker:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-dev
 
@@ -63,6 +72,8 @@ services:
       - 6804:3000
     environment:
       - APP_PORT=3000
+    depends_on:
+      - redis
     volumes:
       - ./main/client-communication-service:/usr/src/app
       - /usr/src/app/node_modules
@@ -83,6 +94,8 @@ services:
     volumes:
       - ./main/route-advisor:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-dev
 
@@ -100,6 +113,8 @@ services:
     volumes:
       - ./main/tracking-analytics:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - car-statistics-database
     networks:
       - smartcity-al-b-network-dev
 
@@ -117,6 +132,9 @@ services:
     volumes:
       - ./main/tracking-shutdown:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
     networks:
       - smartcity-al-b-network-dev
 
@@ -134,6 +152,8 @@ services:
     volumes:
       - ./main/user-configurator:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-dev
 
@@ -151,6 +171,8 @@ services:
     volumes:
       - ./main/user-position-proxy:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-dev
 
@@ -210,8 +232,9 @@ services:
     image: 'percona/mongodb_exporter:0.35'
     environment:
       - MONGODB_URI=mongodb://exporter:password@tracking-infos-database:27017
-    command:
-      - '--mongodb.uri=mongodb://exporter:password@tracking-infos-database:27017'
+      - EXTRA_OPTS="--web.telemetry-prefix=tracking_infos_database_"
+#    command:
+#      - '--mongodb.uri=mongodb://exporter:password@tracking-infos-database:27017 --web.telemetry-prefix=tracking_infos_database'
     depends_on:
       - tracking-infos-database
     networks:
@@ -238,8 +261,9 @@ services:
     image: 'percona/mongodb_exporter:0.35'
     environment:
       - MONGODB_URI=mongodb://exporter:password@car-statistics-database:27017
-    command:
-      - '--mongodb.uri=mongodb://exporter:password@car-statistics-database:27017'
+      - EXTRA_OPTS="--web.telemetry-prefix=car_statistics_database_"
+#    command:
+#      - '--mongodb.uri=mongodb://exporter:password@car-statistics-database:27017 --web.telemetry-prefix=car_statistics_database'
     depends_on:
       - car-statistics-database
     networks:
@@ -265,9 +289,10 @@ services:
       - '9218:9216'
     image: 'percona/mongodb_exporter:0.35'
     environment:
-      - MONGODB_URI=mongodb://exporter:password@bills-database-exporter:27017
-    command:
-      - '--mongodb.uri=mongodb://exporter:password@bills-database-exporter:27017'
+      - MONGODB_URI=mongodb://exporter:password@bills-database:27017
+      - EXTRA_OPTS="--web.telemetry-prefix=bills_database_"
+#    command:
+#      - '--mongodb.uri=mongodb://exporter:password@bills-database:27017 --web.telemetry-prefix=bills_database'
     depends_on:
       - bills-database
     networks:
@@ -294,8 +319,9 @@ services:
     image: 'percona/mongodb_exporter:0.35'
     environment:
       - MONGODB_URI=mongodb://exporter:password@start-stop-database:27017
-    command:
-      - '--mongodb.uri=mongodb://exporter:password@start-stop-database:27017'
+      - EXTRA_OPTS="--web.telemetry-prefix=start_stop_database_"
+#    command:
+#      - '--mongodb.uri=mongodb://exporter:password@start-stop-database:27017 --web.telemetry-prefix=start_stop_database'
     depends_on:
       - start-stop-database
     networks:

@@ -17,6 +17,7 @@ async function bootstrap() {
       },
     },
   });
+
   await app.startAllMicroservices();
 
   const port: number = Number(process.env.APP_PORT);
