@@ -8,7 +8,7 @@ import {AntiFraud, AntiFraudSchema} from "./schema/anti-fraud.schema";
 @Module({
   imports: [
     HttpModule,
-    MongooseModule.forRoot('mongodb://start-stop-database:27017'),
+    MongooseModule.forRoot('mongodb://admin:admin@start-stop-database:27017'),
     MongooseModule.forFeature([{name: AntiFraud.name, schema: AntiFraudSchema}]),
   ],
   controllers: [MainController],

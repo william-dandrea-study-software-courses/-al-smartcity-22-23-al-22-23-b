@@ -16,33 +16,56 @@ rule_files:
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
 scrape_configs:
+
+  - job_name: 'anti-fraud-analyzer'
+    static_configs:
+      - targets: ['anti-fraud-analyzer:3000']
   - job_name: 'billing-handler'
     static_configs:
       - targets: ['billing-handler:3000']
   - job_name: 'car-tracker'
     static_configs:
       - targets: ['car-tracker:3000']
-  - job_name: 'pollution-zone-aggregator'
+  - job_name: 'client-communication-service'
     static_configs:
-      - targets: ['pollution-zone-aggregator:3000']
-  - job_name: 'position-checker'
+      - targets: ['client-communication-service:3000']
+  - job_name: 'route-advisor'
     static_configs:
-      - targets: ['position-checker:3000']
+      - targets: ['route-advisor:3000']
+  - job_name: 'tracking-analytics'
+    static_configs:
+      - targets: ['tracking-analytics:3000']
   - job_name: 'tracking-shutdown'
     static_configs:
-      - targets: ['tracking-shutdown:3000']
-  - job_name: 'user-client'
+      - targets: ['tracking-shutdown:3000' ]
+  - job_name: 'user-configurator'
     static_configs:
-      - targets: ['user-client:3000']
-  - job_name: 'mock-camera-checker'
+      - targets: ['user-configurator:3000' ]
+  - job_name: 'user-position-proxy'
     static_configs:
-      - targets: [ 'mock-camera-checker:3000' ]
-  - job_name: 'mock-pollution-zone-emitter'
+      - targets: ['user-position-proxy:3000' ]
+  - job_name: 'camera-checker'
     static_configs:
-      - targets: [ 'mock-pollution-zones-emitter:3000' ]
-  - job_name: 'car-tracker-bus'
+      - targets: ['camera-checker:3000' ]
+  - job_name: 'zones-pollution-extern'
     static_configs:
-      - targets: [ 'car-tracker-bus:15692' ]
-  - job_name: mongodb
+      - targets: ['zones-pollution-extern:3000' ]
+
+
+  - job_name: 'tracking-shutdown-queue'
     static_configs:
-      - targets: [ 'mongo-exporter:9216' ]
+      - targets: [ 'tracking-shutdown-queue:15692' ]
+
+
+  - job_name: tracking-infos-database-exporter
+    static_configs:
+      - targets: [ 'tracking-infos-database-exporter:9216' ]
+  - job_name: car-statistics-database-exporter
+    static_configs:
+      - targets: [ 'car-statistics-database-exporter:9216' ]
+  - job_name: bills-database-exporter
+    static_configs:
+      - targets: [ 'bills-database-exporter:9216' ]
+  - job_name: start-stop-database-exporter
+    static_configs:
+      - targets: [ 'start-stop-database-exporter:9216' ]

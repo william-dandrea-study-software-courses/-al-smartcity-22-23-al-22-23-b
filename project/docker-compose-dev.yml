@@ -188,48 +188,123 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
+
   tracking-infos-database:
-    image: "mongo:4.4.15"
+    image: "mongo:6.0"
     restart: always
     ports:
-      - 27020:27017
-    # volumes:
-    #   - './monitoring/dev/tracking-infos-database:/data/db'
+      - '27020:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - './docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './monitoring/data/tracking-infos-database:/data/db'
+    networks:
+      - smartcity-al-b-network-dev
+
+  tracking-infos-database-exporter:
+    restart: 'always'
+    ports:
+      - '9216:9216'
+    image: 'percona/mongodb_exporter:0.35'
+    environment:
+      - MONGODB_URI=mongodb://exporter:password@tracking-infos-database:27017
+    command:
+      - '--mongodb.uri=mongodb://exporter:password@tracking-infos-database:27017'
+    depends_on:
+      - tracking-infos-database
     networks:
       - smartcity-al-b-network-dev
 
   car-statistics-database:
-    image: "mongo:4.4.15"
+    image: "mongo:6.0"
     restart: always
     ports:
-      - 27021:27017
-    # volumes:
-    #   - './monitoring/dev/car-statistics-database:/data/db'
+      - '27021:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - './docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './monitoring/data/car-statistics-database:/data/db'
+    networks:
+      - smartcity-al-b-network-dev
+
+  car-statistics-database-exporter:
+    restart: 'always'
+    ports:
+      - '9217:9216'
+    image: 'percona/mongodb_exporter:0.35'
+    environment:
+      - MONGODB_URI=mongodb://exporter:password@car-statistics-database:27017
+    command:
+      - '--mongodb.uri=mongodb://exporter:password@car-statistics-database:27017'
+    depends_on:
+      - car-statistics-database
     networks:
       - smartcity-al-b-network-dev
 
   bills-database:
-    image: "mongo:4.4.15"
+    image: "mongo:6.0"
     restart: always
     ports:
-      - 27022:27017
-    # volumes:
-    #   - './monitoring/dev/bills-database:/data/db'
+      - '27022:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - './docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './monitoring/data/bills-database:/data/db'
+    networks:
+      - smartcity-al-b-network-dev
+
+  bills-database-exporter:
+    restart: 'always'
+    ports:
+      - '9218:9216'
+    image: 'percona/mongodb_exporter:0.35'
+    environment:
+      - MONGODB_URI=mongodb://exporter:password@bills-database-exporter:27017
+    command:
+      - '--mongodb.uri=mongodb://exporter:password@bills-database-exporter:27017'
+    depends_on:
+      - bills-database
     networks:
       - smartcity-al-b-network-dev
 
   start-stop-database:
-    image: "mongo:4.4.15"
+    image: "mongo:6.0"
     restart: always
     ports:
-      - 27023:27017
+      - '27023:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - './docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './monitoring/data/start-stop-database:/data/db'
+    networks:
+      - smartcity-al-b-network-dev
+
+  start-stop-database-exporter:
+    restart: 'always'
+    ports:
+      - '9219:9216'
+    image: 'percona/mongodb_exporter:0.35'
+    environment:
+      - MONGODB_URI=mongodb://exporter:password@start-stop-database:27017
+    command:
+      - '--mongodb.uri=mongodb://exporter:password@start-stop-database:27017'
+    depends_on:
+      - start-stop-database
     networks:
       - smartcity-al-b-network-dev
 
   redis:
     image: "redis:alpine"
     ports:
-      - 6379:6379
+      - '6379:6379'
     networks:
       - smartcity-al-b-network-dev
 
@@ -275,69 +350,51 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
-#  # setting up the mongodb exporter service. exposing the port 9001
-#  mongo-exporter:
-#    restart: 'always'
-#    ports:
-#      - '9216:9216'
-#    image: percona/mongodb_exporter:2.32
-#    environment:
-#      - MONGODB_URI=mongodb://exporter:password@database:27017
-#      #- 'MONGO_SERVICE=database'
-#      #- 'MONGO_PORT=27017'
-#    command:
-#      - '--mongodb.uri=mongodb://exporter:password@database:27017'
-#    depends_on:
-#      - database
-#    networks:
-#      - smartcity-al-b-network-dev
-#
-#
-#  alertmanager:
-#    container_name: alertmanager
-#    hostname: alertmanager
-#    image: prom/alertmanager
-#    user: "$UID:$GID"
-#    volumes:
-#      - ./monitoring/alertmanager.conf:/etc/alertmanager/alertmanager.conf
-#    command:
-#      - '--config.file=/etc/alertmanager/alertmanager.conf'
-#    ports:
-#      - 9093:9093
-#    networks:
-#      - smartcity-al-b-network-dev
-#
-#  prometheus:
-#    container_name: prometheus
-#    hostname: prometheus
-#    image: prom/prometheus
-#    user: "$UID:$GID"
-#    volumes:
-#      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-#      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
-#      - ./monitoring/prometheus_volume:/prometheus
-#    command:
-#      - '--config.file=/etc/prometheus/prometheus.yml'
-#    links:
-#      - alertmanager:alertmanager
-#    ports:
-#      - 9090:9090
-#    networks:
-#      - smartcity-al-b-network-dev
-#
-#  grafana:
-#    container_name: grafana
-#    hostname: grafana
-#    image: grafana/grafana
-#    user: "$UID:$GID"
-#    volumes:
-#      - ./monitoring/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
-#      - ./monitoring/grafana_config.ini:/etc/grafana/config.ini
-#      - ./monitoring/grafana_volume:/var/lib/grafana
-#    ports:
-#      - 3000:3000
-#    networks:
-#      - smartcity-al-b-network-dev
+  alertmanager:
+    container_name: alertmanager
+    hostname: alertmanager
+    image: prom/alertmanager
+    user: "$UID:$GID"
+    volumes:
+      - ./monitoring/alertmanager.conf:/etc/alertmanager/alertmanager.conf
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.conf'
+    ports:
+      - 9093:9093
+    networks:
+      - smartcity-al-b-network-dev
+
+  prometheus:
+    container_name: prometheus
+    hostname: prometheus
+    image: prom/prometheus
+    user: "$UID:$GID"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
+      - ./monitoring/prometheus_volume:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    links:
+      - alertmanager:alertmanager
+    ports:
+      - 9090:9090
+    networks:
+      - smartcity-al-b-network-dev
+
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    image: grafana/grafana
+    user: "$UID:$GID"
+    volumes:
+      - ./monitoring/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
+      - ./monitoring/grafana_config.ini:/etc/grafana/config.ini
+      - ./monitoring/grafana_volume:/var/lib/grafana
+    ports:
+      - 3000:3000
+    networks:
+      - smartcity-al-b-network-dev
 
 networks:
   smartcity-al-b-network-dev:

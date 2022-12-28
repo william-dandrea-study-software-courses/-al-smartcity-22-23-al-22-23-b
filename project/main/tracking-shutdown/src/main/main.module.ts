@@ -8,7 +8,7 @@ import {CarPosition, CarPositionSchema} from "./schema/car-position.schema";
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://tracking-infos-database:27017'),
+    MongooseModule.forRoot('mongodb://admin:admin@tracking-infos-database:27017'),
     MongooseModule.forFeature([{ name: CarPosition.name, schema: CarPositionSchema }]),
     HttpModule
   ],

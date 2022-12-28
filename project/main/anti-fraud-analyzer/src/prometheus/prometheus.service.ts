@@ -13,8 +13,8 @@ interface MapGauge {
 
 @Injectable()
 export class PrometheusService {
-  private readonly serviceTitle = 'position-checker';
-  private readonly servicePrefix = 'position_checker_';
+  private readonly serviceTitle = 'anti-fraud-analyzer';
+  private readonly servicePrefix = 'anti_fraud_analyzer_';
   private registeredMetrics: MapHistogram = {};
   private registeredGauges: MapGauge = {};
   private readonly registry: Registry;
