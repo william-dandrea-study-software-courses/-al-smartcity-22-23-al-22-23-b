@@ -76,6 +76,10 @@ scrape_configs:
         labels:
           instance: 'start_stop'
 
+  - job_name: kafka
+    static_configs:
+      - targets: [ 'kafka-exporter:9308' ]
+
 
 #  - job_name: car-statistics-database-exporter
 #    static_configs:
