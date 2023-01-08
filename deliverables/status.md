@@ -7,7 +7,7 @@
 ## Status semaine 1,08/01
 - [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
 
-### Flag d'avancement <img src="./flags/red_flag.png" width="20" height="20" >
+### Flag d'avancement <img src="./flags/orange_flag.png" width="20" height="20" >
 
 ### Points validés cette semaine:
 
