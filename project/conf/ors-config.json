@@ -139,7 +139,7 @@
               "encoder_options": "turn_costs=true|block_fords=false|use_acceleration=true",
               "maximum_distance": 100000,
               "elevation": true,
-              "maximum_snapping_radius": 1000,
+              "maximum_snapping_radius": 350,
               "preparation": {
                 "min_network_size": 200,
                 "min_one_way_network_size": 200,
