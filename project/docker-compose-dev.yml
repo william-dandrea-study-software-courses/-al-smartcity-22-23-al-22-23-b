@@ -210,6 +210,16 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
+  osrm:
+    image: osrm/osrm-backend
+    command: "osrm-routed --algorithm mld /data/ile-de-france.osrm"
+    volumes:
+      - "./run_manager/osmr:/data"
+    ports:
+      - "6812:5000"
+    # restart: always
+    networks:
+      - smartcity-al-b-network-dev
 
   tracking-infos-database:
     image: "mongo:6.0"
@@ -220,8 +230,8 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
     volumes:
-      - './docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
-      - './monitoring/data/tracking-infos-database:/data/db'
+      - './run_manager/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './run_manager/database/tracking-infos-database:/data/db'
     networks:
       - smartcity-al-b-network-dev
 
@@ -249,8 +259,8 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
     volumes:
-      - './docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
-      - './monitoring/data/car-statistics-database:/data/db'
+      - './run_manager/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './run_manager/database/car-statistics-database:/data/db'
     networks:
       - smartcity-al-b-network-dev
 
@@ -278,8 +288,8 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
     volumes:
-      - './docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
-      - './monitoring/data/bills-database:/data/db'
+      - './run_manager/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './run_manager/database/bills-database:/data/db'
     networks:
       - smartcity-al-b-network-dev
 
@@ -307,8 +317,8 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
     volumes:
-      - './docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
-      - './monitoring/data/start-stop-database:/data/db'
+      - './run_manager/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './run_manager/database/start-stop-database:/data/db'
     networks:
       - smartcity-al-b-network-dev
 
@@ -454,7 +464,7 @@ services:
     image: prom/alertmanager
     user: "$UID:$GID"
     volumes:
-      - ./monitoring/alertmanager.conf:/etc/alertmanager/alertmanager.conf
+      - ./run_manager/alert-manager/alertmanager.conf:/etc/alertmanager/alertmanager.conf
     command:
       - '--config.file=/etc/alertmanager/alertmanager.conf'
     ports:
@@ -468,9 +478,9 @@ services:
     image: prom/prometheus
     user: "$UID:$GID"
     volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
-      - ./monitoring/prometheus_volume:/prometheus
+      - ./run_manager/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./run_manager/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml
+      - ./run_manager/prometheus/prometheus_volume:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     links:
@@ -486,9 +496,9 @@ services:
     image: grafana/grafana
     user: "$UID:$GID"
     volumes:
-      - ./monitoring/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
-      - ./monitoring/grafana_config.ini:/etc/grafana/config.ini
-      - ./monitoring/grafana_volume:/var/lib/grafana
+      - ./run_manager/grafana/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
+      - ./run_manager/grafana/grafana_config.ini:/etc/grafana/config.ini
+      - ./run_manager/grafana/grafana_volume:/var/lib/grafana
     ports:
       - 3000:3000
     networks:
