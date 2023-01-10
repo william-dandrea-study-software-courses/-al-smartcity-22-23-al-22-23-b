@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type BillDocument = Bill & Document;
+export type TicketDocument = Ticket & Document;
 
 @Schema()
-export class Bill {
+export class Ticket {
     @Prop({ required: true })
     price: number;
 
@@ -15,4 +15,4 @@ export class Bill {
     date: Date;
 }
 
-export const BillSchema = SchemaFactory.createForClass(Bill);
+export const TicketSchema = SchemaFactory.createForClass(Ticket);

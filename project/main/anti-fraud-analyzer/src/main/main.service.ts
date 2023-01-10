@@ -66,7 +66,11 @@ export class MainService {
     }
 
     public sendTicket(licensePlate: string) {
-        // TODO: send ticket to billing handler
+        this.httpService.axiosRef.post('http://billing-handler:3000/add-ticket/' + licensePlate, { price: 5 }).then(res => {
+            this.logger.log("ticket sent to " + licensePlate);
+        }).catch(err => {
+            this.logger.error("error sending ticket to " + licensePlate);
+        });
     }
 
 }
