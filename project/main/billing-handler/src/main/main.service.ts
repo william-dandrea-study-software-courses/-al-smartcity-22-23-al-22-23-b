@@ -24,6 +24,7 @@ export class MainService {
 
         const newBill: Bill = new Bill();
         newBill.price = bill;
+        newBill.is_paid = false;
         newBill.date = new Date();
         return await this.userModel.findOneAndUpdate({ license_plate: licensePlate }, { $push: { bills: newBill } }, { returnDocument: 'after' });
     }
@@ -54,6 +55,7 @@ export class MainService {
 
         const newTicket: Ticket = new Ticket();
         newTicket.price = price;
+        newTicket.is_paid = false;
         newTicket.date = new Date();
         return await this.userModel.findOneAndUpdate({ license_plate: licensePlate }, { $push: { tickets: newTicket } }, { returnDocument: 'after' });
     }

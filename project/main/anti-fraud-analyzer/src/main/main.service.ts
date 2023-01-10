@@ -59,7 +59,7 @@ export class MainService {
 
     public async checkCamera(licensePlate: string) {
         const res = await this.httpService.axiosRef.get('http://camera-checker:3000/check');
-        if (res) {
+        if (res.data) {
             this.logger.log("fraudulent car detected: " + licensePlate);
             this.sendTicket(licensePlate);
         }

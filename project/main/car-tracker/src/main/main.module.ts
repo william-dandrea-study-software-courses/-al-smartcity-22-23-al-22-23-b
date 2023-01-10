@@ -31,7 +31,8 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
             brokers: ['kafka-event-bus:9092']
           },
           consumer: {
-            groupId: 'car-tracker-consumer'
+            groupId: 'car-tracker-consumer',
+
           }
         }
       }

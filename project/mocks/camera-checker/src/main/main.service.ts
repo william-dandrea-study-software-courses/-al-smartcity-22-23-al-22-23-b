@@ -11,7 +11,11 @@ export class MainService {
     }
 
     public checkCamera(): boolean {
-        return Math.random() * 10 == 0;
+        this.logger.log("checking camera");
+        const res = Math.round(Math.random() * 10) == 1;
+        this.logger.log(res ? "fraud" : "not fraud");
+
+        return res;
     }
 
 }
