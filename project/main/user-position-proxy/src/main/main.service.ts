@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientKafka } from "@nestjs/microservices";
 import { NewCarPositionDto } from './dto/new-car-position.dto';
+import {AskRouteDto} from "./dto/ask-route.dto";
 
 
 @Injectable()
@@ -45,6 +46,15 @@ export class MainService {
     public async sendStop(data: NewCarPositionDto): Promise<string> {
         await this.kafkaClient.emit(
             'car-stop',
+            data
+        );
+
+        return "Stop sent"
+    }
+
+    public async sendAskRoute(data: AskRouteDto): Promise<string> {
+        await this.kafkaClient.emit(
+            'ask-route',
             data
         );
 
