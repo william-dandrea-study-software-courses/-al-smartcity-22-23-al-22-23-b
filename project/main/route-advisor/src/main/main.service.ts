@@ -18,7 +18,12 @@ export class MainService {
                 private readonly httpService: HttpService,) {
     }
 
+    public get isConnected(): boolean {
+        return true;
+    }
+
     getFullRouteAndSendIt(askRoute: AskRouteDto){
+        console.log(askRoute);
         let pointsList: [];
         let finalRoute: RouteDto = new RouteDto();
         finalRoute.license_plate=askRoute.license_plate;

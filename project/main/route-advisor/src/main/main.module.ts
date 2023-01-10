@@ -13,11 +13,11 @@ import {ClientsModule, Transport} from "@nestjs/microservices";
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'car-tracker',
+            clientId: 'route-advisor',
             brokers: ['kafka-event-bus:9092']
           },
           consumer: {
-            groupId: 'car-tracker-consumer'
+            groupId: 'route-advisor-consumer'
           }
         }
       }
