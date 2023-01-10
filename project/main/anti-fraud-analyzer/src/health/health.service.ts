@@ -22,12 +22,8 @@ export class HealthService {
     private anyOtherService: MainService
   ) {
     this.listOfThingsToMonitor = [
-      new NestjsHealthIndicator(
-        this.http,
-        'https://docs.nestjs.com',
-        this.promClientService
-      ),
-      new AnyOtherHealthIndicator(this.anyOtherService, this.promClientService),
+      //new NestjsHealthIndicator( this.http,  'https://docs.nestjs.com',  this.promClientService),
+      //new AnyOtherHealthIndicator(this.anyOtherService, this.promClientService),
     ];
   }
 
