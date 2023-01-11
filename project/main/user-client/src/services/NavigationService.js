@@ -2,31 +2,36 @@ import axios from "axios";
 
 const proxyUrl = "http://localhost:6809/";
 
-const carPosition = () => {
+function generatePosition(licensePlate) {
   const newLat = Math.random() * 10;
   const newLon = Math.random() * 10;
-
   return {
-    license_plate: "AA-123-AA",
+    license_plate: `${licensePlate}`,
     location: {
       lon: newLon,
       lat: newLat,
     },
     time: new Date().toISOString(),
   };
-};
+}
 
-const startNavigation = () => {
-  const positionBody = carPosition();
-  axios.post(`${proxyUrl}start`, positionBody);
-};
+function startNavigation(licensePlate) {
+  const positionBody = generatePosition(licensePlate);
+  return axios.post(`${proxyUrl}start`, positionBody);
+}
 
-const stopNavigation = () => {
-  const positionBody = carPosition();
-  axios.post(`${proxyUrl}stop`, positionBody);
-};
+function stopNavigation(licensePlate) {
+  const positionBody = generatePosition(licensePlate);
+  return axios.post(`${proxyUrl}stop`, positionBody);
+}
+
+function sendPosition(licensePlate) {
+  const positionBody = generatePosition(licensePlate);
+  return axios.post(`${proxyUrl}position-tracking`, positionBody);
+}
 
 export const NavigationService = {
   startNavigation,
   stopNavigation,
+  sendPosition,
 };
