@@ -1,5 +1,5 @@
 export class RouteDto {
-    license_plate: string;
-    route: 'string';
-    price: number;
+    public license_plate: string;
+    public route: any[][];
+    public price: number;
 }

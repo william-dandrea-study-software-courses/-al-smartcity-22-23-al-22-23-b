@@ -22,23 +22,32 @@ export class MainService {
         return true;
     }
 
-    getFullRouteAndSendIt(askRoute: AskRouteDto){
-        console.log(askRoute);
-        let pointsList: [];
-        let finalRoute: RouteDto = new RouteDto();
-        finalRoute.license_plate=askRoute.license_plate;
-        this.httpService.axiosRef.get(
-            `http://osrm:5000/route/v1/driving/${askRoute.locationStart.lon},
-        ${askRoute.locationStart.lat};${askRoute.locationEnd.lon},${askRoute.locationStart.lat}`)
-            .then(resp => {
-                finalRoute.route=resp.data.geometry
-                pointsList = this.polyline.decode(resp.data.geometry)
-            });
-        pointsList.forEach(point => finalRoute.price += this.getZonePrice(this.getZone(point[0], point[1])));
-        this.httpService.axiosRef.post("http://client-communication-service:3000/route", finalRoute)
+    async getRoutePrice(points: any[][]): Promise<number> {
+        let price = 0;
+        for (const point of points) {
+            price += this.getZonePrice(await this.getZone(point[0], point[1]))
+        }
+        return price;
     }
 
-    private getZonePrice(numberZone: number){
+    async getFullRouteAndSendIt(askRoute: AskRouteDto) {
+        let finalRoute: RouteDto = new RouteDto();
+        finalRoute.license_plate = askRoute.license_plate;
+        await this.httpService.axiosRef.get(
+            `http://osrm:5000/route/v1/driving/${askRoute.locationStart.lon},${askRoute.locationStart.lat};${askRoute.locationEnd.lon},${askRoute.locationEnd.lat}?geometries=geojson`)
+            .then(resp => {
+                finalRoute.route = resp.data.routes[0].geometry.coordinates;
+            });
+        finalRoute.price = await this.getRoutePrice(finalRoute.route);
+        await this.httpService.axiosRef.post("http://client-communication-service:3000/route", finalRoute).then(r => {
+            this.logger.log("Bonjour");
+        }, e => {
+            throw new HttpException("Cannot communicate with client-communication-service", HttpStatus.UNPROCESSABLE_ENTITY);
+        });
+    }
+
+
+    private getZonePrice(numberZone: number): number{
         switch (numberZone){
             case 1:
                 return 0.50;
@@ -54,17 +63,15 @@ export class MainService {
     private async getZone(long: number, lat: number): number {
         let zoneNumber = 0;
 
-        this.getOfficialZone().then((zones: PollutionZone[]) => {
+        await this.getOfficialZone().then((zones: PollutionZone[]) => {
             zones.forEach(zone => {
                 const distance: number = this.getDistanceFromLatLonInKm(zone.centerLat, zone.centerLong, lat, long);
-
                 if (distance <= zone.radiusEnd && distance >= zone.radiusStart) {
                     zoneNumber = zone.number;
                 }
             })
 
         });
-
         return zoneNumber;
     }
 

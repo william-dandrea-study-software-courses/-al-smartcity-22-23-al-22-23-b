@@ -16,7 +16,7 @@ export class MainController {
         await this.appService.newCarFrequency(body);
     }
 
-    @Post('routes')
+    @Post('route')
     public async sendRoutes(@Body() body: RouteDto){
         this.appService.sendRoute(body);
     }
