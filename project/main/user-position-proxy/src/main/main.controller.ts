@@ -3,13 +3,14 @@ import { EventPattern } from "@nestjs/microservices";
 import { NewCarPositionDto } from './dto/new-car-position.dto';
 import { MainService } from "./main.service";
 import { CarPosition } from './schema/car-position.schema';
+import {PrometheusHistogram, PrometheusService} from "../prometheus/prometheus.service";
 // import { CarPosition } from './schema/car-position.schema';
 
 @Controller('')
 export class MainController {
     private readonly logger = new Logger(MainController.name);
 
-    constructor(private readonly appService: MainService) { }
+    constructor(private readonly appService: MainService) {}
 
     @Get('')
     async getHello(): Promise<string> {
