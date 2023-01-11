@@ -7,6 +7,7 @@ import { SocketService } from "../services/Socket";
 const StartStop = observer(() => {
   const [carMoving, setCarMoving] = useState(false);
   const [licensePlate, setLicensePlate] = useState("");
+  const [route, setRoute] = useState(null);
 
   useEffect(() => {
     SocketService.socket.on("message_to_user", (message) => {
@@ -15,6 +16,11 @@ const StartStop = observer(() => {
 
     SocketService.socket.on("new_frequency", (message) => {
       console.log(message);
+    });
+
+    SocketService.socket.on("new_route", (message) => {
+      console.log(message);
+      setRoute(message);
     });
   }, []);
 
@@ -35,12 +41,6 @@ const StartStop = observer(() => {
     await SocketService.connectSocket(licensePlate);
   }, [licensePlate]);
 
-  const sendPlate = (licensePlate) => {
-    SocketService.sendMessage({
-      message: `here is my license plate ${licensePlate}`,
-    });
-  };
-
   const handleStart = useCallback(() => {
     connectToSocket();
     NavigationService.startNavigation(licensePlate).then(() => {
@@ -52,6 +52,10 @@ const StartStop = observer(() => {
     NavigationService.stopNavigation(licensePlate).then(() => {
       setCarMoving(false);
     });
+  }, [licensePlate]);
+
+  const askRoute = useCallback(() => {
+    NavigationService.askRoute(licensePlate);
   }, [licensePlate]);
 
   return (
@@ -79,6 +83,13 @@ const StartStop = observer(() => {
             onClick={handleStop}
           >
             Stop Navigation
+          </Button>
+          <Button
+            onClick={() => {
+              askRoute();
+            }}
+          >
+            ask route
           </Button>
         </CardActions>
       </Card>

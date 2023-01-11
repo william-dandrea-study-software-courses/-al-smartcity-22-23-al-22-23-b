@@ -12,7 +12,7 @@ export class MainController {
 
     @Post('new-frequency')
     public async postNewFrequency(@Body() body: NewFrequencyDto) {
-        this.logger.log("Bonjout")
+        this.logger.log("Bonjour")
         await this.appService.newCarFrequency(body);
     }
 

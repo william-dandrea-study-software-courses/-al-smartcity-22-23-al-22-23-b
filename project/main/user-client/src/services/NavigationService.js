@@ -15,6 +15,24 @@ function generatePosition(licensePlate) {
   };
 }
 
+const generateRoute = (licensePlate) => {
+  const startLat = 48.856969;
+  const startLon = 2.353771;
+  const stopLat = 48.877678;
+  const stopLon = 2.37066;
+  return {
+    license_plate: `${licensePlate}`,
+    locationStart: {
+      lon: startLon,
+      lat: startLat,
+    },
+    locationEnd: {
+      lon: stopLon,
+      lat: stopLat,
+    },
+  };
+};
+
 function startNavigation(licensePlate) {
   const positionBody = generatePosition(licensePlate);
   return axios.post(`${proxyUrl}start`, positionBody);
@@ -30,8 +48,14 @@ function sendPosition(licensePlate) {
   return axios.post(`${proxyUrl}position-tracking`, positionBody);
 }
 
+const askRoute = (licensePlate) => {
+  const routeBody = generateRoute(licensePlate);
+  axios.post(`${proxyUrl}ask-route`, routeBody);
+};
+
 export const NavigationService = {
   startNavigation,
   stopNavigation,
   sendPosition,
+  askRoute,
 };
