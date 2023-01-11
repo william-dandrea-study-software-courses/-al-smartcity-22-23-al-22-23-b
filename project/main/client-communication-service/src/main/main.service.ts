@@ -2,6 +2,7 @@ import {Inject, Injectable, Logger} from '@nestjs/common';
 import {NewFrequencyDto} from "./dto/new-frequency.dto";
 import {WebsocketGateway} from "./websocket.gateway";
 import {CacheServiceLicensePlate} from "./cache-license-plate.service";
+import {RouteDto} from "./dto/route.dto";
 
 
 @Injectable()
@@ -21,6 +22,10 @@ export class MainService {
         // const r1 = await this.cacheService.setNewId("DA444", "djdjjfjfjfjfjfjf"); console.log('r1', r1);
         // await this.cacheService.debug()
         return "Hello World"
+    }
+    public async sendRoute(route: RouteDto){
+        this.logger.log(route);
+        await this.webSocket.sendMessageToLicensePlate(route.license_plate, "new_route", {route: route.route, price:route.price})
     }
 
 

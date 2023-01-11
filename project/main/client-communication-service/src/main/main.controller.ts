@@ -2,6 +2,7 @@ import {Body, Controller, Get, Logger, Post, Query} from '@nestjs/common';
 import {EventPattern} from "@nestjs/microservices";
 import {MainService} from "./main.service";
 import {NewFrequencyDto} from "./dto/new-frequency.dto";
+import {RouteDto} from "./dto/route.dto";
 
 @Controller('')
 export class MainController {
@@ -13,6 +14,11 @@ export class MainController {
     public async postNewFrequency(@Body() body: NewFrequencyDto) {
         this.logger.log("Bonjout")
         await this.appService.newCarFrequency(body);
+    }
+
+    @Post('route')
+    public async sendRoutes(@Body() body: RouteDto){
+        this.appService.sendRoute(body);
     }
 
     @Get('')
