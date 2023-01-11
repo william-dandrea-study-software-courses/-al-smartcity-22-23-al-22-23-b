@@ -12,7 +12,6 @@ export class MainService {
     private readonly logger = new Logger(MainService.name);
     private readonly CACHE_TTL: number = 60;    // en secondes
     private readonly CACHE_NAME: string = "CACHE_IDENTIFIER";
-    private polyline = require('polyline')
 
     constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache,
                 private readonly httpService: HttpService,) {
