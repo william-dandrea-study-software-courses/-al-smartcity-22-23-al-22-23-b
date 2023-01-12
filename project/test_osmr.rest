@@ -1,6 +1,0 @@
-GET http://localhost:5000/route/v1/driving/<longitude_source>,<latitude_source>;<longitude_destination>,<latitude_destination>
-Accept: application/json
-
-###  docker run -v $(pwd)/monitoring/osrm-data:/data osrm/osrm-backend  osrm-extract -p /opt/car.lua /data/ile-de-france.osm.pbf
-###  docker run -t -v $(pwd)/monitoring/osrm-data:/data  osrm/osrm-backend osrm-partition /data/ile-de-france.osm
-###  docker run -t -v $(pwd)/monitoring/osrm-data:/data  osrm/osrm-backend osrm-customize /data/ile-de-france.osm

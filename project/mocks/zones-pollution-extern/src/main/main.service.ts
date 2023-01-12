@@ -1,10 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PollutionZone } from './schema/pollution-zone.schema';
+import {PrometheusService} from "../prometheus/prometheus.service";
 
 
 @Injectable()
 export class MainService {
     private readonly logger = new Logger(MainService.name);
+
+    private numberOfGetZonesRequests = this.prometheusService.registerGauge("number_of_get_zones_requests", "number_of_get_zones_requests")
+
+    constructor(private prometheusService: PrometheusService) {
+    }
+
 
     private readonly zones: PollutionZone[] = [
         {
@@ -35,6 +42,7 @@ export class MainService {
 
 
     getZones() {
+        this.numberOfGetZonesRequests.inc(1);
         return this.zones;
     }
 

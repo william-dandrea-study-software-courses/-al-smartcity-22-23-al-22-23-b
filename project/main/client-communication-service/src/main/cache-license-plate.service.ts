@@ -18,7 +18,7 @@ export class CacheServiceLicensePlate {
 
     public async getIdOfLicensePlate(licensePlate: string): Promise<string | null> {
         const result: {id: string} | null = await this.cacheManager.store.get<{id: string}>(licensePlate);
-        return result.id || null;
+        return result?.id || null;
     }
 
 

@@ -7,6 +7,7 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
 import { Bill, BillSchema } from "./schema/bill.schema";
 import { Ticket, TicketSchema } from "./schema/ticket.schema";
 import { User, UserSchema } from "./schema/user.schema";
+import {PrometheusModule} from "../prometheus/prometheus.module";
 
 
 @Module({
@@ -16,7 +17,8 @@ import { User, UserSchema } from "./schema/user.schema";
     MongooseModule.forFeature([{ name: Ticket.name, schema: TicketSchema }]),
     MongooseModule.forFeature([{ name: Bill.name, schema: BillSchema }]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    HttpModule
+    HttpModule,
+      PrometheusModule
   ],
   controllers: [MainController],
   providers: [MainService],

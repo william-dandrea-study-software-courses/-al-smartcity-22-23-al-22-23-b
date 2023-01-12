@@ -5,6 +5,7 @@ import {PollutionZone} from "./model/pollution-zone.model";
 import {HttpService} from "@nestjs/axios";
 import {AskRouteDto} from "./dto/ask-route.dto";
 import {RouteDto} from "./dto/route.dto";
+import {PrometheusService} from "../prometheus/prometheus.service";
 
 
 @Injectable()
@@ -13,9 +14,16 @@ export class MainService {
     private readonly CACHE_TTL: number = 60;    // en secondes
     private readonly CACHE_NAME: string = "CACHE_IDENTIFIER";
 
+    private numberOfExternalRequests = this.prometheusService.registerGauge("number_of_external_requests", "number_of_external_requests");
+    private numberOfSuccessExternalRequests = this.prometheusService.registerGauge("number_of_success_external_requests", "number_of_success_external_requests");
+    private numberOfFailedExternalRequests = this.prometheusService.registerGauge("number_of_failed_external_requests", "number_of_failed_external_requests");
+
+
+
     constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache,
-                private readonly httpService: HttpService,) {
-    }
+                private readonly httpService: HttpService,
+                private prometheusService: PrometheusService
+                ) {}
 
     public get isConnected(): boolean {
         return true;
@@ -32,16 +40,25 @@ export class MainService {
     async getFullRouteAndSendIt(askRoute: AskRouteDto) {
         let finalRoute: RouteDto = new RouteDto();
         finalRoute.license_plate = askRoute.license_plate;
+        this.numberOfExternalRequests.inc(1);
         await this.httpService.axiosRef.get(
             `http://osrm:5000/route/v1/driving/${askRoute.locationStart.lon},${askRoute.locationStart.lat};${askRoute.locationEnd.lon},${askRoute.locationEnd.lat}?geometries=geojson`)
             .then(resp => {
                 finalRoute.route = resp.data.routes[0].geometry.coordinates;
+                this.numberOfSuccessExternalRequests.inc(1);
+            }).catch(e => {
+                this.numberOfFailedExternalRequests.inc(1);
             });
+
+
         finalRoute.price = await this.getRoutePrice(finalRoute.route);
+        this.numberOfExternalRequests.inc(1);
         await this.httpService.axiosRef.post("http://client-communication-service:3000/route", finalRoute).then(r => {
             this.logger.log("Bonjour");
+            this.numberOfSuccessExternalRequests.inc(1);
         }, e => {
-            throw new HttpException("Cannot communicate with client-communication-service", HttpStatus.UNPROCESSABLE_ENTITY);
+            this.numberOfFailedExternalRequests.inc(1);
+            this.logger.error("Cannot communicate with client-communication-service");
         });
     }
 
@@ -70,6 +87,8 @@ export class MainService {
                 }
             })
 
+        }).catch(e => {
+            this.logger.log("Cannot get the zones")
         });
         return zoneNumber;
     }
@@ -80,11 +99,14 @@ export class MainService {
         if (result == undefined) {
             this.logger.log("Update")
 
+            this.numberOfExternalRequests.inc(1);
             return await this.httpService.axiosRef.get('http://zones-pollution-extern:3000/zones').then(async (response) => {
                 await this.cacheManager.set(this.CACHE_NAME, response.data, this.CACHE_TTL * 1000);
                 const newResult: PollutionZone[] = await this.cacheManager.get(this.CACHE_NAME);
+                this.numberOfSuccessExternalRequests.inc(1);
                 return newResult
             }).catch((error) => {
+                this.numberOfFailedExternalRequests.inc(1);
                 throw new HttpException("Cannot communicate with zone-pollution-extern", HttpStatus.UNPROCESSABLE_ENTITY)
             });
 

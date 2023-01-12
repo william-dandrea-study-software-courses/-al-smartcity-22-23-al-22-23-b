@@ -5,10 +5,12 @@ import { HttpModule } from "@nestjs/axios";
 import { MongooseModule } from "@nestjs/mongoose";
 import { AntiFraud, AntiFraudSchema } from "./schema/car-position.schema";
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import {PrometheusModule} from "../prometheus/prometheus.module";
 
 @Module({
   imports: [
     HttpModule,
+      PrometheusModule,
     MongooseModule.forRoot('mongodb://admin:admin@start-stop-database:27017'),
     MongooseModule.forFeature([{ name: AntiFraud.name, schema: AntiFraudSchema }]),
     ClientsModule.register([

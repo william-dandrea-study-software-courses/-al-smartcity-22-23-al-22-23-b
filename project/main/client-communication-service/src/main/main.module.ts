@@ -5,11 +5,13 @@ import {HttpModule} from "@nestjs/axios";
 import {WebsocketGateway} from "./websocket.gateway";
 import {CacheServiceLicensePlate} from "./cache-license-plate.service";
 import * as redisStore from 'cache-manager-redis-store';
+import {PrometheusModule} from "../prometheus/prometheus.module";
 
 
 // redis://client-communication-socket-authentification-cache:6379
 @Module({
   imports: [
+      PrometheusModule,
     HttpModule,
     CacheModule.register({
       store: redisStore,

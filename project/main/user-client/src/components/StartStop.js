@@ -9,6 +9,20 @@ const StartStop = observer(() => {
   const [licensePlate, setLicensePlate] = useState("");
   const [route, setRoute] = useState(null);
 
+  const generateRandomCoordinatesInParis = () => {
+    // Coordonnées de bordures de Paris (rectangle)
+    const minLat = 48.813;
+    const maxLat = 48.905;
+    const minLng = 2.224;
+    const maxLng = 2.460;
+
+    // Génération des coordonnées aléatoires
+    const lat = minLat + Math.random() * (maxLat - minLat);
+    const lng = minLng + Math.random() * (maxLng - minLng);
+
+    return [lat, lng];
+  }
+
   useEffect(() => {
     SocketService.socket.on("message_to_user", (message) => {
       console.log(message);

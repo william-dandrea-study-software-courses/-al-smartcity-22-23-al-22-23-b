@@ -3,14 +3,21 @@ import {NewFrequencyDto} from "./dto/new-frequency.dto";
 import {WebsocketGateway} from "./websocket.gateway";
 import {CacheServiceLicensePlate} from "./cache-license-plate.service";
 import {RouteDto} from "./dto/route.dto";
+import {PrometheusService} from "../prometheus/prometheus.service";
 
 
 @Injectable()
 export class MainService {
     private readonly logger = new Logger(MainService.name);
+    // private numberOfCarAskingRouteGauge = this.prometheusService.registerGauge("number_of_car_asking_route_requests", "number_of_car_asking_route_requests")
 
-    constructor(private webSocket: WebsocketGateway, private cacheService: CacheServiceLicensePlate) {
-    }
+    constructor(
+        private webSocket: WebsocketGateway,
+        private cacheService: CacheServiceLicensePlate,
+        private prometheusService: PrometheusService
+    ) {}
+
+
     public get isConnected(): boolean {
         return true;
     }
@@ -23,15 +30,13 @@ export class MainService {
         // await this.cacheService.debug()
         return "Hello World"
     }
+
     public async sendRoute(route: RouteDto){
-        this.logger.log(route);
         await this.webSocket.sendMessageToLicensePlate(route.license_plate, "new_route", {route: route.route, price:route.price})
     }
 
 
-
     public async newCarFrequency(body: NewFrequencyDto) {
-        this.logger.log(body);
         await this.webSocket.sendMessageToLicensePlate(body.license_plate, "new_frequency", {frequency: body.frequency})
     }
 
