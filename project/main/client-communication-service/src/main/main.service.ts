@@ -11,11 +11,15 @@ export class MainService {
     private readonly logger = new Logger(MainService.name);
     // private numberOfCarAskingRouteGauge = this.prometheusService.registerGauge("number_of_car_asking_route_requests", "number_of_car_asking_route_requests")
 
+    private serviceUp = this.prometheusService.registerGauge("service_up", "service_up")
+    // this.serviceUp.set(1);
     constructor(
         private webSocket: WebsocketGateway,
         private cacheService: CacheServiceLicensePlate,
         private prometheusService: PrometheusService
-    ) {}
+    ) {
+        this.serviceUp.set(1);
+    }
 
 
     public get isConnected(): boolean {

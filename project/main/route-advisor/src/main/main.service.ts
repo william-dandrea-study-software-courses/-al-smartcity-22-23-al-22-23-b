@@ -19,11 +19,15 @@ export class MainService {
     private numberOfFailedExternalRequests = this.prometheusService.registerGauge("number_of_failed_external_requests", "number_of_failed_external_requests");
 
 
+    private serviceUp = this.prometheusService.registerGauge("service_up", "service_up")
+    // this.serviceUp.set(1);
 
     constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache,
                 private readonly httpService: HttpService,
                 private prometheusService: PrometheusService
-                ) {}
+                ) {
+        this.serviceUp.set(1);
+    }
 
     public get isConnected(): boolean {
         return true;

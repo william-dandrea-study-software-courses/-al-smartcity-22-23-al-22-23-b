@@ -20,7 +20,7 @@ Content-Type: application/json
 {
   "license_plate": "DA-258-EF",
   "location": {
-    "lon": 2.334054,
+    "lon": 3.0,
     "lat": 48.873996
   },
   "time": "2023-01-11T13:55:48.614Z"

@@ -15,11 +15,16 @@ export class MainService {
     private numberOfSuccessExternalRequests = this.prometheusService.registerGauge("number_of_success_external_requests", "number_of_success_external_requests");
     private numberOfFailedExternalRequests = this.prometheusService.registerGauge("number_of_failed_external_requests", "number_of_failed_external_requests");
 
+    private serviceUp = this.prometheusService.registerGauge("service_up", "service_up")
+    // this.serviceUp.set(1);
+
     constructor(
         @InjectModel(CarPosition.name) private carPositionModel: Model<CarPositionDocument>,
         private readonly httpService: HttpService,
         private prometheusService: PrometheusService)
-    {}
+    {
+        this.serviceUp.set(1);
+    }
 
     getHello(): Promise<any> {
         return this.carPositionModel.find({}).exec();

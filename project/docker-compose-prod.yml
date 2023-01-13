@@ -5,12 +5,17 @@ services:
       context: ./main/anti-fraud-analyzer
       dockerfile: ./Dockerfile
       target: production
-    restart: always
-    command: npm run start:dev
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
       - 6801:3000
     environment:
       - APP_PORT=3000
+
     depends_on:
       - start-stop-database
       - kafka-event-bus
@@ -18,13 +23,31 @@ services:
       - smartcity-al-b-network-prod
 
   billing-handler:
+    image: nginx:latest
+    volumes:
+      - "./run_manager/configuration-nginx/billing-handler:/etc/nginx/conf.d"
+    ports:
+      - "6802:3000"
+    depends_on:
+      - billing-handler-2
+      - billing-handler-1
+      - billing-handler-0
+    networks:
+      - smartcity-al-b-network-prod
+
+  billing-handler-0:
     build:
       context: ./main/billing-handler
       dockerfile: ./Dockerfile
       target: production
-    restart: always
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
-      - 6802:3000
+      - "6502:3000"
     environment:
       - APP_PORT=3000
     depends_on:
@@ -32,14 +55,173 @@ services:
     networks:
       - smartcity-al-b-network-prod
 
-  car-tracker:
+  billing-handler-1:
+    build:
+      context: ./main/billing-handler
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6503:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - bills-database
+    networks:
+      - smartcity-al-b-network-prod
+
+  billing-handler-2:
+    build:
+      context: ./main/billing-handler
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6504:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - bills-database
+    networks:
+      - smartcity-al-b-network-prod
+
+  car-tracker-0:
     build:
       context: ./main/car-tracker
       dockerfile: ./Dockerfile
       target: production
-    restart: always
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
-      - 6803:3000
+      - "6903:3000"
+    environment:
+      - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  car-tracker-1:
+    build:
+      context: ./main/car-tracker
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6904:3000"
+    environment:
+      - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  car-tracker-2:
+    build:
+      context: ./main/car-tracker
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6905:3000"
+    environment:
+      - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  car-tracker-3:
+    build:
+      context: ./main/car-tracker
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6906:3000"
+    environment:
+      - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  car-tracker-4:
+    build:
+      context: ./main/car-tracker
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6907:3000"
+    environment:
+      - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+  car-tracker-5:
+    build:
+      context: ./main/car-tracker
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6908:3000"
     environment:
       - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
       - APP_PORT=3000
@@ -55,7 +237,12 @@ services:
       context: ./main/client-communication-service
       dockerfile: ./Dockerfile
       target: production
-    restart: always
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
       - 6804:3000
     environment:
@@ -70,7 +257,12 @@ services:
       context: ./main/route-advisor
       dockerfile: ./Dockerfile
       target: production
-    restart: always
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
       - 6805:3000
     environment:
@@ -80,14 +272,19 @@ services:
     networks:
       - smartcity-al-b-network-prod
 
-  tracking-analytics:
+  tracking-analytics-0:
     build:
       context: ./main/tracking-analytics
       dockerfile: ./Dockerfile
       target: production
-    restart: always
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
-      - 6806:3000
+      - "6606:3000"
     environment:
       - APP_PORT=3000
     depends_on:
@@ -95,14 +292,114 @@ services:
     networks:
       - smartcity-al-b-network-prod
 
-  tracking-shutdown:
+  tracking-analytics-1:
+    build:
+      context: ./main/tracking-analytics
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6607:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - car-statistics-database
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-analytics-2:
+    build:
+      context: ./main/tracking-analytics
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6608:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - car-statistics-database
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-analytics:
+    image: nginx:latest
+    volumes:
+      - "./run_manager/configuration-nginx/tracking-analytics:/etc/nginx/conf.d"
+    ports:
+      - "6806:3000"
+    depends_on:
+      - tracking-analytics-2
+      - tracking-analytics-1
+      - tracking-analytics-0
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-shutdown-0:
     build:
       context: ./main/tracking-shutdown
       dockerfile: ./Dockerfile
       target: production
-    restart: always
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
-      - 6807:3000
+      - "6707:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-shutdown-1:
+    build:
+      context: ./main/tracking-shutdown
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6708:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-shutdown-2:
+    build:
+      context: ./main/tracking-shutdown
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6709:3000"
     environment:
       - APP_PORT=3000
     depends_on:
@@ -116,7 +413,12 @@ services:
       context: ./main/user-configurator
       dockerfile: ./Dockerfile
       target: production
-    restart: always
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
       - 6808:3000
     environment:
@@ -127,13 +429,30 @@ services:
       - smartcity-al-b-network-prod
 
   user-position-proxy:
+    image: nginx:latest
+    volumes:
+      - "./run_manager/configuration-nginx/user-position-proxy:/etc/nginx/conf.d"
+    ports:
+      - "6809:3000"
+    depends_on:
+      - user-position-proxy-0
+    networks:
+      - smartcity-al-b-network-prod
+
+
+  user-position-proxy-0:
     build:
       context: ./main/user-position-proxy
       dockerfile: ./Dockerfile
       target: production
-    restart: always
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
-      - 6809:3000
+      - "7809:3000"
     environment:
       - APP_PORT=3000
     depends_on:
@@ -141,12 +460,119 @@ services:
     networks:
       - smartcity-al-b-network-prod
 
+  user-position-proxy-1:
+    build:
+      context: ./main/user-position-proxy
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "7810:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  user-position-proxy-2:
+    build:
+      context: ./main/user-position-proxy
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "7811:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  user-position-proxy-3:
+    build:
+      context: ./main/user-position-proxy
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "7812:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  user-position-proxy-4:
+    build:
+      context: ./main/user-position-proxy
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "7813:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  user-position-proxy-5:
+    build:
+      context: ./main/user-position-proxy
+      dockerfile: ./Dockerfile
+      target: production
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "7814:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+
+
   camera-checker:
     build:
       context: ./mocks/camera-checker
       dockerfile: ./Dockerfile
       target: production
-    restart: always
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
       - 6810:3000
     environment:
@@ -159,7 +585,12 @@ services:
       context: ./mocks/zones-pollution-extern
       dockerfile: ./Dockerfile
       target: production
-    restart: always
+    # restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
       - 6811:3000
     environment:

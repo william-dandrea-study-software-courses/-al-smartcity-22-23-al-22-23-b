@@ -8,8 +8,11 @@ export class MainService {
     private readonly logger = new Logger(MainService.name);
 
     private numberOfGetZonesRequests = this.prometheusService.registerGauge("number_of_get_zones_requests", "number_of_get_zones_requests")
+    private serviceUp = this.prometheusService.registerGauge("service_up", "service_up")
+    // this.serviceUp.set(1);
 
     constructor(private prometheusService: PrometheusService) {
+        this.serviceUp.set(1);
     }
 
 

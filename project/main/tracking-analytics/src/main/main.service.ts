@@ -12,10 +12,15 @@ export class MainService {
 
     private numberOfDatabaseCall = this.prometheusService.registerGauge("number_of_database_call", "number_of_database_call")
 
+    private serviceUp = this.prometheusService.registerGauge("service_up", "service_up")
+    // this.serviceUp.set(1);
+
     constructor(
         @InjectModel(Statistics.name) private statisticsModel: Model<StatisticsDocument>,
         private prometheusService: PrometheusService
-    ) {}
+    ) {
+        this.serviceUp.set(1);
+    }
 
     public get isConnected(): boolean {
         return true;

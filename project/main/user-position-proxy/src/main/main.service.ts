@@ -14,10 +14,15 @@ export class MainService {
     private numberOfCarPositionGauge = this.prometheusService.registerGauge("number_of_car_position_requests", "number_of_car_position_requests")
     private numberOfCarAskingRouteGauge = this.prometheusService.registerGauge("number_of_car_asking_route_requests", "number_of_car_asking_route_requests")
 
+    private serviceUp = this.prometheusService.registerGauge("service_up", "service_up")
+    // this.serviceUp.set(1);
+
     constructor(
         @Inject('USER_POSITION_BUS') private readonly kafkaClient: ClientKafka,
         private prometheusService: PrometheusService
-    ) { }
+    ) {
+        this.serviceUp.set(1);
+    }
 
     public get isConnected(): boolean {
         return true;

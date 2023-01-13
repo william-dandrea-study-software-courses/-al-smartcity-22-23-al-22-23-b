@@ -5,6 +5,8 @@ import { MainService } from "./main.service";
 export class MainController {
     private readonly logger = new Logger(MainController.name);
 
+
+
     constructor(private readonly appService: MainService) { }
 
     @Get("/zones")

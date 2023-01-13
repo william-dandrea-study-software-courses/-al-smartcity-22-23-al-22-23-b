@@ -9,7 +9,12 @@ export class MainController {
 
     private numberOfCameraCheckRequests = this.prometheusService.registerGauge("number_of_camera_checks_requests", "number_of_camera_checks_requests")
 
-    constructor(private readonly appService: MainService, private prometheusService: PrometheusService) { }
+    private serviceUp = this.prometheusService.registerGauge("service_up", "service_up")
+    // this.serviceUp.set(1);
+
+    constructor(private readonly appService: MainService, private prometheusService: PrometheusService) {
+        this.serviceUp.set(1);
+    }
 
     @Get('/check')
     checkCamera(): boolean {

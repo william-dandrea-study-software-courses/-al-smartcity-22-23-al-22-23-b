@@ -21,13 +21,18 @@ export class MainService {
     private numberOfTrackingShutdownEmitEvents = this.prometheusService.registerGauge("number_of_tracking_shutdown_emit_events", "number_of_tracking_shutdown_emit_events")
     private numberOfCacheRequest = this.prometheusService.registerGauge("number_of_cache_request", "number_of_cache_request")
 
+    private serviceUp = this.prometheusService.registerGauge("service_up", "service_up")
+    // this.serviceUp.set(1);
+
     constructor(
         @InjectModel(CarPosition.name) private carPositionModel: Model<CarPositionDocument>,
         private readonly httpService: HttpService,
         @Inject('RABBITMQ_SERVICE_TRACKING_SHUTDOWN') private trackingShutdownClient: ClientProxy,
         @Inject(CACHE_MANAGER) private cacheManager: Cache,
         private prometheusService: PrometheusService,
-    ) { }
+    ) {
+        this.serviceUp.set(1);
+    }
 
 
     addPosition(license_plate: string, long: number, lat: number, time: string, positionType: PositionType): Promise<CarPosition> {

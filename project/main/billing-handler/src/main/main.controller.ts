@@ -13,7 +13,12 @@ export class MainController {
     private numberOfSystemInputRequests = this.prometheusService.registerGauge("number_of_system_input_request", "number_of_system_input_request");
     private numberOfUserInputRequests = this.prometheusService.registerGauge("number_of_user_input_request", "number_of_user_input_request");
 
-    constructor(private readonly appService: MainService, private prometheusService: PrometheusService) { }
+    private serviceUp = this.prometheusService.registerGauge("service_up", "service_up")
+    // this.serviceUp.set(1);
+
+    constructor(private readonly appService: MainService, private prometheusService: PrometheusService) {
+        this.serviceUp.set(1);
+    }
 
 
     @Post('/new-bill')

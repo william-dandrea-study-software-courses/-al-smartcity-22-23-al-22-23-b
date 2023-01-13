@@ -14,13 +14,16 @@ export class MainService {
     private numberOfSuccessOutputRequestGauge = this.prometheusService.registerGauge("number_of_success_output_requests", "number_of_success_output_requests");
     private numberOfFailedOutputRequestGauge = this.prometheusService.registerGauge("number_of_failed_output_requests", "number_of_failed_output_requests");
     private numberOfDatabaseCallGauge = this.prometheusService.registerGauge("number_of_database_call", "number_of_database_call")
-    // private prometheusService: PrometheusService
+
+    private serviceUp = this.prometheusService.registerGauge("service_up", "service_up")
 
     constructor(
         @InjectModel(AntiFraud.name) private antiFraudModel: Model<AntiFraudDocument>,
         private readonly httpService: HttpService,
         private prometheusService: PrometheusService
-    ) { }
+    ) {
+        this.serviceUp.set(1);
+    }
 
     public get isConnected(): boolean {
         return true;
