@@ -1,3 +1,134 @@
+# 11. Changement du système de GPS
+###### ? janvier 2022
+
+## Status
+ACCEPTED
+
+## Context
+
+Nos utilisateurs doivent avoir une remontée en temps reel de leur itinéraire ainsi que de leur potentiel prix de billing. 
+Du fait du temps que cela à pris, nous avons du prendre une décision de simplification du système de retour d'itinéraire
+
+## Decision
+![](ressources/img15.png)
+
+Nous allons configurer le front-end pour que ce soit l'utilisateur qui demande un nouveau tracé d'itinéraire. C'est-à-dire
+que toutes les 30 secondes, une boucle dans notre frontend va faire une requête à `user-position-proxy` qui emettra
+un message dans le bus dans un topic particulier que `route-advisor` écoutera, générera un nouvel itinéraire grâce au 
+service `open-route-service` qui est un container docker donné par OpenStreetMap (hébergé 100% en local), et enverra
+cet itinéraire à `client-communication-service` qui s'occupera ensuite de le renvoyer à l'utilisateur par Socket. 
+
+
+## Consequences
+
+Nous n'avons pas besoin d'implémenter un algorithme de suivi de l'utilisateur qui regarde s'il dévie de sa route. Cependant,
+cela augmente la charge sur `route-advisor` et `client-communciation-service`. 
+
+
+
+
+
+# 10. Régulation du nombre de messages destiné au test de fraude et d'optimisation
+###### 14 janvier 2022
+
+## Status
+ACCEPTED
+
+## Context
+
+Lors de la montée en charge, les services `user-configurator` et `anti-fraud-analyzer recoivent le même montant de charge
+que car-tracker alors que ce sont des services "non-essentiels", car notre mission principale est d'enregistrer les trajets des
+utilisateurs
+
+## Decision
+![](./ressources/img7.png)!
+Plusieurs choix possibles : 
+- Limiter le nombre de messages qui rentre dans les services via un timer Kafka ou un offset (que l'on gère directement
+dans la configuration Kafka)
+- Scaler horizontalement les microservices pour qu'ils tiennent la charge
+- Dans user-position-proxy, n'envoyer qu'un message sur N dans un topic différend de `car-position`
+
+L'option 1 n'est pas très intuitive pour un utilisateur, il est difficile pour lui de faire le lien entre le temps d'offset
+et le nombre de messages qui arrivera dans les services, tandis que l'option 3 est plus intuitive, il pourra directement
+configurer le pourcentage de message qui arrive dans les services (exemple : 10%). L'option 2 est également intéressante,
+mais ce n'est pas l'objectif de devoir scaler ces 2 microservices tout autant que `car-tracker`, de plus, `camera-checker`
+est un service externe, il est de notre devoir de ne pas le surcharger. 
+
+Nous trouvons que le fait de prendre que un message sur 10 est judicieux, car il permet tout de même de faire de la configuration
+et de l'analyse de fraude, de manière significative, et le fait de l'implémenter dans user-position-proxy, cela permet
+à la smartcity de réguler en fonction des heures d'affluences. De plus, nous pourrons potentiellement le scaler. 
+
+
+## Consequences
+
+Du fait de ce choix, nous devons ajouter un calcul au niveau de user-position-proxy (qui ne devient donc plus qu'un simple proxy)
+mais, cela entraînement un scale plus facile par la suite.
+
+
+# 9. Scaling des micro-services essentiels à la remontée de position (domaine métier principal)
+###### 13 janvier 2022
+
+## Status
+ACCEPTED
+
+## Context
+
+Sans aucun scale, notre service ne tient pas la charge, et, du fait de ce problème, les données placées en DB sont
+incohérentes, ce qui nuit grandement à lka smartcity car elle ne peut pas se fier aux données délivrées par notre
+service.
+
+## Decision
+![](ressources/img14.png)
+
+Nous avons fait le choix de 
+- mettre un load-balancer devant `user-position-proxy` et de le scaler à 6 réplica. 
+- mettre un load-balancer devant `tracking-analytics` et de le scaler à 3 réplicas.
+- mettre un load-balancer devant `billing-handler` et de le scaler à 3 réplicas.
+- de scaler car-tracker à 6 réplica
+- de scaler tracking-shutdown à 3 réplica
+
+Nous avons fait le choix de 6 réplica et 3 réplica car nous pensons qu'il y aura 3 fois plus de remonté de positions que
+de stops (donc 2 replica de `tracking-shutdown` pour 6 réplica de car-tracker). Cependant, ces 2 services `tracking-shutdown`
+et les 2 services qui en découlent sont relativement vulnérable, et nous ne pouvons pas nous permettent qu'ils tombent tous
+en même temps sinon nous n'auront pas de remonté d'information à la ville. Nous le scalons ainsi avec un replica de plus. 
+
+## Consequences
+Nous devons configurer les load-balancer, scaler les instances, configurer prometheus et grafana pour bien afficher
+les instances. De plus nous devons configurer Kafka pour que les 6 instances de `car-tracker` ne consomment qu'un message
+à la fois, nous devons donc les mettre dans le même consumer groupe (ce fut relativement simple honnêtement)
+
+
+# 8. Implémentation de nombreuses metrics relatives à Prometheus et Grafana
+###### 10 janvier 2022
+
+## Status
+ACCEPTED
+
+## Context
+
+Afin de réaliser au mieux les tests de charges, nous voulons une interface Grafana avec des métrics relatives à notre
+domaine métier.
+
+## Decision
+Il a été décidé d'implémenter des métriques relatives à notre domaine métier (nombre de messages start / positions / stop)
+mais aussi par rapport à notre architecture afin de monitorer l'endroit où nous pourrions avoir des problèmes. De plus
+un gros effort a été fait sur la partie qui analyse si les services sont up/down pour visualiser clairement quels 
+services tombent dans le but de moduler au mieux l'architecture (un point represente 5 secondes)
+
+![](ressources/img8.png)
+![](ressources/img9.png)
+![](ressources/img10.png)
+![](ressources/img11.png)
+![](ressources/img12.png)
+![](ressources/img13.png)
+
+
+## Consequences
+
+Du fait de ce choix, nous devons ajouter un calcul au niveau d'`user-position-proxy` (qui ne devient donc plus qu'un simple proxy)
+mais, cela entraînement un scale plus facile par la suite.
+
+
 # 7. Implémentation d'un système d'itinéraire
 ###### 13 décembre 2022
 
