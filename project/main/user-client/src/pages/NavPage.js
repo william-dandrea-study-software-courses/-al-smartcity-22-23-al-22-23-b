@@ -1,33 +1,43 @@
-import React, {useRef, useState} from "react";
+import React, {useCallback, useRef, useState} from "react";
 import { StartStop } from "../components";
-import { TestDebug } from "../components/TestDebug";
+import L from "leaflet"
+import "leaflet-routing-machine";
 
 import { MapContainer, TileLayer} from "react-leaflet";
+import Routing from "../components/Routing";
 
 const maptiler = {
-    url: "https://api.maptiler.com/maps/basic-2154/?key=KcNMZD3S4dFh93cyStfs#9.9/48.86758/2.32928",
-    attribution:
-    '&copy; <a href="https://www.maptiler.com/">MapTiler</a> &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 }
 
 const NavPage = () => {
-    const [center, setCenter] = useState({lat: 48.234578, lon:2.76932})
+    const [center, setCenter] = useState( [48.854539, 2.347756])
+    const [route, setRoute] = useState(null);
     const ZOOM_LVL=9
     const ref = useRef()
   console.log("inb   home page");
 
+    const renderMap = useCallback(() => {
+        return(
+            <div id='map'>
+                <MapContainer style={{ height: "600px" }} center={center} zoom={13}>
+                    <TileLayer
+                        attribution={maptiler.attribution}
+                        url={maptiler.url}
+                    />
+                    <Routing route={route}/>
+                </MapContainer>
+            </div>
+            )
+    }, [center])
+
   return (
     <>
-      <StartStop />
-      <div>
-          <MapContainer
-          center={center}
-          zoom={ZOOM_LVL}
-          ref={ref}
-          >
-            <TileLayer url={maptiler.url} attribution = {maptiler.attribution}/>
-          </MapContainer>
-      </div>
+      <StartStop setRoute={setRoute} />
+        <div id='map'>
+            {renderMap()}
+        </div>
+
     </>
   );
 };

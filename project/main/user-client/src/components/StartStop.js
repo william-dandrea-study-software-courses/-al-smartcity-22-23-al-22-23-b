@@ -4,10 +4,10 @@ import { observer } from "mobx-react-lite";
 import { NavigationService } from "../services/NavigationService";
 import { SocketService } from "../services/Socket";
 
-const StartStop = observer(() => {
+const StartStop = observer((setRoute) => {
   const [carMoving, setCarMoving] = useState(false);
   const [licensePlate, setLicensePlate] = useState("");
-  const [route, setRoute] = useState(null);
+
 
   const generateRandomCoordinatesInParis = () => {
     // Coordonnées de bordures de Paris (rectangle)
@@ -56,10 +56,12 @@ const StartStop = observer(() => {
   }, [licensePlate]);
 
   const handleStart = useCallback(() => {
-    connectToSocket();
-    NavigationService.startNavigation(licensePlate).then(() => {
-      setCarMoving(true);
-    });
+    if (licensePlate){
+      connectToSocket();
+      NavigationService.startNavigation(licensePlate).then(() => {
+        setCarMoving(true);
+      });
+    }
   }, [connectToSocket, licensePlate]);
 
   const handleStop = useCallback(() => {
