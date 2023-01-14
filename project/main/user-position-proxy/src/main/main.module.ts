@@ -24,6 +24,7 @@ import {PrometheusModule} from "../prometheus/prometheus.module";
         }
       }
     ]),
+
   ],
   controllers: [MainController],
   providers: [MainService],

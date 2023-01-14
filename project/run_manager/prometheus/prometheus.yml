@@ -87,6 +87,7 @@ scrape_configs:
       - targets: [ 'tracking-shutdown-2:3000' ]
         labels:
           instance: 'tracking-shutdown-2'
+
   - job_name: 'user-configurator'
     static_configs:
       - targets: ['user-configurator:3000' ]
@@ -95,22 +96,22 @@ scrape_configs:
     static_configs:
       - targets: ['user-position-proxy-0:3000' ]
         labels:
-          instance: 'tracking-shutdown-0'
+          instance: 'user-position-proxy-0'
       - targets: [ 'user-position-proxy-1:3000' ]
         labels:
-          instance: 'tracking-shutdown-1'
+          instance: 'user-position-proxy-1'
       - targets: [ 'user-position-proxy-2:3000' ]
         labels:
-          instance: 'tracking-shutdown-2'
+          instance: 'user-position-proxy-2'
       - targets: [ 'user-position-proxy-3:3000' ]
         labels:
-          instance: 'tracking-shutdown-3'
+          instance: 'user-position-proxy-3'
       - targets: [ 'user-position-proxy-4:3000' ]
         labels:
-          instance: 'tracking-shutdown-4'
+          instance: 'user-position-proxy-4'
       - targets: [ 'user-position-proxy-5:3000' ]
         labels:
-          instance: 'tracking-shutdown-5'
+          instance: 'user-position-proxy-5'
 
   - job_name: 'camera-checker'
     static_configs:

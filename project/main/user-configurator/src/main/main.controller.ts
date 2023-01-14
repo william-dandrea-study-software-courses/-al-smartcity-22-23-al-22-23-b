@@ -13,7 +13,7 @@ export class MainController {
 
     constructor(private readonly appService: MainService, private prometheusService: PrometheusService) { }
 
-    @EventPattern('car-position')
+    @EventPattern('car-position-optimisation-and-fraud-topic')
     public async receiveNewPosition(data: CarPositionSchema) {
         this.numberOfCarStartGauge.inc(1);
         this.logger.log('car-position ', data);
@@ -26,6 +26,7 @@ export class MainController {
         this.logger.log('car-start ', data)
         await this.appService.newPosition(data);
     }
+
 
     /*
     @Get('')

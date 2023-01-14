@@ -9,6 +9,7 @@ async function bootstrap() {
   await app.connectMicroservice({
     transport: Transport.KAFKA,
     options: {
+
       client: {
         brokers: ['kafka-event-bus:9092'],
       },

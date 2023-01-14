@@ -5,7 +5,7 @@ services:
       context: ./main/anti-fraud-analyzer
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -40,7 +40,7 @@ services:
       context: ./main/billing-handler
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -60,7 +60,7 @@ services:
       context: ./main/billing-handler
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -80,7 +80,7 @@ services:
       context: ./main/billing-handler
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -100,7 +100,7 @@ services:
       context: ./main/car-tracker
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -123,7 +123,7 @@ services:
       context: ./main/car-tracker
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -146,7 +146,7 @@ services:
       context: ./main/car-tracker
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -169,7 +169,7 @@ services:
       context: ./main/car-tracker
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -192,7 +192,7 @@ services:
       context: ./main/car-tracker
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -214,7 +214,7 @@ services:
       context: ./main/car-tracker
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -237,7 +237,7 @@ services:
       context: ./main/client-communication-service
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -257,7 +257,7 @@ services:
       context: ./main/route-advisor
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -277,7 +277,7 @@ services:
       context: ./main/tracking-analytics
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -297,7 +297,7 @@ services:
       context: ./main/tracking-analytics
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -317,7 +317,7 @@ services:
       context: ./main/tracking-analytics
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -334,6 +334,7 @@ services:
 
   tracking-analytics:
     image: nginx:latest
+    restart: always
     volumes:
       - "./run_manager/configuration-nginx/tracking-analytics:/etc/nginx/conf.d"
     ports:
@@ -350,7 +351,7 @@ services:
       context: ./main/tracking-shutdown
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -371,7 +372,7 @@ services:
       context: ./main/tracking-shutdown
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -392,7 +393,7 @@ services:
       context: ./main/tracking-shutdown
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -413,7 +414,7 @@ services:
       context: ./main/user-configurator
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -430,6 +431,7 @@ services:
 
   user-position-proxy:
     image: nginx:latest
+    restart: always
     volumes:
       - "./run_manager/configuration-nginx/user-position-proxy:/etc/nginx/conf.d"
     ports:
@@ -445,7 +447,7 @@ services:
       context: ./main/user-position-proxy
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -465,7 +467,7 @@ services:
       context: ./main/user-position-proxy
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -485,7 +487,7 @@ services:
       context: ./main/user-position-proxy
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -505,7 +507,7 @@ services:
       context: ./main/user-position-proxy
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -525,7 +527,7 @@ services:
       context: ./main/user-position-proxy
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -545,7 +547,7 @@ services:
       context: ./main/user-position-proxy
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -567,7 +569,7 @@ services:
       context: ./mocks/camera-checker
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -585,7 +587,7 @@ services:
       context: ./mocks/zones-pollution-extern
       dockerfile: ./Dockerfile
       target: production
-    # restart: always
+    restart: always
     deploy:
       resources:
         limits:
@@ -719,6 +721,7 @@ services:
 
   redis:
     image: "redis:alpine"
+    restart: always
     ports:
       - '6379:6379'
     networks:
@@ -728,6 +731,7 @@ services:
   tracking-shutdown-queue:
     image: 'rabbitmq:3-management'
     container_name: car-tracker-bus
+    restart: always
     environment:
       RABBITMQ_DEFAULT_USER: "admin"
       RABBITMQ_DEFAULT_PASS: "admin"
@@ -781,6 +785,7 @@ services:
   alertmanager:
     container_name: alertmanager
     hostname: alertmanager
+    restart: always
     image: prom/alertmanager
     user: "$UID:$GID"
     volumes:
@@ -797,6 +802,7 @@ services:
     hostname: prometheus
     image: prom/prometheus
     user: "$UID:$GID"
+    restart: always
     volumes:
       - ./run_manager/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./run_manager/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml
@@ -815,6 +821,7 @@ services:
     hostname: grafana
     image: grafana/grafana
     user: "$UID:$GID"
+    restart: always
     volumes:
       - ./run_manager/grafana/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
       - ./run_manager/grafana/grafana_config.ini:/etc/grafana/config.ini

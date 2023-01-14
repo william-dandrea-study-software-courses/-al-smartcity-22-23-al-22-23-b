@@ -15,12 +15,12 @@ export class MainController {
 
     constructor(private readonly appService: MainService, private prometheusService: PrometheusService ) { }
 
-    @EventPattern('car-position')
+    @EventPattern('car-position-optimisation-and-fraud-topic')
     public async receiveNewPosition(data: any) {
         this.numberOfCarPositionGauge.inc(1);
         this.numberOfInputEventGauge.inc(1);
         this.logger.log('car-position ', data);
-        this.appService.checkCamera(data.license_plate);
+        await this.appService.checkCamera(data.license_plate);
     }
 
     @EventPattern('car-start')
@@ -28,7 +28,7 @@ export class MainController {
         this.numberOfCarStartGauge.inc(1);
         this.numberOfInputEventGauge.inc(1);
         this.logger.log('car-start ', data)
-        if (this.appService.isFraudulent(data.license_plate, data.location)) {
+        if (await this.appService.isFraudulent(data.license_plate, data.location)) {
             this.appService.sendTicket(data.license_plate);
         }
     }
@@ -38,7 +38,7 @@ export class MainController {
         this.numberOfCarStopGauge.inc(1);
         this.numberOfInputEventGauge.inc(1);
         this.logger.log('car-stop ', data);
-        this.appService.updateStop(data.license_plate, data.location);
+        await this.appService.updateStop(data.license_plate, data.location);
     }
 
 }
