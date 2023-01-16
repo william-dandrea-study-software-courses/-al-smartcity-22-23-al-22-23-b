@@ -38,3 +38,8 @@ npm run start
 
 Si vous souhaitez utiliser le même modèle que notre interface Grafana, vous trouverez notre dashboard au format JSON 
 dans le fichier `grafana_dashboard.json`
+
+
+### Important
+
+Au moment du lancement, le service `kafka-exporter` se relancera plusieurs fois, c'est normal car il met du temps a se connecter au service Kafka, et donc du moment qu'il n'arrive pas a se connecter, il se redémarre (en general au bout de 1min tout est bon)
