@@ -36,7 +36,7 @@ export class MainService {
     }
 
     public async sendRoute(route: RouteDto){
-        await this.webSocket.sendMessageToLicensePlate(route.license_plate, "new_route", {route: route.route, price:route.price})
+        await this.webSocket.sendMessageToLicensePlate(route.license_plate, "new_route", {route: route.route, price:route.price, zones: route.zones})
     }
 
 

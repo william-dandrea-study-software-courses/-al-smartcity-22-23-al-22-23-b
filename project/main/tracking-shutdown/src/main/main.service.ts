@@ -41,10 +41,8 @@ export class MainService {
                 if (carPosition.zone === "1") {
                     price += 50;
                 } else if (carPosition.zone === "2") {
-                    price += 40;
-                } else if (carPosition.zone === "3") {
                     price += 30;
-                } else if (carPosition.zone === "4") {
+                } else if (carPosition.zone === "3") {
                     price += 10;
                 } else {
                     price += 5;

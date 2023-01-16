@@ -2,33 +2,45 @@ import axios from "axios";
 
 const proxyUrl = "http://localhost:6809/";
 
+const generateRandomCoordinatesInParis = () => {
+  // Coordonnées de bordures de Paris (rectangle)
+  const minLat = 48.813;
+  const maxLat = 48.905;
+  const minLng = 2.224;
+  const maxLng = 2.46;
+
+  // Génération des coordonnées aléatoires
+  const lat = minLat + Math.random() * (maxLat - minLat);
+  const lng = minLng + Math.random() * (maxLng - minLng);
+
+  return [lat, lng];
+};
+
+const arrivalCoord = generateRandomCoordinatesInParis();
+
 function generatePosition(licensePlate) {
-  const newLat = Math.random() * 10;
-  const newLon = Math.random() * 10;
+  const coords = generateRandomCoordinatesInParis();
   return {
     license_plate: `${licensePlate}`,
     location: {
-      lon: newLon,
-      lat: newLat,
+      lon: coords[1],
+      lat: coords[0],
     },
     time: new Date().toISOString(),
   };
 }
 
 const generateRoute = (licensePlate) => {
-  const startLat = 48.856969;
-  const startLon = 2.353771;
-  const stopLat = 48.877678;
-  const stopLon = 2.37066;
+  const departureCoord = generateRandomCoordinatesInParis();
   return {
     license_plate: `${licensePlate}`,
     locationStart: {
-      lon: startLon,
-      lat: startLat,
+      lon: departureCoord[1],
+      lat: departureCoord[0],
     },
     locationEnd: {
-      lon: stopLon,
-      lat: stopLat,
+      lon: arrivalCoord[1],
+      lat: arrivalCoord[0],
     },
   };
 };
