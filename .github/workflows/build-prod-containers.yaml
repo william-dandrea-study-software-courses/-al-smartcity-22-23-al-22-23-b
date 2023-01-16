@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Build the production car-tracker
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-prod.yml build car-tracker
+        run: docker-compose --file ./docker-compose-prod.yml build car-tracker-0
 
   build-client-communication-service-prod:
     runs-on: ubuntu-latest
@@ -64,7 +64,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Build the production tracking-shutdown
         working-directory: ./project
-        run: docker-compose --file ./docker-compose-prod.yml build tracking-shutdown
+        run: docker-compose --file ./docker-compose-prod.yml build tracking-shutdown-0
 
   build-user-configurator-prod:
     runs-on: ubuntu-latest
