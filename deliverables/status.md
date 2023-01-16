@@ -3,29 +3,62 @@
 > Sujet V6: Pay as you pollute: real-time billing of car depending on car categories and dynamic city zones they travel in.
 > Equipe b: Guillaume Piccina, Willian d'Andrea, Nicolas Fernandez, Yann Brault
 
+## Final Status, 16/01
 
-## Status semaine 1,08/01
+- [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
+
+### Points validés depuis la séance du 10/01:
+
+- Implémentation complète et fonctionnelle de Grafana + Prometheus
+- Test de charge avant scaling
+- Mise en place de réplicas + load balancers pour le passage à l'échelle du système
+- Test de charge après renforcement de l'architecture
+- Implémentation du composant `Route-advisor`
+- Remontée d'information du guidage de `route-advisor` vers l'interface client via socket
+- Implémentation complète du front-end: Trajet + envoie de position, Demande de trajet + affichage des zones, accès aux factures
+
+### Points de difficultés:
+
+- Mise en place de la stack Grafana/ Prometheus et passage à l'échelle du système
+- Des problèmes de Docker pour certains membres
+- Système très gros et très lourd (+ 50 conteneurs) donc les machines s'envolent
+
+### Bilan de la période:
+
+Cette seconde phase a été un peu plus compliquée que la première. Sur le plan technique les nouveaux besoins demandés ont été assez compliqués, ce qui a eu pour conséquence de nous pousser à bien réfléchir avant de faire des choix et des décisions, nous pensons notamment au changement de la technologie gérant le flux événementiel du projet ou encore comment remonter de l'information à un client en particulier. C'est dans l'organisation que ça a été le plus compliqué pour nous, un déséquilibre dans les participations s'est créé autour de la période des vacances. Néanmoins le groupe est resté soudé et a globalement maintenu une bonne ambiance et les discussions d'architectures ainsi que les choix ont toujours été posés et réfléchis.
+Sur un aspect réflexion, discussion et rédaction des documents et présentations les participations sont équivalentes.
+Sur un aspect technique et implémentation elles ne le sont pas.
+
+Répartition des points:
+
+- William 110
+- Guillaume 100
+- Nicolas 100
+- Yann 90
+
+## Status semaine 1,03/01
+
 - [Architecture](https://github.com/pns-si5-al-course/al-smartcity-22-23-al-22-23-b/blob/Develop/deliverables/Architecture.pdf)
 
 ### Flag d'avancement <img src="./flags/orange_flag.png" width="20" height="20" >
 
 ### Points validés cette semaine:
 
-* Fin du système d'anti-fraude
-* Implémentation de la communication via Socket entre le ClientCommunicationService (NestJS) et le UserClient (React)
-* Prometheus : implémentation (difficile) des exporters MongoDB ainsi que Kafka. 
-** Pour MongoDB, tout est fait automatiquement, nous n'avons plus besoin de créer un user à la main comme auparavant
+- Fin du système d'anti-fraude
+- Implémentation de la communication via Socket entre le ClientCommunicationService (NestJS) et le UserClient (React)
+- Prometheus : implémentation (difficile) des exporters MongoDB ainsi que Kafka.
+  \*\* Pour MongoDB, tout est fait automatiquement, nous n'avons plus besoin de créer un user à la main comme auparavant
 
 ### Points non validés cette semaine :
 
-* Toujours pas de fonctionnement du domaine métier entier alors que c'était prévu d'être fait pour il y a bien longtemps (frontend react, route advisor, open route service)
-* Pas de tests de charge
+- Toujours pas de fonctionnement du domaine métier entier alors que c'était prévu d'être fait pour il y a bien longtemps (frontend react, route advisor, open route service)
+- Pas de tests de charge
 
 ### Pour la semaine suivante:
-* Finir le domaine métier (OpenRouteService, ClientCommunicationService, UserClient)
-* Tests de charge et implémentation de load balancer
-* Préparer la présentation finale
 
+- Finir le domaine métier (OpenRouteService, ClientCommunicationService, UserClient)
+- Tests de charge et implémentation de load balancer
+- Préparer la présentation finale
 
 ## Status semaine 50,13/12
 
