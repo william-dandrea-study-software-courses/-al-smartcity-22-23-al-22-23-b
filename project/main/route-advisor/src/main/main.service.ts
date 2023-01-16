@@ -56,6 +56,7 @@ export class MainService {
 
 
         finalRoute.price = await this.getRoutePrice(finalRoute.route);
+        finalRoute.zones = await this.getOfficialZone();
         this.numberOfExternalRequests.inc(1);
         await this.httpService.axiosRef.post("http://client-communication-service:3000/route", finalRoute).then(r => {
             this.logger.log("Bonjour");
@@ -70,13 +71,13 @@ export class MainService {
     private getZonePrice(numberZone: number): number{
         switch (numberZone){
             case 1:
-                return 0.50;
+                return 50;
             case 2:
-                return 0.25;
+                return 30;
             case 3:
-                return 0.10
+                return 10
             default:
-                return 0;
+                return 5;
         }
     }
     // @ts-ignore

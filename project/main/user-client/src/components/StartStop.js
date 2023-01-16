@@ -4,24 +4,9 @@ import { observer } from "mobx-react-lite";
 import { NavigationService } from "../services/NavigationService";
 import { SocketService } from "../services/Socket";
 
-const StartStop = observer(() => {
+const StartStop = observer(({ setRoute, licensePlate, setLicensePlate }) => {
   const [carMoving, setCarMoving] = useState(false);
-  const [licensePlate, setLicensePlate] = useState("");
-  const [route, setRoute] = useState(null);
-
-  const generateRandomCoordinatesInParis = () => {
-    // Coordonnées de bordures de Paris (rectangle)
-    const minLat = 48.813;
-    const maxLat = 48.905;
-    const minLng = 2.224;
-    const maxLng = 2.460;
-
-    // Génération des coordonnées aléatoires
-    const lat = minLat + Math.random() * (maxLat - minLat);
-    const lng = minLng + Math.random() * (maxLng - minLng);
-
-    return [lat, lng];
-  }
+  const [connected, setConnected] = useState(false);
 
   useEffect(() => {
     SocketService.socket.on("message_to_user", (message) => {
@@ -38,7 +23,7 @@ const StartStop = observer(() => {
     });
   }, []);
 
-  const TIMER_MS = 5000;
+  const TIMER_MS = 2000;
 
   useEffect(() => {
     if (carMoving) {
@@ -46,24 +31,42 @@ const StartStop = observer(() => {
         console.log("send position");
         NavigationService.sendPosition(licensePlate);
       }, TIMER_MS);
-
       return () => clearInterval(interval);
     }
   }, [carMoving, licensePlate]);
+
+  useEffect(() => {
+    if (carMoving) {
+      const interval = setInterval(() => {
+        console.log("ask route");
+        NavigationService.askRoute(licensePlate);
+      }, TIMER_MS * 6);
+      return () => clearInterval(interval);
+    }
+  }, [carMoving]);
 
   const connectToSocket = useCallback(async () => {
     await SocketService.connectSocket(licensePlate);
   }, [licensePlate]);
 
-  const handleStart = useCallback(() => {
-    connectToSocket();
-    NavigationService.startNavigation(licensePlate).then(() => {
-      setCarMoving(true);
-    });
+  const handleConnect = useCallback(() => {
+    if (licensePlate) {
+      connectToSocket();
+      setConnected(true);
+    }
   }, [connectToSocket, licensePlate]);
+
+  const handleStart = useCallback(() => {
+    if (connected) {
+      NavigationService.startNavigation(licensePlate).then(() => {
+        setCarMoving(true);
+      });
+    }
+  }, [connected]);
 
   const handleStop = useCallback(() => {
     NavigationService.stopNavigation(licensePlate).then(() => {
+      setRoute(null);
       setCarMoving(false);
     });
   }, [licensePlate]);
@@ -80,6 +83,14 @@ const StartStop = observer(() => {
         onChange={(e) => setLicensePlate(e.target.value)}
         placeholder="Your license plate"
       />
+      <Button
+        size="small"
+        color={"success"}
+        variant="contained"
+        onClick={handleConnect}
+      >
+        Connect
+      </Button>
       <Card>
         <CardActions>
           <Button

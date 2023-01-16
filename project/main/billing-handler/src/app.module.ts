@@ -1,7 +1,4 @@
 import { Module } from '@nestjs/common';
-import {ClientsModule, Transport} from '@nestjs/microservices';
-import { MongooseModule } from '@nestjs/mongoose';
-import {Bill, BillSchema} from "./main/schema/bill.schema";
 import {HealthModule} from "./health/health.module";
 import {PrometheusModule} from "./prometheus/prometheus.module";
 import {MetricsModule} from "./metrics/metrics.module";
