@@ -81,7 +81,6 @@ const NavPage = observer(() => {
         >
           Get Bills
         </Button>
-        <div>{payments}</div>
       </div>
     </>
   );
