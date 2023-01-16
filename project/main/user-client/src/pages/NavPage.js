@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import { StartStop } from "../components";
-import { Button } from "@mui/material";
+import {Button, Divider, List, ListItem, ListItemText, Typography} from "@mui/material";
 import { observer } from "mobx-react-lite";
 import L from "leaflet";
 import "leaflet-routing-machine";
@@ -16,7 +16,8 @@ const maptiler = {
 const NavPage = observer(() => {
   const [center, setCenter] = useState([48.854539, 2.347756]);
   const [route, setRoute] = useState(null);
-  const [payments, setPayments] = useState(null);
+  const [tickets, setTickets] = useState([]);
+  const [bills, setBills] = useState([]);
   const [licensePlate, setLicensePlate] = useState("");
 
   const ZOOM_LVL = 9;
@@ -36,10 +37,25 @@ const NavPage = observer(() => {
 
   const loadBills = useCallback(() => {
     BillsService.getBills(licensePlate).then((resp) => {
-      console.log(resp.data);
-      setPayments(resp.data);
+      setBills(resp.data.bills)
+      setTickets(resp.data.tickets);
+      console.log(resp.data)
     });
   }, [licensePlate]);
+
+  const payBill = (id) => {
+    BillsService.payBill(licensePlate, id).then(r => {
+      console.log(r.data)
+      loadBills()
+    })
+  }
+
+  const payTicket = (id) => {
+    BillsService.payTicket(licensePlate, id).then(r => {
+      console.log(r.data)
+      loadBills()
+    })
+  }
 
   return (
     <>
@@ -73,14 +89,43 @@ const NavPage = observer(() => {
             <></>
           )}
         </MapContainer>
-        <Button
-          size="small"
-          color={"success"}
-          variant="contained"
-          onClick={loadBills}
-        >
-          Get Bills
-        </Button>
+
+        <Divider></Divider>
+        <Button size="small" color={"success"} variant="contained" onClick={loadBills}>Update Bills</Button>
+
+        <h2>Your bills</h2>
+        {bills.length > 0
+            ? <List>
+
+              {bills.map(b => {
+                return <ListItem>
+                  <ListItemText primary={`${b.price} EUR`}></ListItemText>
+                  <ListItemText primary={b.date}></ListItemText>
+                  <Button disabled={b.is_paid} onClick={() => payBill(b._id)}>Payer</Button>
+                </ListItem>
+              })}
+
+            </List>
+            : <div>No bills</div>
+        }
+
+        <h2>Your tickets</h2>
+        {tickets.length > 0
+            ? <div>
+              {tickets.map(t => {
+                return <ListItem>
+                  <ListItemText primary={`${t.price} EUR`}></ListItemText>
+                  <ListItemText primary={t.date}></ListItemText>
+                  <Button disabled={t.is_paid} onClick={() => payTicket(t._id)}>Payer</Button>
+                </ListItem>
+              })}
+
+
+            </div>
+            : <div>No tickets</div>
+        }
+
+
       </div>
     </>
   );

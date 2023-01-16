@@ -1,15 +1,15 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
-import { Bill, BillDocument } from "./schema/bill.schema";
-import { Ticket } from './schema/ticket.schema';
-import { User, UserDocument } from './schema/user.schema';
+import {Model, Schema} from "mongoose";
+import {Bill, Ticket, User, UserDocument} from './schema/user.schema';
 import {PrometheusService} from "../prometheus/prometheus.service";
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class MainService {
 
     private numberOfDatabaseCall = this.prometheusService.registerGauge("number_of_database_call", "number_of_database_call")
+    private logger: Logger = new Logger(MainService.name)
 
 
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private prometheusService: PrometheusService) { }
@@ -31,6 +31,7 @@ export class MainService {
 
 
         const newBill: Bill = new Bill();
+        newBill._id = uuid()
         newBill.price = bill;
         newBill.is_paid = false;
         newBill.date = new Date();
@@ -48,14 +49,31 @@ export class MainService {
     }
 
     public async payBill(licensePlate: string, idBill: string) {
-        this.numberOfDatabaseCall.inc(1);
-        return await this.userModel.find({ license_plate: licensePlate, 'bills._id': idBill }).updateOne({ 'bills.$.is_paid': true }, { returnDocument: 'after' });
+        this.numberOfDatabaseCall.inc(2);
+
+        const user: User = await this.userModel.findOne({ license_plate: licensePlate} );
+
+        const index: number = user.bills.findIndex(b => b._id === idBill)
+        if (index >= 0) {
+            user.bills[index].is_paid = true
+        }
+
+        return this.userModel.updateOne({license_plate: licensePlate}, {"bills": user.bills});
     }
 
     public async payTicket(licensePlate: string, idTicket: string) {
-        this.numberOfDatabaseCall.inc(1);
-        return await this.userModel.find({ licensePlate: licensePlate, 'tickets._id': idTicket }).updateOne({ 'tickets.$.is_paid': true }, { returnDocument: 'after' });
-    }
+        this.numberOfDatabaseCall.inc(2);
+
+        const user: User = await this.userModel.findOne({ license_plate: licensePlate} );
+
+        const index: number = user.tickets.findIndex(b => b._id === idTicket)
+        if (index >= 0) {
+            user.tickets[index].is_paid = true
+        }
+
+        return this.userModel.updateOne({license_plate: licensePlate}, {"tickets": user.tickets});
+
+        }
 
     public async getUserBills(licensePlate: string): Promise<User> {
         this.numberOfDatabaseCall.inc(1);
@@ -70,6 +88,7 @@ export class MainService {
 
 
         const newTicket: Ticket = new Ticket();
+        newTicket._id = uuid();
         newTicket.price = price;
         newTicket.is_paid = false;
         newTicket.date = new Date();

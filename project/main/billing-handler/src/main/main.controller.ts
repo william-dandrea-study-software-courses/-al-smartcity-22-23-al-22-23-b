@@ -1,7 +1,5 @@
 import { Body, Controller, Get, Logger, Param, Post, Put } from '@nestjs/common';
 import { MainService } from "./main.service";
-import { Bill } from "./schema/bill.schema";
-import { Ticket } from './schema/ticket.schema';
 import { User } from './schema/user.schema';
 import {PrometheusService} from "../prometheus/prometheus.service";
 
