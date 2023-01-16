@@ -2,7 +2,7 @@
 ###############################
 #        PRODUCTION           #
 ###############################
-FROM node:16.16.0-alpine As production
+FROM node:18-alpine As production
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -25,7 +25,7 @@ CMD [ "node", "dist/main.js" ]
 ###############################
 #         DEVELOPMENT         #
 ###############################
-FROM node:16.16.0-alpine As development
+FROM node:18-alpine As development
 
 WORKDIR /usr/src/app
 

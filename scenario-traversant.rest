@@ -1,0 +1,77 @@
+
+### A new car start driving
+POST http://localhost:6809/start
+Content-Type: application/json
+
+{
+  "license_plate": "DA-258-EF",
+  "location": {
+    "lon": 2.289966,
+    "lat": 48.892853
+  },
+  "time": "2023-01-11T13:55:44.614Z"
+}
+
+
+### A car send a position
+POST http://localhost:6809/position-tracking
+Content-Type: application/json
+
+{
+  "license_plate": "DA-258-EF",
+  "location": {
+    "lon": 3.0,
+    "lat": 48.873996
+  },
+  "time": "2023-01-11T13:55:48.614Z"
+}
+
+### A car send a new position
+POST http://localhost:6809/position-tracking
+Content-Type: application/json
+
+{
+  "license_plate": "DA-258-EF",
+  "location": {
+    "lon": 2.359816,
+    "lat": 48.862359
+  },
+  "time": "2023-01-11T13:56:44.614Z"
+}
+
+
+
+
+### A car stopped driving
+POST http://localhost:6809/stop
+Content-Type: application/json
+
+{
+  "license_plate": "DA-258-EF",
+  "location": {
+    "lon": 2.391467,
+    "lat": 48.842025
+  },
+  "time": "2023-01-11T13:59:44.614Z"
+}
+
+
+### Get bills
+GET http://localhost:6802/user-bills/DA-258-EF
+Content-Type: application/json
+
+### Pay bill
+PUT http://localhost:6809/pay-bill/DA-258-EF
+Content-Type: application/json
+
+{
+  "idBill": ""
+}
+
+### Pay ticket
+PUT http://localhost:6809/pay-ticket/DA-258-EF
+Content-Type: application/json
+
+{
+  "idTicket": ""
+}

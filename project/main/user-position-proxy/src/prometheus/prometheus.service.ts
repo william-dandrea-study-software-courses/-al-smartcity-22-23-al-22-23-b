@@ -13,8 +13,8 @@ interface MapGauge {
 
 @Injectable()
 export class PrometheusService {
-  private readonly serviceTitle = 'position-checker';
-  private readonly servicePrefix = 'position_checker_';
+  private readonly serviceTitle = 'user-position-proxy';
+  private readonly servicePrefix = 'user_position_proxy_';
   private registeredMetrics: MapHistogram = {};
   private registeredGauges: MapGauge = {};
   private readonly registry: Registry;
@@ -22,6 +22,7 @@ export class PrometheusService {
   public get metrics(): Promise<string> {
     return this.registry.metrics();
   }
+
 
   constructor() {
     this.registry = new Registry();
@@ -31,12 +32,7 @@ export class PrometheusService {
     collectDefaultMetrics({ register: this.registry, prefix: this.servicePrefix });
   }
 
-  public registerMetrics(
-    name: string,
-    help: string,
-    labelNames: string[],
-    buckets: number[]
-  ): Histogram<string> {
+  public registerMetrics( name: string,  help: string,  labelNames: string[],  buckets: number[]): Histogram<string> {
     if (this.registeredMetrics[name] === undefined) {
       const histogram = new Histogram({ name, help, labelNames, buckets });
       this.registry.registerMetric(histogram);

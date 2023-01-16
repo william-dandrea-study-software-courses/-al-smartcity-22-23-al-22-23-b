@@ -1,0 +1,161 @@
+global:
+  scrape_interval:     1s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 1s # By default, scrape targets every 15 seconds.
+  # scrape_timeout is set to the global default (10s).
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'codelab-monitor'
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+# - "first.rules"
+# - "second.rules"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+
+  - job_name: 'anti-fraud-analyzer'
+    static_configs:
+      - targets: ['anti-fraud-analyzer:3000']
+
+
+  - job_name: 'billing-handler'
+    static_configs:
+      - targets: ['billing-handler-0:3000']
+        labels:
+          instance: 'billing-handler-0'
+      - targets: [ 'billing-handler-1:3000' ]
+        labels:
+          instance: 'billing-handler-1'
+      - targets: [ 'billing-handler-2:3000' ]
+        labels:
+          instance: 'billing-handler-2'
+
+
+
+
+  - job_name: 'car-tracker'
+    static_configs:
+      - targets: ['car-tracker-0:3000']
+        labels:
+          instance: 'car-tracker-0'
+      - targets: [ 'car-tracker-1:3000' ]
+        labels:
+          instance: 'car-tracker-1'
+      - targets: [ 'car-tracker-2:3000' ]
+        labels:
+          instance: 'car-tracker-2'
+      - targets: [ 'car-tracker-3:3000' ]
+        labels:
+          instance: 'car-tracker-3'
+      - targets: [ 'car-tracker-4:3000' ]
+        labels:
+          instance: 'car-tracker-4'
+      - targets: [ 'car-tracker-5:3000' ]
+        labels:
+          instance: 'car-tracker-5'
+  - job_name: 'client-communication-service'
+    static_configs:
+      - targets: ['client-communication-service:3000']
+  - job_name: 'route-advisor'
+    static_configs:
+      - targets: ['route-advisor:3000']
+
+  - job_name: 'tracking-analytics'
+    static_configs:
+      - targets: ['tracking-analytics-0:3000']
+        labels:
+          instance: 'tracking-analytics-0'
+      - targets: [ 'tracking-analytics-1:3000' ]
+        labels:
+          instance: 'tracking-analytics-1'
+      - targets: [ 'tracking-analytics-2:3000' ]
+        labels:
+          instance: 'tracking-analytics-2'
+
+  - job_name: 'tracking-shutdown'
+    static_configs:
+      - targets: ['tracking-shutdown-0:3000' ]
+        labels:
+          instance: 'tracking-shutdown-0'
+      - targets: [ 'tracking-shutdown-1:3000' ]
+        labels:
+          instance: 'tracking-shutdown-1'
+      - targets: [ 'tracking-shutdown-2:3000' ]
+        labels:
+          instance: 'tracking-shutdown-2'
+
+  - job_name: 'user-configurator'
+    static_configs:
+      - targets: ['user-configurator:3000' ]
+
+  - job_name: 'user-position-proxy'
+    static_configs:
+      - targets: ['user-position-proxy-0:3000' ]
+        labels:
+          instance: 'user-position-proxy-0'
+      - targets: [ 'user-position-proxy-1:3000' ]
+        labels:
+          instance: 'user-position-proxy-1'
+      - targets: [ 'user-position-proxy-2:3000' ]
+        labels:
+          instance: 'user-position-proxy-2'
+      - targets: [ 'user-position-proxy-3:3000' ]
+        labels:
+          instance: 'user-position-proxy-3'
+      - targets: [ 'user-position-proxy-4:3000' ]
+        labels:
+          instance: 'user-position-proxy-4'
+      - targets: [ 'user-position-proxy-5:3000' ]
+        labels:
+          instance: 'user-position-proxy-5'
+
+  - job_name: 'camera-checker'
+    static_configs:
+      - targets: ['camera-checker:3000' ]
+  - job_name: 'zones-pollution-extern'
+    static_configs:
+      - targets: ['zones-pollution-extern:3000' ]
+
+
+
+  - job_name: 'queues'
+    static_configs:
+      - targets: [ 'tracking-shutdown-queue:15692' ]
+        labels:
+          instance: 'tracking_shutdown_queue'
+
+
+
+  - job_name: database
+    static_configs:
+      - targets: [ 'tracking-infos-database-exporter:9216' ]
+        labels:
+          instance: 'tracking_infos_database'
+      - targets: [ 'car-statistics-database-exporter:9216' ]
+        labels:
+          instance: 'car_statistics_database'
+      - targets: [ 'bills-database-exporter:9216' ]
+        labels:
+          instance: 'bills_database'
+      - targets: [ 'start-stop-database-exporter:9216' ]
+        labels:
+          instance: 'start_stop'
+
+  - job_name: kafka
+    static_configs:
+      - targets: [ 'kafka-exporter:9308' ]
+
+
+#  - job_name: car-statistics-database-exporter
+#    static_configs:
+#      - targets: [ 'car-statistics-database-exporter:9216' ]
+#  - job_name: bills-database-exporter
+#    static_configs:
+#      - targets: [ 'bills-database-exporter:9216' ]
+#  - job_name: start-stop-database-exporter
+#    static_configs:
+#      - targets: [ 'start-stop-database-exporter:9216' ]

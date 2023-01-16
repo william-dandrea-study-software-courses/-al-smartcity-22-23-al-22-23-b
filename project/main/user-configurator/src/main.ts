@@ -9,6 +9,7 @@ async function bootstrap() {
   await app.connectMicroservice({
     transport: Transport.KAFKA,
     options: {
+
       client: {
         brokers: ['kafka-event-bus:9092'],
       },
@@ -17,6 +18,7 @@ async function bootstrap() {
       },
     },
   });
+
   await app.startAllMicroservices();
 
   const port: number = Number(process.env.APP_PORT);

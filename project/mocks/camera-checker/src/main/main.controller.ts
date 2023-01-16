@@ -1,15 +1,24 @@
-import {Controller, Get, Logger, Post, Query} from '@nestjs/common';
-import {EventPattern} from "@nestjs/microservices";
-import {MainService} from "./main.service";
+import { Controller, Get, Logger, Post, Param } from '@nestjs/common';
+import { EventPattern } from "@nestjs/microservices";
+import { PrometheusService } from 'src/prometheus/prometheus.service';
+import { MainService } from "./main.service";
 
 @Controller('')
 export class MainController {
     private readonly logger = new Logger(MainController.name);
 
-    constructor(private readonly appService: MainService) { }
+    private numberOfCameraCheckRequests = this.prometheusService.registerGauge("number_of_camera_checks_requests", "number_of_camera_checks_requests")
 
-    @Get('')
-    getHello(): string {
-        return this.appService.getHello();
+    private serviceUp = this.prometheusService.registerGauge("service_up", "service_up")
+    // this.serviceUp.set(1);
+
+    constructor(private readonly appService: MainService, private prometheusService: PrometheusService) {
+        this.serviceUp.set(1);
+    }
+
+    @Get('/check')
+    checkCamera(): boolean {
+        this.numberOfCameraCheckRequests.inc(1);
+        return this.appService.checkCamera();
     }
 }

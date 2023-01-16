@@ -5,11 +5,13 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { CarPosition, CarPositionSchema } from "./schema/car-position.schema";
 import { HttpModule } from "@nestjs/axios";
 import { ClientsModule, Transport } from "@nestjs/microservices";
+import {PrometheusModule} from "../prometheus/prometheus.module";
 
 @Module({
   imports: [
+      PrometheusModule,
     MongooseModule.forFeature([{ name: CarPosition.name, schema: CarPositionSchema }]),
-    MongooseModule.forRoot('mongodb://tracking-infos-database:27017'),
+    MongooseModule.forRoot('mongodb://admin:admin@tracking-infos-database:27017'),
     ClientsModule.register([{
       name: 'RABBITMQ_SERVICE_TRACKING_SHUTDOWN',
       transport: Transport.RMQ,
@@ -31,7 +33,8 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
             brokers: ['kafka-event-bus:9092']
           },
           consumer: {
-            groupId: 'car-tracker-consumer'
+            groupId: 'car-tracker-consumer',
+
           }
         }
       }

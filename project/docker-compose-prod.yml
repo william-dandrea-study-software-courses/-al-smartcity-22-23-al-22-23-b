@@ -6,39 +6,229 @@ services:
       dockerfile: ./Dockerfile
       target: production
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
       - 6801:3000
     environment:
       - APP_PORT=3000
+
+    depends_on:
+      - start-stop-database
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-prod
 
   billing-handler:
+    image: nginx:latest
+    volumes:
+      - "./run_manager/configuration-nginx/billing-handler:/etc/nginx/conf.d"
+    ports:
+      - "6802:3000"
+    depends_on:
+      - billing-handler-2
+      - billing-handler-1
+      - billing-handler-0
+    networks:
+      - smartcity-al-b-network-prod
+
+  billing-handler-0:
     build:
       context: ./main/billing-handler
       dockerfile: ./Dockerfile
       target: production
     restart: always
-    command: npm run start:dev
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
-      - 6802:3000
+      - "6502:3000"
     environment:
       - APP_PORT=3000
+    depends_on:
+      - bills-database
     networks:
       - smartcity-al-b-network-prod
 
-  car-tracker:
+  billing-handler-1:
+    build:
+      context: ./main/billing-handler
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6503:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - bills-database
+    networks:
+      - smartcity-al-b-network-prod
+
+  billing-handler-2:
+    build:
+      context: ./main/billing-handler
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6504:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - bills-database
+    networks:
+      - smartcity-al-b-network-prod
+
+  car-tracker-0:
     build:
       context: ./main/car-tracker
       dockerfile: ./Dockerfile
       target: production
     restart: always
-    command: npm run start:dev
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
-      - 6803:3000
+      - "6903:3000"
     environment:
       - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
       - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  car-tracker-1:
+    build:
+      context: ./main/car-tracker
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6904:3000"
+    environment:
+      - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  car-tracker-2:
+    build:
+      context: ./main/car-tracker
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6905:3000"
+    environment:
+      - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  car-tracker-3:
+    build:
+      context: ./main/car-tracker
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6906:3000"
+    environment:
+      - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  car-tracker-4:
+    build:
+      context: ./main/car-tracker
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6907:3000"
+    environment:
+      - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+  car-tracker-5:
+    build:
+      context: ./main/car-tracker
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6908:3000"
+    environment:
+      - URL_ZONES_POLLUTION=http://zones-pollution-extern:3000
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-prod
 
@@ -48,11 +238,17 @@ services:
       dockerfile: ./Dockerfile
       target: production
     restart: always
-    command: npm run start:dev
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
       - 6804:3000
     environment:
       - APP_PORT=3000
+    depends_on:
+      - redis
     networks:
       - smartcity-al-b-network-prod
 
@@ -62,39 +258,154 @@ services:
       dockerfile: ./Dockerfile
       target: production
     restart: always
-    command: npm run start:dev
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
       - 6805:3000
     environment:
       - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-prod
 
-  tracking-analytics:
+  tracking-analytics-0:
     build:
       context: ./main/tracking-analytics
       dockerfile: ./Dockerfile
       target: production
     restart: always
-    command: npm run start:dev
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
-      - 6806:3000
+      - "6606:3000"
     environment:
       - APP_PORT=3000
+    depends_on:
+      - car-statistics-database
     networks:
       - smartcity-al-b-network-prod
 
-  tracking-shutdown:
+  tracking-analytics-1:
+    build:
+      context: ./main/tracking-analytics
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6607:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - car-statistics-database
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-analytics-2:
+    build:
+      context: ./main/tracking-analytics
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6608:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - car-statistics-database
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-analytics:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - "./run_manager/configuration-nginx/tracking-analytics:/etc/nginx/conf.d"
+    ports:
+      - "6806:3000"
+    depends_on:
+      - tracking-analytics-2
+      - tracking-analytics-1
+      - tracking-analytics-0
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-shutdown-0:
     build:
       context: ./main/tracking-shutdown
       dockerfile: ./Dockerfile
       target: production
     restart: always
-    command: npm run start:dev
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
-      - 6807:3000
+      - "6707:3000"
     environment:
       - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-shutdown-1:
+    build:
+      context: ./main/tracking-shutdown
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6708:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-shutdown-2:
+    build:
+      context: ./main/tracking-shutdown
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "6709:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
     networks:
       - smartcity-al-b-network-prod
 
@@ -104,27 +415,154 @@ services:
       dockerfile: ./Dockerfile
       target: production
     restart: always
-    command: npm run start:dev
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
       - 6808:3000
     environment:
       - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-prod
 
   user-position-proxy:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - "./run_manager/configuration-nginx/user-position-proxy:/etc/nginx/conf.d"
+    ports:
+      - "6809:3000"
+    depends_on:
+      - user-position-proxy-0
+    networks:
+      - smartcity-al-b-network-prod
+
+
+  user-position-proxy-0:
     build:
       context: ./main/user-position-proxy
       dockerfile: ./Dockerfile
       target: production
     restart: always
-    command: npm run start:dev
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
-      - 6809:3000
+      - "7809:3000"
     environment:
       - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-prod
+
+  user-position-proxy-1:
+    build:
+      context: ./main/user-position-proxy
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "7810:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  user-position-proxy-2:
+    build:
+      context: ./main/user-position-proxy
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "7811:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  user-position-proxy-3:
+    build:
+      context: ./main/user-position-proxy
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "7812:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  user-position-proxy-4:
+    build:
+      context: ./main/user-position-proxy
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "7813:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  user-position-proxy-5:
+    build:
+      context: ./main/user-position-proxy
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
+    ports:
+      - "7814:3000"
+    environment:
+      - APP_PORT=3000
+    depends_on:
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+
 
   camera-checker:
     build:
@@ -132,7 +570,11 @@ services:
       dockerfile: ./Dockerfile
       target: production
     restart: always
-    command: npm run start:dev
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
       - 6810:3000
     environment:
@@ -146,7 +588,11 @@ services:
       dockerfile: ./Dockerfile
       target: production
     restart: always
-    command: npm run start:dev
+    deploy:
+      resources:
+        limits:
+          memory: 128MB
+          cpus: "0.1"
     ports:
       - 6811:3000
     environment:
@@ -154,33 +600,138 @@ services:
     networks:
       - smartcity-al-b-network-prod
 
+  osrm:
+    image: osrm/osrm-backend
+    command: "osrm-routed --algorithm mld /data/ile-de-france.osrm"
+    volumes:
+      - "./run_manager/osmr:/data"
+    ports:
+      - "6812:5000"
+    restart: always
+    networks:
+      - smartcity-al-b-network-prod
+
   tracking-infos-database:
-    image: "mongo:4.4.15"
+    image: "mongo:6.0"
     restart: always
     ports:
-      - 27020:27017
+      - '27020:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - './run_manager/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './run_manager/database/tracking-infos-database:/data/db'
+    networks:
+      - smartcity-al-b-network-prod
+
+  tracking-infos-database-exporter:
+    restart: 'always'
+    ports:
+      - '9216:9216'
+    image: 'percona/mongodb_exporter:0.35'
+    environment:
+      - MONGODB_URI=mongodb://exporter:password@tracking-infos-database:27017
+      - EXTRA_OPTS="--web.telemetry-prefix=tracking_infos_database_"
+    depends_on:
+      - tracking-infos-database
     networks:
       - smartcity-al-b-network-prod
 
   car-statistics-database:
-    image: "mongo:4.4.15"
+    image: "mongo:6.0"
     restart: always
     ports:
-      - 27021:27017
+      - '27021:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - './run_manager/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './run_manager/database/car-statistics-database:/data/db'
+    networks:
+      - smartcity-al-b-network-prod
+
+  car-statistics-database-exporter:
+    restart: 'always'
+    ports:
+      - '9217:9216'
+    image: 'percona/mongodb_exporter:0.35'
+    environment:
+      - MONGODB_URI=mongodb://exporter:password@car-statistics-database:27017
+      - EXTRA_OPTS="--web.telemetry-prefix=car_statistics_database_"
+    depends_on:
+      - car-statistics-database
     networks:
       - smartcity-al-b-network-prod
 
   bills-database:
-    image: "mongo:4.4.15"
+    image: "mongo:6.0"
     restart: always
     ports:
-      - 27022:27017
+      - '27022:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - './run_manager/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './run_manager/database/bills-database:/data/db'
     networks:
       - smartcity-al-b-network-prod
+
+  bills-database-exporter:
+    restart: 'always'
+    ports:
+      - '9218:9216'
+    image: 'percona/mongodb_exporter:0.35'
+    environment:
+      - MONGODB_URI=mongodb://exporter:password@bills-database:27017
+      - EXTRA_OPTS="--web.telemetry-prefix=bills_database_"
+    depends_on:
+      - bills-database
+    networks:
+      - smartcity-al-b-network-prod
+
+  start-stop-database:
+    image: "mongo:6.0"
+    restart: always
+    ports:
+      - '27023:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - './run_manager/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './run_manager/database/start-stop-database:/data/db'
+    networks:
+      - smartcity-al-b-network-prod
+
+  start-stop-database-exporter:
+    restart: 'always'
+    ports:
+      - '9219:9216'
+    image: 'percona/mongodb_exporter:0.35'
+    environment:
+      - MONGODB_URI=mongodb://exporter:password@start-stop-database:27017
+      - EXTRA_OPTS="--web.telemetry-prefix=start_stop_database_"
+    depends_on:
+      - start-stop-database
+    networks:
+      - smartcity-al-b-network-prod
+
+  redis:
+    image: "redis:alpine"
+    restart: always
+    ports:
+      - '6379:6379'
+    networks:
+      - smartcity-al-b-network-prod
+
 
   tracking-shutdown-queue:
     image: 'rabbitmq:3-management'
     container_name: car-tracker-bus
+    restart: always
     environment:
       RABBITMQ_DEFAULT_USER: "admin"
       RABBITMQ_DEFAULT_PASS: "admin"
@@ -189,6 +740,7 @@ services:
       - 15692:15692
     networks:
       - smartcity-al-b-network-prod
+
 
   zookeeper:
     container_name: smart-city-dev-zookeeper
@@ -202,86 +754,82 @@ services:
       - smartcity-al-b-network-prod
 
   kafka-event-bus:
-    # container_name: soa-team-e-kafka
     restart: unless-stopped
     image: 'wurstmeister/kafka'
     depends_on:
       - zookeeper
+    ports:
+      - "9092:9092"
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka-event-bus
-      KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ZOOKEEPER_CONNECT: smart-city-dev-zookeeper:2181
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_BROKER_ID: 1
-      KAFKA_CREATE_TOPICS: "topic-poll:1:1,topic-poll-response:1:1,topic-rocket-event:1:1,topic-launch-event:1:1,topic-launch-order:1:1"
-    expose:
-      - 9092
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_CREATE_TOPICS: "test:1:1"
     networks:
       - smartcity-al-b-network-prod
 
-#  # setting up the mongodb exporter service. exposing the port 9001
-#  mongo-exporter:
-#    restart: 'always'
-#    ports:
-#      - '9216:9216'
-#    image: percona/mongodb_exporter:2.32
-#    environment:
-#      - MONGODB_URI=mongodb://exporter:password@database:27017
-#      #- 'MONGO_SERVICE=database'
-#      #- 'MONGO_PORT=27017'
-#    command:
-#      - '--mongodb.uri=mongodb://exporter:password@database:27017'
-#    depends_on:
-#      - database
-#    networks:
-#      - smartcity-al-b-network-prod
-#
-#
-#  alertmanager:
-#    container_name: alertmanager
-#    hostname: alertmanager
-#    image: prom/alertmanager
-#    user: "$UID:$GID"
-#    volumes:
-#      - ./monitoring/alertmanager.conf:/etc/alertmanager/alertmanager.conf
-#    command:
-#      - '--config.file=/etc/alertmanager/alertmanager.conf'
-#    ports:
-#      - 9093:9093
-#    networks:
-#      - smartcity-al-b-network-prod
-#
-#  prometheus:
-#    container_name: prometheus
-#    hostname: prometheus
-#    image: prom/prometheus
-#    user: "$UID:$GID"
-#    volumes:
-#      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-#      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
-#      - ./monitoring/prometheus_volume:/prometheus
-#    command:
-#      - '--config.file=/etc/prometheus/prometheus.yml'
-#    links:
-#      - alertmanager:alertmanager
-#    ports:
-#      - 9090:9090
-#    networks:
-#      - smartcity-al-b-network-prod
-#
-#  grafana:
-#    container_name: grafana
-#    hostname: grafana
-#    image: grafana/grafana
-#    user: "$UID:$GID"
-#    volumes:
-#      - ./monitoring/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
-#      - ./monitoring/grafana_config.ini:/etc/grafana/config.ini
-#      - ./monitoring/grafana_volume:/var/lib/grafana
-#    ports:
-#      - 3000:3000
-#    networks:
-#      - smartcity-al-b-network-prod
+  kafka-exporter:
+    restart: always
+    image: "bitnami/kafka-exporter:latest"
+    ports:
+      - "9308:9308"
+    command:
+      - --kafka.server=kafka-event-bus:9092
+    depends_on:
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-prod
+
+  alertmanager:
+    container_name: alertmanager
+    hostname: alertmanager
+    restart: always
+    image: prom/alertmanager
+    user: "$UID:$GID"
+    volumes:
+      - ./run_manager/alert-manager/alertmanager.conf:/etc/alertmanager/alertmanager.conf
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.conf'
+    ports:
+      - 9093:9093
+    networks:
+      - smartcity-al-b-network-prod
+
+  prometheus:
+    container_name: prometheus
+    hostname: prometheus
+    image: prom/prometheus
+    user: "$UID:$GID"
+    restart: always
+    volumes:
+      - ./run_manager/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./run_manager/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml
+      - ./run_manager/prometheus/prometheus_volume:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    links:
+      - alertmanager:alertmanager
+    ports:
+      - 9090:9090
+    networks:
+      - smartcity-al-b-network-prod
+
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    image: grafana/grafana
+    user: "$UID:$GID"
+    restart: always
+    volumes:
+      - ./run_manager/grafana/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
+      - ./run_manager/grafana/grafana_config.ini:/etc/grafana/config.ini
+      - ./run_manager/grafana/grafana_volume:/var/lib/grafana
+    ports:
+      - 3000:3000
+    networks:
+      - smartcity-al-b-network-prod
 
 networks:
   smartcity-al-b-network-prod:

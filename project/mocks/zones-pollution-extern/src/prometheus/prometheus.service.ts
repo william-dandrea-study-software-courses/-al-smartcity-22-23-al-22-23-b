@@ -13,8 +13,8 @@ interface MapGauge {
 
 @Injectable()
 export class PrometheusService {
-  private readonly serviceTitle = 'mock-pollution-zones-emitter';
-  private readonly servicePrefix = 'mock_pollution_zones_emitter_';
+  private readonly serviceTitle = 'mock-zones-pollution-extern';
+  private readonly servicePrefix = 'mock_zones_pollution_extern_';
   private registeredMetrics: MapHistogram = {};
   private registeredGauges: MapGauge = {};
   private readonly registry: Registry;

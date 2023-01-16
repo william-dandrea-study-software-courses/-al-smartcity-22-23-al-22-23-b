@@ -4,7 +4,8 @@
 function function_to_execute() {
   echo $1
   cd $1 || exit
-  npm i --save kafkajs
+  rm -rf dist node_modules package-lock.json
+  npm install
 
   cd ../..
 }

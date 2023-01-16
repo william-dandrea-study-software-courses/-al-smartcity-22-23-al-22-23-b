@@ -1,12 +1,30 @@
-import { Module } from '@nestjs/common';
+import {CacheModule, Module} from '@nestjs/common';
 import { MainController } from './main.controller';
 import { MainService } from './main.service';
 import {HttpModule} from "@nestjs/axios";
 import {ClientsModule, Transport} from "@nestjs/microservices";
+import {PrometheusModule} from "../prometheus/prometheus.module";
 
 @Module({
   imports: [
-    HttpModule
+    HttpModule,
+      PrometheusModule,
+    ClientsModule.register([
+      {
+        name: 'USER_POSITION_BUS',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'route-advisor',
+            brokers: ['kafka-event-bus:9092']
+          },
+          consumer: {
+            groupId: 'route-advisor-consumer'
+          }
+        }
+      }
+    ]),
+    CacheModule.register()
   ],
   controllers: [MainController],
   providers: [MainService],

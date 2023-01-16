@@ -3,10 +3,12 @@ import { MainController } from './main.controller';
 import { MainService } from './main.service';
 import {HttpModule} from "@nestjs/axios";
 import {ClientsModule, Transport} from "@nestjs/microservices";
+import {PrometheusModule} from "../prometheus/prometheus.module";
 
 @Module({
   imports: [
     HttpModule,
+      PrometheusModule,
     ClientsModule.register([
       {
         name: 'USER_POSITION_BUS',
@@ -22,6 +24,7 @@ import {ClientsModule, Transport} from "@nestjs/microservices";
         }
       }
     ]),
+
   ],
   controllers: [MainController],
   providers: [MainService],

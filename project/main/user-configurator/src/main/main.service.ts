@@ -3,6 +3,7 @@ import {HttpService} from "@nestjs/axios";
 import {Cache} from "cache-manager";
 import {PollutionZone} from "./schema/pollution-zone.schema";
 import {CarPositionSchema} from "./models/car-position.schema";
+import {PrometheusService} from "../prometheus/prometheus.service";
 
 
 @Injectable()
@@ -12,10 +13,20 @@ export class MainService {
     private readonly CACHE_NAME: string = "CACHE_IDENTIFIER";
     private readonly logger = new Logger(MainService.name);
 
+    private numberOfExternalRequests = this.prometheusService.registerGauge("number_of_external_requests", "number_of_external_requests");
+    private numberOfSuccessExternalRequests = this.prometheusService.registerGauge("number_of_success_external_requests", "number_of_success_external_requests");
+    private numberOfFailedExternalRequests = this.prometheusService.registerGauge("number_of_failed_external_requests", "number_of_failed_external_requests");
+
+    private serviceUp = this.prometheusService.registerGauge("service_up", "service_up")
+    // this.serviceUp.set(1);
+
     constructor(
         @Inject(CACHE_MANAGER) private cacheManager: Cache,
         private readonly httpService: HttpService,
-    ) {}
+        private prometheusService: PrometheusService,
+    ) {
+        this.serviceUp.set(1);
+    }
 
     public async newPosition(infos: CarPositionSchema) {
         this.logger.log(infos);
@@ -28,29 +39,16 @@ export class MainService {
             "time": (new Date()).toISOString(),
         }
 
+        this.numberOfExternalRequests.inc(1);
         this.httpService.axiosRef.post("http://client-communication-service:3000/new-frequency", resultToSend).then(r => {
             this.logger.log("BOnjour")
+            this.numberOfSuccessExternalRequests.inc(1);
         }, e => {
-            throw new HttpException("Cannot communicate with client-communication-service", HttpStatus.UNPROCESSABLE_ENTITY)
+            this.numberOfFailedExternalRequests.inc(1);
+            this.logger.error("Cannot communicate with client-communication-service")
+            // throw new HttpException("Cannot communicate with client-communication-service", HttpStatus.UNPROCESSABLE_ENTITY)
         })
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -83,14 +81,20 @@ export class MainService {
 
     public async getZoneWhereIsTheUser(lon: number, lat: number): Promise<number> {
 
-        const zones: PollutionZone[] = await this.getOfficialZone();
+        await this.getOfficialZone().then(zones => {
+            this.numberOfSuccessExternalRequests.inc(1);
+            zones.forEach(zone => {
+                const distanceBetweenCenterAndUser: number = this.getDistanceBetween2Points(zone.centerLat, zone.centerLong, lat, lon);
+                if (distanceBetweenCenterAndUser >= zone.radiusStart && distanceBetweenCenterAndUser < zone.radiusEnd) {
+                    return zone.number;
+                }
+            })
+        }).catch(e => {
+            this.numberOfFailedExternalRequests.inc(1);
+            this.logger.error("Cannot communicate with zones-pollution-extern")
+        });
 
-        zones.forEach(zone => {
-            const distanceBetweenCenterAndUser: number = this.getDistanceBetween2Points(zone.centerLat, zone.centerLong, lat, lon);
-            if (distanceBetweenCenterAndUser >= zone.radiusStart && distanceBetweenCenterAndUser < zone.radiusEnd) {
-                return zone.number;
-            }
-        })
+
 
         return 0;
     }
@@ -101,13 +105,15 @@ export class MainService {
         if (result == undefined) {
             this.logger.log("Update")
 
+            this.numberOfExternalRequests.inc(1);
             return await this.httpService.axiosRef.get('http://zones-pollution-extern:3000/zones').then(async (response) => {
                 await this.cacheManager.set(this.CACHE_NAME, response.data, this.CACHE_TTL * 1000);
                 const newResult: PollutionZone[] = await this.cacheManager.get(this.CACHE_NAME);
                 return newResult
-            }).catch((error) => {
-                throw new HttpException("Cannot communicate with zone-pollution-extern", HttpStatus.UNPROCESSABLE_ENTITY)
-            });
+            }) /*.catch((error) => {
+                this.logger.log("Cannot communicate with zone-pollution-extern")
+                // throw new HttpException("Cannot communicate with zone-pollution-extern", HttpStatus.UNPROCESSABLE_ENTITY)
+            }); */
 
         } else {
             this.logger.log("Respond")

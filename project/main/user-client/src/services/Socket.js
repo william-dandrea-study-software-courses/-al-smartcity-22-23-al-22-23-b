@@ -1,45 +1,29 @@
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:3001');
 
+const socket = io('http://localhost:6804', {
+    autoConnect: false,
+    auth: {
+        license_plate: null
+    }
+});
 
-function connection() {
-    socket.emit('findAllMessages', {},  (messages) => {
-        console.log(messages)
-    });
-
-    socket.on('message', (message) => {
-        console.log((prev) => [...prev, message]);
-    });
-
-    socket.on('typing', ({name, isTyping}) => {
-        console.log(name, isTyping)
-    });
+const connectSocket = async (license_plate) => {
+    socket.auth.license_plate = license_plate;
+    await socket.disconnect().connect();
 }
 
-
-function join(e) {
-    e.preventDefault();
-
-    socket.emit('join', { name }, () => setJoined(true));
-
-    connection();
+const sendMessage = (value) => {
+    socket.emit('message_topic_1', value);
 }
 
-function sendMessage(e) {
-    e.preventDefault();
+socket.on('connection_status_server', (message) => {
+    console.log(message);
+});
 
-    socket.emit('createMessage', { text }, () => {
-        console.log("")
-    });
-}
 
-function emitTyping(e) {
-    console.log(e.target.value);
-
-    socket.emit('typing', { isTyping: true });
-
-    setTimeout(() => {
-        socket.emit('typing', { isTyping: false });
-    }, 2000);
+export const SocketService = {
+    socket,
+    connectSocket,
+    sendMessage,
 }

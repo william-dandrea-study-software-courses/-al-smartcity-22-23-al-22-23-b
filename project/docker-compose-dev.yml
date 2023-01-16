@@ -14,6 +14,9 @@ services:
     volumes:
       - ./main/anti-fraud-analyzer:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - start-stop-database
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-dev
 
@@ -31,6 +34,8 @@ services:
     volumes:
       - ./main/billing-handler:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - bills-database
     networks:
       - smartcity-al-b-network-dev
 
@@ -49,6 +54,10 @@ services:
     volumes:
       - ./main/car-tracker:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-dev
 
@@ -63,6 +72,8 @@ services:
       - 6804:3000
     environment:
       - APP_PORT=3000
+    depends_on:
+      - redis
     volumes:
       - ./main/client-communication-service:/usr/src/app
       - /usr/src/app/node_modules
@@ -83,6 +94,8 @@ services:
     volumes:
       - ./main/route-advisor:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-dev
 
@@ -100,6 +113,8 @@ services:
     volumes:
       - ./main/tracking-analytics:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - car-statistics-database
     networks:
       - smartcity-al-b-network-dev
 
@@ -117,6 +132,9 @@ services:
     volumes:
       - ./main/tracking-shutdown:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - tracking-infos-database
+      - tracking-shutdown-queue
     networks:
       - smartcity-al-b-network-dev
 
@@ -134,6 +152,8 @@ services:
     volumes:
       - ./main/user-configurator:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-dev
 
@@ -151,6 +171,8 @@ services:
     volumes:
       - ./main/user-position-proxy:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - kafka-event-bus
     networks:
       - smartcity-al-b-network-dev
 
@@ -188,35 +210,140 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
+  osrm:
+    image: osrm/osrm-backend
+    command: "osrm-routed --algorithm mld /data/ile-de-france.osrm"
+    volumes:
+      - "./run_manager/osmr:/data"
+    ports:
+      - "6812:5000"
+    # restart: always
+    networks:
+      - smartcity-al-b-network-dev
+
   tracking-infos-database:
-    image: "mongo:4.4.15"
+    image: "mongo:6.0"
     restart: always
     ports:
-      - 27020:27017
-    # volumes:
-    #   - './monitoring/dev/tracking-infos-database:/data/db'
+      - '27020:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - './run_manager/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './run_manager/database/tracking-infos-database:/data/db'
+    networks:
+      - smartcity-al-b-network-dev
+
+  tracking-infos-database-exporter:
+    restart: 'always'
+    ports:
+      - '9216:9216'
+    image: 'percona/mongodb_exporter:0.35'
+    environment:
+      - MONGODB_URI=mongodb://exporter:password@tracking-infos-database:27017
+      - EXTRA_OPTS="--web.telemetry-prefix=tracking_infos_database_"
+#    command:
+#      - '--mongodb.uri=mongodb://exporter:password@tracking-infos-database:27017 --web.telemetry-prefix=tracking_infos_database'
+    depends_on:
+      - tracking-infos-database
     networks:
       - smartcity-al-b-network-dev
 
   car-statistics-database:
-    image: "mongo:4.4.15"
+    image: "mongo:6.0"
     restart: always
     ports:
-      - 27021:27017
-    # volumes:
-    #   - './monitoring/dev/car-statistics-database:/data/db'
+      - '27021:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - './run_manager/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './run_manager/database/car-statistics-database:/data/db'
+    networks:
+      - smartcity-al-b-network-dev
+
+  car-statistics-database-exporter:
+    restart: 'always'
+    ports:
+      - '9217:9216'
+    image: 'percona/mongodb_exporter:0.35'
+    environment:
+      - MONGODB_URI=mongodb://exporter:password@car-statistics-database:27017
+      - EXTRA_OPTS="--web.telemetry-prefix=car_statistics_database_"
+#    command:
+#      - '--mongodb.uri=mongodb://exporter:password@car-statistics-database:27017 --web.telemetry-prefix=car_statistics_database'
+    depends_on:
+      - car-statistics-database
     networks:
       - smartcity-al-b-network-dev
 
   bills-database:
-    image: "mongo:4.4.15"
+    image: "mongo:6.0"
     restart: always
     ports:
-      - 27022:27017
-    # volumes:
-    #   - './monitoring/dev/bills-database:/data/db'
+      - '27022:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - './run_manager/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './run_manager/database/bills-database:/data/db'
     networks:
       - smartcity-al-b-network-dev
+
+  bills-database-exporter:
+    restart: 'always'
+    ports:
+      - '9218:9216'
+    image: 'percona/mongodb_exporter:0.35'
+    environment:
+      - MONGODB_URI=mongodb://exporter:password@bills-database:27017
+      - EXTRA_OPTS="--web.telemetry-prefix=bills_database_"
+#    command:
+#      - '--mongodb.uri=mongodb://exporter:password@bills-database:27017 --web.telemetry-prefix=bills_database'
+    depends_on:
+      - bills-database
+    networks:
+      - smartcity-al-b-network-dev
+
+  start-stop-database:
+    image: "mongo:6.0"
+    restart: always
+    ports:
+      - '27023:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - './run_manager/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/'
+      - './run_manager/database/start-stop-database:/data/db'
+    networks:
+      - smartcity-al-b-network-dev
+
+  start-stop-database-exporter:
+    restart: 'always'
+    ports:
+      - '9219:9216'
+    image: 'percona/mongodb_exporter:0.35'
+    environment:
+      - MONGODB_URI=mongodb://exporter:password@start-stop-database:27017
+      - EXTRA_OPTS="--web.telemetry-prefix=start_stop_database_"
+#    command:
+#      - '--mongodb.uri=mongodb://exporter:password@start-stop-database:27017 --web.telemetry-prefix=start_stop_database'
+    depends_on:
+      - start-stop-database
+    networks:
+      - smartcity-al-b-network-dev
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - '6379:6379'
+    networks:
+      - smartcity-al-b-network-dev
+
 
   tracking-shutdown-queue:
     image: 'rabbitmq:3-management'
@@ -230,6 +357,7 @@ services:
     networks:
       - smartcity-al-b-network-dev
 
+
   zookeeper:
     container_name: smart-city-dev-zookeeper
     restart: unless-stopped
@@ -242,86 +370,138 @@ services:
       - smartcity-al-b-network-dev
 
   kafka-event-bus:
-    # container_name: soa-team-e-kafka
     restart: unless-stopped
     image: 'wurstmeister/kafka'
     depends_on:
       - zookeeper
+    ports:
+      - "9092:9092"
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka-event-bus
-      KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ZOOKEEPER_CONNECT: smart-city-dev-zookeeper:2181
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_BROKER_ID: 1
-      KAFKA_CREATE_TOPICS: "topic-poll:1:1,topic-poll-response:1:1,topic-rocket-event:1:1,topic-launch-event:1:1,topic-launch-order:1:1"
-    expose:
-      - 9092
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_CREATE_TOPICS: "test:1:1"
     networks:
       - smartcity-al-b-network-dev
 
-#  # setting up the mongodb exporter service. exposing the port 9001
-#  mongo-exporter:
-#    restart: 'always'
-#    ports:
-#      - '9216:9216'
-#    image: percona/mongodb_exporter:2.32
+  kafka-exporter:
+    restart: always
+    image: "bitnami/kafka-exporter:latest"
+    ports:
+      - "9308:9308"
+    command:
+      - --kafka.server=kafka-event-bus:9092
+    depends_on:
+      - kafka-event-bus
+    networks:
+      - smartcity-al-b-network-dev
+
+#  zookeeper:
+#    container_name: smart-city-dev-zookeeper
+#    restart: unless-stopped
+#    image: 'wurstmeister/zookeeper'
 #    environment:
-#      - MONGODB_URI=mongodb://exporter:password@database:27017
-#      #- 'MONGO_SERVICE=database'
-#      #- 'MONGO_PORT=27017'
-#    command:
-#      - '--mongodb.uri=mongodb://exporter:password@database:27017'
+#      zk_id: "1"
+#    expose:
+#      - 2181
+#    networks:
+#      - smartcity-al-b-network-dev
+#
+#  kafka-event-bus:
+#    container_name: kafka-event-bus-container
+#    restart: unless-stopped
+#    image: 'wurstmeister/kafka'
 #    depends_on:
-#      - database
-#    networks:
-#      - smartcity-al-b-network-dev
-#
-#
-#  alertmanager:
-#    container_name: alertmanager
-#    hostname: alertmanager
-#    image: prom/alertmanager
-#    user: "$UID:$GID"
-#    volumes:
-#      - ./monitoring/alertmanager.conf:/etc/alertmanager/alertmanager.conf
-#    command:
-#      - '--config.file=/etc/alertmanager/alertmanager.conf'
+#      - zookeeper
 #    ports:
-#      - 9093:9093
+#      - 9092:9092
+#    environment:
+#      KAFKA_ADVERTISED_HOST_NAME: "kafka-event-bus"
+##      KAFKA_ADVERTISED_HOST_NAME: kafka-event-bus
+##      KAFKA_ADVERTISED_PORT: 9092
+#      KAFKA_ZOOKEEPER_CONNECT: smart-city-dev-zookeeper:2181
+#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#      KAFKA_BROKER_ID: 1
+#      KAFKA_CREATE_TOPICS: "test:1:1"
+##    expose:
+##      - 9092
 #    networks:
 #      - smartcity-al-b-network-dev
 #
-#  prometheus:
-#    container_name: prometheus
-#    hostname: prometheus
-#    image: prom/prometheus
-#    user: "$UID:$GID"
-#    volumes:
-#      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-#      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
-#      - ./monitoring/prometheus_volume:/prometheus
-#    command:
-#      - '--config.file=/etc/prometheus/prometheus.yml'
-#    links:
-#      - alertmanager:alertmanager
+#  kafka-exporter:
+#    image: bitnami/kafka-exporter:latest
 #    ports:
-#      - 9090:9090
+#      - "9308:9308"
+#    environment:
+#      KAFKA_EXPORTER_KAFKA_URLS: kafka-event-bus-container:9092
+#    volumes:
+#      - './run_manager/kafka-exporter/run.sh:/opt/bitnami/kafka-exporter/bin/run.sh'
+#    entrypoint: [ "run.sh" ]
+#    depends_on:
+#      - kafka-event-bus
 #    networks:
 #      - smartcity-al-b-network-dev
-#
-#  grafana:
-#    container_name: grafana
-#    hostname: grafana
-#    image: grafana/grafana
-#    user: "$UID:$GID"
-#    volumes:
-#      - ./monitoring/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
-#      - ./monitoring/grafana_config.ini:/etc/grafana/config.ini
-#      - ./monitoring/grafana_volume:/var/lib/grafana
+
+#  kafka-exporter:
+#    image: bitnami/kafka-exporter:latest
 #    ports:
-#      - 3000:3000
+#      - "9308:9308"
+#    environment:
+#      KAFKA_EXPORTER_KAFKA_URLS: "kafka-event-bus:9092"
+#    volumes:
+#      - './run_manager/kafka-exporter/run.sh:/opt/bitnami/kafka-exporter/bin/run.sh'
+#    entrypoint: [ "run.sh" ]
+#    depends_on:
+#      - kafka-event-bus
 #    networks:
 #      - smartcity-al-b-network-dev
+
+  alertmanager:
+    container_name: alertmanager
+    hostname: alertmanager
+    image: prom/alertmanager
+
+    volumes:
+      - ./run_manager/alert-manager/alertmanager.conf:/etc/alertmanager/alertmanager.conf
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.conf'
+    ports:
+      - 9093:9093
+    networks:
+      - smartcity-al-b-network-dev
+
+  prometheus:
+    container_name: prometheus
+    hostname: prometheus
+    image: prom/prometheus
+
+    volumes:
+      - ./run_manager/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./run_manager/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml
+      - ./run_manager/prometheus/prometheus_volume:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    links:
+      - alertmanager:alertmanager
+    ports:
+      - 9090:9090
+    networks:
+      - smartcity-al-b-network-dev
+
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    image: grafana/grafana
+    volumes:
+      - ./run_manager/grafana/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
+      - ./run_manager/grafana/grafana_config.ini:/etc/grafana/config.ini
+      - ./run_manager/grafana/grafana_volume:/var/lib/grafana
+    ports:
+      - 3000:3000
+    networks:
+      - smartcity-al-b-network-dev
 
 networks:
   smartcity-al-b-network-dev:
