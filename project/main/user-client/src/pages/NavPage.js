@@ -41,6 +41,13 @@ const NavPage = observer(() => {
     });
   }, [licensePlate]);
 
+  const payBill = useCallback((billId) => {
+    BillsService.getBills(licensePlate).then((resp) => {
+      console.log(resp.data);
+      setPayments(resp.data);
+    });
+  }, [licensePlate]);
+
   return (
     <>
       <StartStop
@@ -81,6 +88,24 @@ const NavPage = observer(() => {
         >
           Get Bills
         </Button>
+        {payments?.bills.map(bill => {
+          return(
+              <div>
+                <div>{bill.price}</div>
+                <div>{bill.isPaid ? "Paid"
+                    :
+                    <Button
+                        size="small"
+                        color={"success"}
+                        variant="contained"
+                        onClick={() => payBill(bill.id)}
+                    >
+                      Pay
+                    </Button>
+                }</div>
+              </div>
+          )
+        })}
       </div>
     </>
   );
