@@ -25,16 +25,14 @@
 
 ### Bilan de la période:
 
-Cette seconde phase a été un peu plus compliquée que la première. Sur le plan technique les nouveaux besoins demandés ont été assez compliqués, ce qui a eu pour conséquence de nous pousser à bien réfléchir avant de faire des choix et des décisions, nous pensons notamment au changement de la technologie gérant le flux événementiel du projet ou encore comment remonter de l'information à un client en particulier. C'est dans l'organisation que ça a été le plus compliqué pour nous, un déséquilibre dans les participations s'est créé autour de la période des vacances. Néanmoins le groupe est resté soudé et a globalement maintenu une bonne ambiance et les discussions d'architectures ainsi que les choix ont toujours été posés et réfléchis.
-Sur un aspect réflexion, discussion et rédaction des documents et présentations les participations sont équivalentes.
-Sur un aspect technique et implémentation elles ne le sont pas.
+Cette seconde phase a été un peu plus compliquée que la première. Sur le plan technique les nouveaux besoins demandés ont été assez compliqués, ce qui a eu pour conséquence de nous pousser à bien réfléchir avant de faire des choix et des décisions, nous pensons notamment au changement de la technologie gérant le flux événementiel du projet ou encore comment remonter de l'information à un client en particulier. En terme d'organisation, quelques divergences sont apparues lors de nos débats sur les idées mais des accords communs à tout le groupe étaient trouvés à chaque décision. Le groupe a conservé une bonne cohésion et une bonne synergie jusqu'à la fin. Toutes les tâches ont été réparties de manière à peu près équivalente sauf la gestion du monitoring et tout ce qui touche à la charge du système, cette partie a entièrement été faite par William comme sur la première partie du projet.
 
 Répartition des points:
 
-- William 110
+- William 100
 - Guillaume 100
 - Nicolas 100
-- Yann 90
+- Yann 100
 
 ## Status semaine 1,03/01
 
