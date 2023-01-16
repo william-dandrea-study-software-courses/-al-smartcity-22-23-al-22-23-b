@@ -54,3 +54,24 @@ Content-Type: application/json
   },
   "time": "2023-01-11T13:59:44.614Z"
 }
+
+
+### Get bills
+GET http://localhost:6802/user-bills/DA-258-EF
+Content-Type: application/json
+
+### Pay bill
+PUT http://localhost:6809/pay-bill/DA-258-EF
+Content-Type: application/json
+
+{
+  "idBill": ""
+}
+
+### Pay ticket
+PUT http://localhost:6809/pay-ticket/DA-258-EF
+Content-Type: application/json
+
+{
+  "idTicket": ""
+}
