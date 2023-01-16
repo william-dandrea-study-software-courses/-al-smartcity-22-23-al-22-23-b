@@ -33,3 +33,8 @@ ne fonctionnera pas. Cependant, si vous lancer `./launch.sh`, ces etapes sont fa
 cd project/main/user-client
 npm run start
 ```
+
+# Détails
+
+Si vous souhaitez utiliser le même modèle que notre interface Grafana, vous trouverez notre dashboard au format JSON 
+dans le fichier `grafana_dashboard.json`
